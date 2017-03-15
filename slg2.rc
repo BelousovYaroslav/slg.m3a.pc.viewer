@@ -200,9 +200,9 @@ CAPTION "About slg2_viewer"
 FONT 8, "MS Sans Serif"
 BEGIN
     ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
-    LTEXT           "slg2 Version 5.1.2.0",IDC_STATIC,40,10,119,8,
+    LTEXT           "slg2 Version 5.2.0.0",IDC_STATIC,40,10,119,8,
                     SS_NOPREFIX
-    LTEXT           "Copyright (C) AL, 2017",IDC_STATIC,40,25,119,8
+    LTEXT           "Copyright (C) AL, 2016",IDC_STATIC,40,25,119,8
     DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
 END
 
@@ -483,17 +483,39 @@ BEGIN
     PUSHBUTTON      "Изменить",IDC_BTN_BROWSE,345,15,40,15
 END
 
-IDD_OPEN_MEAS_DLG DIALOG DISCARDABLE  0, 0, 186, 31
+IDD_OPEN_MEAS_DLG DIALOG DISCARDABLE  0, 0, 362, 62
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Открытие измерения"
 FONT 8, "MS Sans Serif"
 BEGIN
-    DEFPUSHBUTTON   "OK",IDOK,10,5,50,14,NOT WS_VISIBLE
-    PUSHBUTTON      "Cancel",IDCANCEL,130,5,50,14,NOT WS_VISIBLE
-    CONTROL         "Progress1",IDC_PRGR,"msctls_progress32",WS_BORDER,5,20,
-                    175,10
-    CONTROL         "Progress1",IDC_PRGR2,"msctls_progress32",WS_BORDER,5,5,
-                    175,10
+    DEFPUSHBUTTON   "OK",IDOK,30,25,50,14,NOT WS_VISIBLE
+    PUSHBUTTON      "Cancel",IDCANCEL,110,20,50,14,NOT WS_VISIBLE
+    CONTROL         "Progress1",IDC_PRGR,"msctls_progress32",WS_BORDER,5,5,
+                    300,10
+    CONTROL         "Progress1",IDC_PRGR2,"msctls_progress32",WS_BORDER,5,35,
+                    300,10
+    LTEXT           "",IDC_LBL_SLIDER2,5,45,300,10,WS_BORDER
+    LTEXT           "",IDC_LBL_SLIDER1,5,15,300,10,WS_BORDER
+    PUSHBUTTON      "Отмена",IDC_BTN_STOP_LOAD,310,5,50,50
+END
+
+IDD_DLG_SELECT_MC_VER DIALOG DISCARDABLE  0, 0, 186, 121
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Выбор версии программы микроконтроллера"
+FONT 8, "MS Sans Serif"
+BEGIN
+    CONTROL         "3.1.8",IDC_RAD_318,"Button",BS_AUTORADIOBUTTON | 
+                    WS_DISABLED | WS_GROUP,5,40,175,10
+    CONTROL         "3.1.9",IDC_RAD_319,"Button",BS_AUTORADIOBUTTON | 
+                    WS_DISABLED,5,55,175,10
+    CONTROL         "3.2.2",IDC_RAD_322,"Button",BS_AUTORADIOBUTTON | 
+                    WS_DISABLED,5,70,175,10
+    CONTROL         "3.2.3",IDC_RAD_323,"Button",BS_AUTORADIOBUTTON,5,85,175,
+                    10
+    DEFPUSHBUTTON   "OK",IDOK,15,100,50,14
+    PUSHBUTTON      "Отмена",IDCANCEL,125,100,50,14
+    LTEXT           "Не удалось автоматически определить версию ПО микроконтроллера.\n\nУкажите версию:",
+                    IDC_STATIC,5,5,175,35
 END
 
 
@@ -504,8 +526,8 @@ END
 //
 
 VS_VERSION_INFO VERSIONINFO
- FILEVERSION 5,1,2,0
- PRODUCTVERSION 5,1,2,0
+ FILEVERSION 5,2,0,0
+ PRODUCTVERSION 5,2,0,0
  FILEFLAGSMASK 0x3fL
 #ifdef _DEBUG
  FILEFLAGS 0x1L
@@ -522,15 +544,15 @@ BEGIN
         BEGIN
             VALUE "Comments", "\0"
             VALUE "CompanyName", "\0"
-            VALUE "FileDescription", "T39_M3А(1,2) просмотрщик записанных данных\0"
-            VALUE "FileVersion", "5, 1, 2, 0\0"
+            VALUE "FileDescription", "T39_M3 просмотрщик записанных данных\0"
+            VALUE "FileVersion", "5, 2, 0, 0\0"
             VALUE "InternalName", "t7_slg_pc_viewer\0"
-            VALUE "LegalCopyright", "Copyright (C) 2009-2017\0"
+            VALUE "LegalCopyright", "Copyright (C) 2009-2015\0"
             VALUE "LegalTrademarks", "\0"
-            VALUE "OriginalFilename", "t7_slg_pc_viewer_5120\0"
+            VALUE "OriginalFilename", "slg2.EXE\0"
             VALUE "PrivateBuild", "\0"
-            VALUE "ProductName", "Т39-М3А(1,2). Просмотр измерений.\0"
-            VALUE "ProductVersion", "5, 1, 2, 0\0"
+            VALUE "ProductName", "Т39-М3. Просмотр измерений.\0"
+            VALUE "ProductVersion", "5, 2, 0, 0\0"
             VALUE "SpecialBuild", "\0"
         END
     END
@@ -610,9 +632,17 @@ BEGIN
     IDD_OPEN_MEAS_DLG, DIALOG
     BEGIN
         LEFTMARGIN, 7
+        RIGHTMARGIN, 355
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 55
+    END
+
+    IDD_DLG_SELECT_MC_VER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
         RIGHTMARGIN, 179
         TOPMARGIN, 7
-        BOTTOMMARGIN, 24
+        BOTTOMMARGIN, 114
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -1867,7 +1897,7 @@ END
 STRINGTABLE PRELOAD DISCARDABLE 
 BEGIN
     IDR_MAINFRAME           "slg2\n\nSlg2\n\n\nSlg2.Document\nSlg2 Document"
-    IDS_SOFTWARE_VERSION    "5.1.2.0"
+    IDS_SOFTWARE_VERSION    "5.2.0.0"
 END
 
 STRINGTABLE PRELOAD DISCARDABLE 

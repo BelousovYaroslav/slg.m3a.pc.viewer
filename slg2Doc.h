@@ -85,7 +85,7 @@ public:
   double m_d_t3_min,   m_d_t3_mean,		m_d_t3_max,		m_d_t3_rms;
 	double m_d_tsa_min,	 m_d_tsa_mean,	m_d_tsa_max,	m_d_tsa_rms;
 
-	long nDataFileLines;
+	long m_nDataFileLines;
 };
 
 /////////////////////////////////////////////////////////////////////////////

@@ -50,7 +50,7 @@ CSlg2Doc::CSlg2Doc()
 
 	m_strCurrentFileName.Empty();
 
-	nDataFileLines = 0;
+	m_nDataFileLines = 0;
 	m_nStatFileVersion = 0;
 
 	m_bShowCursors = false;
@@ -114,25 +114,37 @@ BOOL CSlg2Doc::OnOpenDocument(LPCTSTR lpszPathName)
 {
 	m_strCurrentFileName = lpszPathName;
 
-	COpenMeasDlg *dlg;
-	dlg = new COpenMeasDlg();
+  if (!CDocument::OnOpenDocument(lpszPathName)) {
+    //delete dlg;
+    return FALSE;
+  }
+
+  COpenMeasDlg dlg;
+  dlg.m_strOpenFilePathName = lpszPathName;
+  dlg.DoModal();
+	
+  /*
+  COpenMeasDlg *dlg;
+  dlg = new COpenMeasDlg();
 	dlg->Create( IDD_OPEN_MEAS_DLG, NULL);
 	dlg->ShowWindow( SW_SHOW);
 	dlg->CenterWindow();
+  */
 
-	if (!CDocument::OnOpenDocument(lpszPathName)) {
-		delete dlg;
-		return FALSE;
-	}
+  /*
+  
 	
-	nDataFileLines = 0;
-	ReadDataFile( m_strCurrentFileName, dlg);
-	
+	m_nDataFileLines = 0;
+	//ReadDataFile( m_strCurrentFileName, dlg);
+	*/
+
 	POSITION pos = GetFirstViewPosition();
 	(( CMainView* ) GetNextView( pos))->SetRefreshTimer();
-  
+
+  /*  
 	dlg->EndDialog( 0);
 	delete dlg;
+  */
 
 	return TRUE;
 }
@@ -472,15 +484,15 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 			if( fread( &s3, sizeof( short), 1, fh) < 1)
 				break;
 
-			nDataFileLines++;
-			tsasumm += ( double) s3 / 2607104.;
+			m_nDataFileLines++;
+			tsasumm += ( double) s3 / 32768.;
 			if( tsasumm > 0.1) {
 				m_dn100m++;
 				tsasumm = 0.;
 			}
 
 			if( dlg != NULL)
-				if( !( nDataFileLines % 100))
+				if( !( m_nDataFileLines % 100))
 					dlg->m_ctlProgress2.SetPos( ftell( fh));
 
 			if( feof( fh))
@@ -601,11 +613,10 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 				f1 = 0;
 			}
 
-			double p_phi = ( d1 / 2147483647. * 99310.) * ((CSlg2App *) AfxGetApp())->m_dKimpSec / 4.;
+      CString strTmp;
 
-      //время считаем исходя из рассчётов
-      //ФАПЧ (1273, а не 1275 как в мануале) * 32768 (кварц, проверено осцилографом) / 16 делитель
-			double p_tsa = s3 / 2607104.;
+			double p_phi = ( d1 / 2147483647. * 99310.) * ((CSlg2App *) AfxGetApp())->m_dKimpSec / 4.;
+			double p_tsa = s3 / 32768.;
 			switch( s1 & 0x7F) {
 				case 0: temp1 += ( unsigned short) s2; n_temp1_s++; break;	//Temp1
 				case 1: temp2 += ( unsigned short) s2; n_temp2_s++; break;	//Temp2
@@ -626,14 +637,34 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 				case 12: ( ( CSlg2App *) AfxGetApp())->m_shFlashI2min = s2; break; //flashParamI2min
 	      case 13: ( ( CSlg2App *) AfxGetApp())->m_shFlashAmplAng1min = s2; break; //flashParamAmplAngMin1
 		    case 14: ( ( CSlg2App *) AfxGetApp())->m_shFlashDecCoeff = s2; /*fprintf( fh_test_needs, _T("%.4f\n"), ( double) s2 / 65535.);*/ break; //коэффициент вычета
-			  case 15: ( ( CSlg2App *) AfxGetApp())->m_shFlashSa = s2; break; //flashParamSAtime          
+			  
+        //case 15: ( ( CSlg2App *) AfxGetApp())->m_shFlashSa = s2; break; //flashParamSAtime
+          
 				case 16: //software version
 					( ( CSlg2App *) AfxGetApp())->m_strSoftwareVer.Format( _T("%d.%d.%d.%d"),
 							( s2 & 0x00F0) >> 4,
 							( s2 & 0x000F),
 							( s2 & 0xF000) >> 12,
-							( s2 & 0x0F00) >> 8);	
+							( s2 & 0x0F00) >> 8);
+          
+          
+          /*
+          strTmp.Format( "0x%x\n%d.%d.%d.%d", s2,
+              ( s2 & 0x00F0) >> 4,
+							( s2 & 0x000F),
+							( s2 & 0xF000) >> 12,
+							( s2 & 0x0F00) >> 8);
+          
+          AfxMessageBox(strTmp);
+          */
+
 				break;
+
+        /*
+        case 25:
+					 ( ( CSlg2App *) AfxGetApp())->m_shPhaseShift = nCur1;
+			  break; //фазовый сдвиг
+        */
 			}
 
 			tsa += p_tsa;			n_tsa_s++;
@@ -757,7 +788,7 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 			float f1, f2;
 			int i1, i2, i3;
 			fscanf(fh, "%f\t%f\t%d\t%d\t%d\n", &f1, &f2, &i1, &i2, &i3);
-			nDataFileLines++;
+			m_nDataFileLines++;
 			tsasumm += ( double) i3 / 32768.;
 			if( tsasumm > 0.1) {
 				m_dn100m++;
@@ -765,7 +796,7 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 			}
 
 			if( dlg != NULL)
-				if( !( nDataFileLines % 100))
+				if( !( m_nDataFileLines % 100))
 					dlg->m_ctlProgress2.SetPos( ftell( fh));
 
 			if( feof( fh))

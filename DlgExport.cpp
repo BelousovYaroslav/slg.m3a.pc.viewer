@@ -193,8 +193,8 @@ void CDlgExport::OnOK()
 		if( !m_nTmean) {
 			if( m_bChkTimeSA) fprintf( fhOut, _T("%-12.4f"), dGlobalTime);
 			if( m_bChkRotAngle) fprintf( fhOut, _T("%-12.4f"), w_Summ);
-			if( m_bChkI1) fprintf( fhOut, _T("%-12.4f"), i1_Summ / i1_Counter / 4096. * 3. / 3.973);
-			if( m_bChkI2) fprintf( fhOut, _T("%-12.4f"), i2_Summ / i2_Counter / 4096. * 3. / 3.973);
+			if( m_bChkI1) fprintf( fhOut, _T("%-12.4f"), ( 2.5 - i1_Summ / i1_Counter / 4096. * 3.) / 2.5); //i1_Summ / i1_Counter / 4096. * 3. / 3.973);
+			if( m_bChkI2) fprintf( fhOut, _T("%-12.4f"), ( 2.5 - i2_Summ / i2_Counter / 4096. * 3.) / 2.5); //i2_Summ / i2_Counter / 4096. * 3. / 3.973);
 			if( m_bChkVpp) fprintf( fhOut, _T("%-12.4f"), (( vpc_Summ / vpc_Counter / 4096. * 3.) - 2.048) * 100.);
 			if( m_bChkAA) fprintf( fhOut, _T("%-12.4f"), ( aa_Summ / aa_Counter / 4096. * 3.) / 0.5);
 			
@@ -234,10 +234,10 @@ void CDlgExport::OnOK()
 			if( m_bChkRotAngle) fprintf( fhOut, _T("%-12.4f"), w_Summ / tsa_Summ);
 			
       if( m_bChkI1)
-        fprintf( fhOut, _T("%-12.4f"), i1_Summ / i1_Counter / 4096. * 3. / 3.973);
+        fprintf( fhOut, _T("%-12.4f"), ( 2.5 - i1_Summ / i1_Counter / 4096. * 3.) / 2.5); //i1_Summ / i1_Counter / 4096. * 3. / 3.973);
 			
       if( m_bChkI2)
-        fprintf( fhOut, _T("%-12.4f"), i2_Summ / i2_Counter / 4096. * 3. / 3.973);
+        fprintf( fhOut, _T("%-12.4f"), ( 2.5 - i2_Summ / i2_Counter / 4096. * 3.) / 2.5); //i2_Summ / i2_Counter / 4096. * 3. / 3.973);
 
 			if( m_bChkVpp)
         fprintf( fhOut, _T("%-12.4f"), (( vpc_Summ / vpc_Counter / 4096. * 3.) - 2.048) * 100.);

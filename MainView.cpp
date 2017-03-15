@@ -732,6 +732,7 @@ void CMainView::RefreshGraphs()
 		case 2: m_ctlSmallGraph1.PlotXY( line_w10s, true); break;
 		case 3: m_ctlSmallGraph1.PlotXY( line_w100s, true); break;
 	}
+
 	m_ctlSmallGraph2.PlotXY( line_i1, true);
 	m_ctlSmallGraph3.PlotXY( line_i2, true);
 	m_ctlSmallGraph4.PlotXY( line_vpc, true);
@@ -1233,7 +1234,7 @@ void CMainView::OnHistogram()
 void CMainView::OnAlanCurve() 
 {
 	/*CDlgAlanCurve dlg;
-	dlg.m_nDataFileLines = ((CSlg2Doc *) GetDocument())->nDataFileLines;
+	dlg.m_nDataFileLines = ((CSlg2Doc *) GetDocument())->m_nDataFileLines;
 	dlg.m_strFileName = ((CSlg2Doc *) GetDocument())->m_strCurrentFileName;
 	dlg.DoModal();*/
 }
@@ -1241,7 +1242,7 @@ void CMainView::OnAlanCurve()
 void CMainView::OnBtnExport() 
 {
 	CDlgExport dlg;
-	dlg.m_nDataFileLines = ((CSlg2Doc *) GetDocument())->nDataFileLines;
+	dlg.m_nDataFileLines = ((CSlg2Doc *) GetDocument())->m_nDataFileLines;
 	dlg.m_strFileName = ((CSlg2Doc *) GetDocument())->m_strCurrentFileName;
 	dlg.m_nStatFileVersion = ((CSlg2Doc *) GetDocument())->m_nStatFileVersion;
 	dlg.DoModal();

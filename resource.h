@@ -15,6 +15,7 @@
 #define IDD_OPEN_MEAS_DLG               140
 #define IDI_RED                         141
 #define IDI_BLUE                        142
+#define IDD_DLG_SELECT_MC_VER           143
 #define IDC_GRAPH1                      1000
 #define IDC_GRAPH2                      1001
 #define IDC_CMB_COM                     1001
@@ -201,10 +202,17 @@
 #define IDC_NO_MEANING                  1187
 #define IDC_RAD_T1_TD1                  1189
 #define IDC_RAD_T1_TD2                  1190
+#define IDC_LBL_SLIDER2                 1190
 #define IDC_RAD_T1_TD3                  1191
+#define IDC_LBL_SLIDER1                 1191
 #define IDC_RAD_T2_TD1                  1192
+#define IDC_BTN_STOP_LOAD               1192
 #define IDC_RAD_T2_TD2                  1193
+#define IDC_RAD_318                     1193
 #define IDC_RAD_T2_TD3                  1194
+#define IDC_RAD_319                     1194
+#define IDC_RAD_323                     1195
+#define IDC_RAD_322                     1196
 #define ID_START                        32771
 #define ID_HISTOGRAM                    32772
 #define ID_ALAN_CURVE                   32773
@@ -217,9 +225,9 @@
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_3D_CONTROLS                     1
-#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_RESOURCE_VALUE        144
 #define _APS_NEXT_COMMAND_VALUE         32778
-#define _APS_NEXT_CONTROL_VALUE         1190
+#define _APS_NEXT_CONTROL_VALUE         1194
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

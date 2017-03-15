@@ -14,6 +14,11 @@ class COpenMeasDlg : public CDialog
 {
 // Construction
 public:
+  long m_dn100m;
+  int m_nVersionMajor;
+  int m_nVersionMiddle;
+  int m_nVersionMinor;
+	CString m_strOpenFilePathName;
 	COpenMeasDlg(CWnd* pParent = NULL);   // standard constructor
 
 // Dialog Data
@@ -29,6 +34,7 @@ public:
 	//{{AFX_VIRTUAL(COpenMeasDlg)
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
+	virtual LRESULT WindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 	//}}AFX_VIRTUAL
 
 // Implementation
@@ -36,9 +42,19 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(COpenMeasDlg)
-		// NOTE: the ClassWizard will add member functions here
+	virtual BOOL OnInitDialog();
+	afx_msg void OnTimer(UINT nIDEvent);
+	afx_msg void OnBtnStopLoad();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
+  long m_lFileLen;
+  long m_lFilePos;
+  long m_lPacks;
+  int m_nMarkerFails;
+  int m_nCounterFails;
+  int m_nCheckSummFails;
+  long m_lTimeMillis;
 };
 
 //{{AFX_INSERT_LOCATION}}
