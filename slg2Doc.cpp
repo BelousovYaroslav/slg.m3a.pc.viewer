@@ -457,8 +457,8 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 	}
 	if( dlg != NULL) {
 		fseek( fh, 0, SEEK_END);
-		dlg->m_ctlProgress.SetRange32( 0, ftell( fh));
-		dlg->m_ctlProgress.SetPos( 0);
+		dlg->m_ctlProgress1.SetRange32( 0, ftell( fh));
+		dlg->m_ctlProgress1.SetPos( 0);
 		dlg->m_ctlProgress2.SetRange32( 0, ftell( fh));
 		dlg->m_ctlProgress2.SetPos( 0);
 	}
@@ -771,7 +771,7 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 
 			if( dlg != NULL)
 				if( !( n100m % 50))
-					dlg->m_ctlProgress.SetPos( ftell( fh));
+					dlg->m_ctlProgress1.SetPos( ftell( fh));
 
 			if( feof( fh))
 				break;
@@ -1039,7 +1039,7 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 
 			if( dlg != NULL)
 				if( !( n100m % 50))
-					dlg->m_ctlProgress.SetPos( ftell( fh));
+					dlg->m_ctlProgress1.SetPos( ftell( fh));
 
 			if( feof( fh))
 				break;

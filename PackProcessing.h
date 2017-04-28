@@ -42,7 +42,10 @@ public:
   int m_nAnParam;
   double m_dblAnParamValue;
 
-  int ProcessPack_323( void);
+  int ProcessPack_4_1_7( void);
+  int ProcessPack_4_2_0( void);
+  int ProcessPack_3_2_3( void);
+  int ProcessPack_3_2_5( void);
 
   BOOL m_bVeracity;
   BOOL m_bLockBit;

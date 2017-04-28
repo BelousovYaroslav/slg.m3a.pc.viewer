@@ -20,27 +20,32 @@ static char THIS_FILE[] = __FILE__;
 #endif
 
 #define WM_SET_FILELEN      ( WM_USER + 1)
-#define WM_SET_FILEPOS      ( WM_USER + 2)
+#define WM_SET_FILEPOS1     ( WM_USER + 2)
 #define WM_SET_MF           ( WM_USER + 3)
 #define WM_SET_CF           ( WM_USER + 4)
 #define WM_SET_CSF          ( WM_USER + 5)
 #define WM_SET_PACKS        ( WM_USER + 6)
 #define WM_SET_MC_VERSION   ( WM_USER + 7)
-#define WM_SET_TIME         ( WM_USER + 8)
+//#define WM_SET_TIME         ( WM_USER + 8)
 #define WM_SET_FILEPOS2     ( WM_USER + 9)
+#define WM_SET_FILEPOS0     ( WM_USER + 10)
+#define WM_SET_STEP1INFO    ( WM_USER + 11)
 
-#define TIMER_REFRESH_VALUES1 1001
-#define TIMER_REFRESH_VALUES2 1002
+#define TIMER_REFRESH_VALUES0 1001
+#define TIMER_REFRESH_VALUES1 1002
+#define TIMER_REFRESH_VALUES2 1003
 
 /////////////////////////////////////////////////////////////////////////////
-// Поток определения числа посылок в файле
-BOOL gl_bLoadFile1ThreadWork;
-BOOL gl_bStopLoadThread1;
+// ПОТОК 0
+// Поток определения версии прошивки прибора
+BOOL gl_bLoadFile0ThreadWork;
+BOOL gl_bStopLoadThread0;
 
-DWORD WINAPI LoadFile1Thread(LPVOID lparam)
+DWORD WINAPI LoadFile0Thread(LPVOID lparam)
 {
-  gl_bStopLoadThread1 = FALSE;
-  gl_bLoadFile1ThreadWork = TRUE;
+  gl_bStopLoadThread0 = FALSE;
+  gl_bLoadFile0ThreadWork = TRUE;
+
   COpenMeasDlg *pParent = ( COpenMeasDlg *) lparam;
   //открываем файл измрения
   FILE *fh = fopen( pParent->m_strOpenFilePathName, _T("rb"));
@@ -75,7 +80,7 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
     bool bMarkerFailOnce = true;
     do {
 
-      if( gl_bStopLoadThread1 == TRUE)
+      if( gl_bStopLoadThread0 == TRUE)
         break;
 
       switch( nMarkerCounter) {
@@ -117,14 +122,14 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
       }
       
       lPos = ftell( fh);
-      pParent->SendMessage( WM_SET_FILEPOS, 0, lPos);
+      pParent->SendMessage( WM_SET_FILEPOS0, 0, lPos);
 
     } while( feof( fh) == 0 && nMarkerCounter != 2);
 
     if( feof( fh) != 0)
       break;
 
-    if( gl_bStopLoadThread1 == TRUE)
+    if( gl_bStopLoadThread0 == TRUE)
       break;
 
     //ПРИРАЩЕНИЕ УГЛА: 4 байта
@@ -182,13 +187,9 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
       pParent->SendMessage( WM_SET_PACKS, 0, lPacks);
 
 
-      lTimeMillis += ( long) (
-                    ( ( double) ( bt11 * 16 + bt10))
-                                  / 32768. * 1000.);      
-      pParent->SendMessage( WM_SET_TIME, 0, lTimeMillis);
-      
       if( bt7 == 43) {//VERSION) {
         pParent->SendMessage( WM_SET_MC_VERSION, bt8, bt9);
+        break;
       }
 
       if( btPrevPackCounter == 500) {
@@ -205,6 +206,245 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
       }
     }
 
+  } while( feof( fh) == 0 && gl_bStopLoadThread0 == FALSE);
+
+  fclose( fh);
+  gl_bLoadFile0ThreadWork = FALSE;
+
+  return 0;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+// ПОТОК 1
+// Поток определения числа посылок (временной длительности) файла измерения
+BOOL gl_bLoadFile1ThreadWork;
+BOOL gl_bStopLoadThread1;
+struct Step1Info {
+  long lPacks;
+  int nMarkerFails;
+  int nCheckSummFails;
+  int nCounterFails;  
+  double dblTime;
+  long lDeviceId;
+  char cSyncAsyncUnknown;
+  char cHaveRegimedNdU;
+  char bSignCoeff;
+  double dblDecCoeffMin;
+  double dblDecCoeffMax;
+  double dblDecCoeffMean;
+  int nDecCoeffData;
+} gl_InfoStep1;
+
+DWORD WINAPI LoadFile1Thread(LPVOID lparam)
+{
+  gl_bStopLoadThread1 = FALSE;
+  gl_bLoadFile1ThreadWork = TRUE;
+  COpenMeasDlg *pParent = ( COpenMeasDlg *) lparam;
+  //открываем файл измрения
+  FILE *fh = fopen( pParent->m_strOpenFilePathName, _T("rb"));
+  
+  /*
+  //перематываем файл измерения в его конец
+  fseek( fh, 0, SEEK_END);
+  
+  //узнаём длину, и передаём её в окно прогресса
+  long lLen = ftell( fh);
+  //SendMessage( pParent->m_hWnd, WM_SET_FILELEN, 0, lLen);
+
+  //перематываем файл в начало
+  fseek( fh, 0, SEEK_SET);
+  */
+
+  int btPrevPackCounter = 500;
+  
+  gl_InfoStep1.nMarkerFails = 0;
+  gl_InfoStep1.nCheckSummFails = 0;
+  gl_InfoStep1.nCounterFails = 0;
+  gl_InfoStep1.lPacks = 0;
+  gl_InfoStep1.dblTime = 0.;
+  gl_InfoStep1.lDeviceId = 0;
+  gl_InfoStep1.cSyncAsyncUnknown = 0;   //0 - unknown; 1-sync;            2-async;
+  gl_InfoStep1.cHaveRegimedNdU = 0;     //0 - unknown; 1-have such data;  2-dont have it;
+  gl_InfoStep1.bSignCoeff = 0;          //0 - unknown; 1- +1;             2- -1;
+  gl_InfoStep1.dblDecCoeffMin = 1.e6;
+  gl_InfoStep1.dblDecCoeffMax = -1.e6;
+  gl_InfoStep1.dblDecCoeffMean = 0.;
+  gl_InfoStep1.nDecCoeffData = 0;
+
+  //поехали
+  do {
+
+    unsigned char bt1, bt2, bt3, bt4, bt5, bt6, bt7, bt8, bt9, bt10, bt11, bt12, bt13, bt14;
+    unsigned char btCheckSumm;
+
+    long lPos;
+
+    //выискиваем последовательность маркера 0x55, 0xAA
+    int nMarkerCounter = 0;
+    bool bMarkerFailOnce = true;
+    do {
+
+      if( gl_bStopLoadThread1 == TRUE)
+        break;
+
+      switch( nMarkerCounter) {
+        case 0:
+          bt1 = fgetc( fh);
+          if( bt1 == 0x55)
+            nMarkerCounter = 1;
+          else {
+            if( feof( fh) == 0) {
+              if( bMarkerFailOnce) {
+                gl_InfoStep1.nMarkerFails++;
+                pParent->SendMessage( WM_SET_STEP1INFO, 0, reinterpret_cast <LPARAM> ( &gl_InfoStep1));
+                bMarkerFailOnce = false;
+              }
+            }
+          }
+        break;
+
+        case 1:
+          bt2 = fgetc( fh);
+          if( bt2 == 0xAA) {
+            nMarkerCounter = 2;
+          }
+          else {
+            nMarkerCounter = 0;
+
+            if( feof( fh) == 0) {
+              if( bMarkerFailOnce) {
+                gl_InfoStep1.nMarkerFails++;
+                pParent->SendMessage( WM_SET_STEP1INFO, 0, reinterpret_cast <LPARAM> ( &gl_InfoStep1));
+                bMarkerFailOnce = false;
+              }
+            }
+          }
+        break;
+      }
+      
+      lPos = ftell( fh);
+      pParent->SendMessage( WM_SET_FILEPOS1, 0, lPos);
+
+    } while( feof( fh) == 0 && nMarkerCounter != 2);
+
+    if( feof( fh) != 0)
+      break;
+
+    if( gl_bStopLoadThread1 == TRUE)
+      break;
+
+    //ПРИРАЩЕНИЕ УГЛА: 4 байта
+    bt3 = fgetc( fh);
+    bt4 = fgetc( fh);
+    bt5 = fgetc( fh);
+    bt6 = fgetc( fh);
+
+    //НОМЕР ЧЕРЕДУЮЩЕГОСЯ (ТЕХНОЛОГИЧЕСКОГО, АНАЛОГОВОГО) ПАРАМЕТРА. 1 байт
+    bt7 = fgetc( fh);
+
+    //ЗНАЧЕНИЕ ТЕХНОЛОГИЧЕСКОГО (АНАЛОГОВОГО) ПАРАМЕТРА. 2 Байта
+    bt8 = fgetc( fh);
+    bt9 = fgetc( fh);
+
+    //SA TIMING.
+    //ИНТЕРВАЛ ВРЕМЕНИ МЕЖДУ ТЕКУЩИМ И ПРЕДЫДУЩИМ МОМЕНТАМИ ФИКСАЦИИ ПАРАМЕТРОВ. 2 БАЙТА
+    bt10 = fgetc( fh);
+    bt11 = fgetc( fh);
+
+    //ПОРЯДКОВЫЙ НОМЕР СООБЩЕНИЯ. 1 БАЙТ
+    bt12 = fgetc( fh);
+
+    //EMERGENCY CODE
+    //КОД ОШИБКИ. 1 БАЙТ
+    bt13 = fgetc( fh);
+
+    //CHEKSUMM
+    //КОНТРОЛЬНАЯ СУММА, CS. 1 байт
+    bt14 = fgetc( fh);
+
+    if( feof( fh) != 0)
+      break;
+
+    
+    //РАЗБОР ПАЧКИ
+    CPackProcessing pack;
+        
+    pack.bt3 = bt3;
+    pack.bt4 = bt4;
+    pack.bt5 = bt5;
+    pack.bt6 = bt6;
+
+    pack.bt7 = bt7;
+
+    pack.bt8 = bt8;
+    pack.bt9 = bt9;
+
+    pack.bt10 = bt10;
+    pack.bt11 = bt11;
+
+    pack.bt12 = bt12;
+
+    pack.bt13 = bt13;
+    
+    //Обсчитаем пачку (время мы получим в любом случае, поэтому нефиг смотреть на возвратное значение)
+    int nVer = (pParent->m_nVersionMajor << 16) + (pParent->m_nVersionMiddle << 8) + pParent->m_nVersionMinor;
+    switch( nVer) {
+      case 0x030205: pack.ProcessPack_3_2_5(); break;
+
+      case 0x040107: pack.ProcessPack_4_1_7(); break;
+      case 0x040200: pack.ProcessPack_4_2_0(); break;
+      default:    pack.ProcessPack_3_2_3();
+    }
+
+    //ПРОВЕРКА КОНТРОЛЬНОЙ СУММЫ
+    btCheckSumm  = bt3;
+    btCheckSumm += bt4;
+    btCheckSumm += bt5;
+    btCheckSumm += bt6;
+    btCheckSumm += bt7;
+    btCheckSumm += bt8;
+    btCheckSumm += bt9;
+    btCheckSumm += bt10;
+    btCheckSumm += bt11;
+    btCheckSumm += bt12;
+    btCheckSumm += bt13;
+
+    if( ( btCheckSumm % 256) != bt14) {
+      if( feof( fh) == 0) {
+        gl_InfoStep1.nCheckSummFails++;
+        pParent->SendMessage( WM_SET_STEP1INFO, 0, reinterpret_cast <LPARAM> ( &gl_InfoStep1));
+      }
+    }
+    else {
+      //ЕСЛИ С ПАЧКОЙ ВСЁ ХОРОШО
+      
+      //плюсуем количество пачек
+      gl_InfoStep1.lPacks++;
+      
+      //суммируем время такта
+      gl_InfoStep1.dblTime += pack.m_dblTime;
+
+      
+      
+
+
+      //ПРОВЕРКА СЧЁТЧИКА ПОСЫЛОК
+      if( btPrevPackCounter == 500) {
+        btPrevPackCounter = bt12;
+      }
+      else {
+        if( ( ( btPrevPackCounter + 1) % 256) != bt12) {
+          if( feof( fh) == 0) {
+            gl_InfoStep1.nCounterFails++;
+            
+          }
+        }
+        btPrevPackCounter = bt12;
+      }
+
+      pParent->SendMessage( WM_SET_STEP1INFO, 0, reinterpret_cast <LPARAM> ( &gl_InfoStep1));
+    }
+
   } while( feof( fh) == 0 && gl_bStopLoadThread1 == FALSE);
 
   fclose( fh);
@@ -215,10 +455,12 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
 
 
 /////////////////////////////////////////////////////////////////////////////
-// Поток загрузки файла
+// ПОТОК 2
+// Поток загрузки данных из файла
 BOOL gl_bLoadFile2ThreadWork;
 BOOL gl_bStopLoadThread2;
 
+double gl_dblTime;
 DWORD WINAPI LoadFile2Thread(LPVOID lparam)
 {
   gl_bStopLoadThread2 = FALSE;
@@ -238,7 +480,8 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
   int nCheckSummFails = 0;
   int nCounterFails = 0;
   int btPrevPackCounter = 500;
-  long lTimeMillis = 0.;
+  
+  gl_dblTime = 0.;
 
 
   double w100m = 0., t100m = 0.;
@@ -379,6 +622,36 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
     if( feof( fh) != 0)
       break;
 
+    //РАЗБОР ПАЧКИ
+    CPackProcessing pack;
+        
+    pack.bt3 = bt3;
+    pack.bt4 = bt4;
+    pack.bt5 = bt5;
+    pack.bt6 = bt6;
+
+    pack.bt7 = bt7;
+
+    pack.bt8 = bt8;
+    pack.bt9 = bt9;
+
+    pack.bt10 = bt10;
+    pack.bt11 = bt11;
+
+    pack.bt12 = bt12;
+
+    pack.bt13 = bt13;
+
+    //Обсчитаем пачку (время мы получим в любом случае, поэтому нефиг смотреть на возвратное значение)
+    int nVer = pParent->m_nVersionMajor * 65536 + pParent->m_nVersionMiddle * 256 + pParent->m_nVersionMinor;
+    switch( nVer) {
+      case 0x030205: pack.ProcessPack_3_2_5(); break;
+      case 0x040107: pack.ProcessPack_4_1_7(); break;
+      case 0x040200: pack.ProcessPack_4_2_0(); break;
+      default:    pack.ProcessPack_3_2_3();
+    }
+
+    //ПРОВЕРКА ЧЕКСУММЫ
     btCheckSumm  = bt3;
     btCheckSumm += bt4;
     btCheckSumm += bt5;
@@ -402,15 +675,11 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       pParent->SendMessage( WM_SET_PACKS, 0, lPacks);
 
 
-      lTimeMillis += ( long) (
-                    ( ( double) ( bt11 * 16 + bt10))
-                                  / 32768. * 1000.);      
-      pParent->SendMessage( WM_SET_TIME, 0, lTimeMillis);
-      
-      if( bt7 == 43) {//VERSION) {
-        pParent->SendMessage( WM_SET_MC_VERSION, bt8, bt9);
-      }
+      gl_dblTime += pack.m_dblTime;
+      //pParent->SendMessage( WM_SET_TIME, 0, 0);
 
+
+      //ПРОВЕРКА РАВНОМЕРНОСТИ СЧЁТЧИКА ПОСЫЛОК
       if( btPrevPackCounter == 500) {
         btPrevPackCounter = bt12;
       }
@@ -424,32 +693,8 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
         btPrevPackCounter = bt12;
       }
 
-      //РАЗБОР ПАЧКИ
-      CPackProcessing pack;
-        
-      pack.bt3 = bt3;
-      pack.bt4 = bt4;
-      pack.bt5 = bt5;
-      pack.bt6 = bt6;
-
-      pack.bt7 = bt7;
-
-      pack.bt8 = bt8;
-      pack.bt9 = bt9;
-
-      pack.bt10 = bt10;
-      pack.bt11 = bt11;
-
-      pack.bt12 = bt12;
-
-      pack.bt13 = bt13;
-        
-      //pack.m_dblDecCoeff = ;
-
-      //if( pParent->m_nVersionMajor == 3 && pParent->m_nVersionMiddle == 2 && pParent->m_nVersionMinor == 3) {
-        pack.ProcessPack_323();
-      //}
-
+      
+      //ОБСЧЁТ ПАРАМЕТРОВ ИЗ ПОСЫЛКИ
       tsa += pack.m_dblTime;    n_tsa_s++;
 
       double dblPhi_ang = pack.m_dblPhi;
@@ -583,7 +828,6 @@ COpenMeasDlg::COpenMeasDlg(CWnd* pParent /*=NULL*/)
 	: CDialog(COpenMeasDlg::IDD, pParent)
 {
 	//{{AFX_DATA_INIT(COpenMeasDlg)
-		// NOTE: the ClassWizard will add member initialization here
 	//}}AFX_DATA_INIT
 }
 
@@ -592,8 +836,9 @@ void COpenMeasDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(COpenMeasDlg)
+	DDX_Control(pDX, IDC_PRGR0, m_ctlProgress0);
 	DDX_Control(pDX, IDC_PRGR2, m_ctlProgress2);
-	DDX_Control(pDX, IDC_PRGR, m_ctlProgress);
+	DDX_Control(pDX, IDC_PRGR1, m_ctlProgress1);
 	//}}AFX_DATA_MAP
 }
 
@@ -614,7 +859,7 @@ BOOL COpenMeasDlg::OnInitDialog()
 
   //ЗАПУСК ПОТОКА ДЛЯ ОБРАБОТКИ ДАННЫХ
   DWORD id2;
-  HANDLE hthread2 = ::CreateThread( 0, 0, &LoadFile1Thread, this, 0, &id2);
+  HANDLE hthread2 = ::CreateThread( 0, 0, &LoadFile0Thread, this, 0, &id2);
 
   m_lPacks = 0;
   m_nMarkerFails = 0;
@@ -625,7 +870,7 @@ BOOL COpenMeasDlg::OnInitDialog()
   m_nVersionMiddle = -1;
   m_nVersionMinor = -1;
 
-  SetTimer( TIMER_REFRESH_VALUES1, 1000, NULL);
+  SetTimer( TIMER_REFRESH_VALUES0, 100, NULL);
 
   return TRUE;  // return TRUE unless you set the focus to a control
                 // EXCEPTION: OCX Property Pages should return FALSE
@@ -637,12 +882,17 @@ LRESULT COpenMeasDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
   switch( message) {
     case WM_SET_FILELEN:
       m_lFileLen = lParam;
-      m_ctlProgress.SetRange32( 0, m_lFileLen);
+      m_ctlProgress0.SetRange32( 0, m_lFileLen);
+      m_ctlProgress1.SetRange32( 0, m_lFileLen);
       m_ctlProgress2.SetRange32( 0, m_lFileLen);
     break;
-    case WM_SET_FILEPOS:
+    case WM_SET_FILEPOS0:
       m_lFilePos = lParam;
-      m_ctlProgress.SetPos( m_lFilePos);
+      m_ctlProgress0.SetPos( m_lFilePos);
+    break;
+    case WM_SET_FILEPOS1:
+      m_lFilePos = lParam;
+      m_ctlProgress1.SetPos( m_lFilePos);
     break;
     case WM_SET_FILEPOS2:
       m_lFilePos = lParam;
@@ -660,14 +910,24 @@ LRESULT COpenMeasDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
     case WM_SET_PACKS:
       m_lPacks = lParam;
     break;
-    case WM_SET_TIME:
-      m_lTimeMillis = lParam;
-    break;
+    //case WM_SET_TIME: {
+    //  m_dblTime += dblAddTime;
+    //}
+    //break;
     case WM_SET_MC_VERSION:
       m_nVersionMajor =  wParam / 16;  //major
       m_nVersionMiddle = wParam % 16;	//middle
       m_nVersionMinor =  lParam / 16;	//minor
       theApp.m_strSoftwareVer.Format( "%d.%d.%d", m_nVersionMajor, m_nVersionMiddle, m_nVersionMinor);
+    break;
+    case WM_SET_STEP1INFO: {
+      Step1Info *pStep1Info = reinterpret_cast <Step1Info *>(lParam);
+      CString str, strToAdd;
+      str.Format( "lPacks=%ld\n", pStep1Info->lPacks);
+      strToAdd.Format( "Time=");
+
+      GetDlgItem( IDC_LBL_SLIDER1)->SetWindowText( str);
+    }
     break;
   }
 
@@ -679,33 +939,20 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
   CString strTmp;
 
   switch( nIDEvent) {
-    case TIMER_REFRESH_VALUES1: {
-      int nHou = ( int) ( m_lTimeMillis / 1000. / 60. / 60.);
-      int nMin = (( int) ( m_lTimeMillis / 1000. / 60) % 60);
-      int nSec = (( int) (( m_lTimeMillis / 1000) % 60) % 60);
-      int nMsec = ( int) ( m_lTimeMillis % 1000);
+    case TIMER_REFRESH_VALUES0: {
+      if( m_nVersionMajor == -1 || m_nVersionMiddle == -1 || m_nVersionMinor == -1)
+        strTmp.Format( "Определение версии прошивки прибора");
+      else
+        strTmp.Format( "Прибор с прошивкой версии: %x.%x.%x", m_nVersionMajor, m_nVersionMiddle, m_nVersionMinor);
 
-      if( m_nVersionMajor == -1 || m_nVersionMiddle == -1 || m_nVersionMinor == -1) {
-        strTmp.Format( "PACKS: %ld   TIME: %02d:%02d:%02d.%03d   MF: %d   CF: %d   CSF: %d   MC_VERSION: unknown",
-                m_lPacks,
-                nHou, nMin, nSec, nMsec,
-                m_nMarkerFails, m_nCounterFails, m_nCheckSummFails);
-      }
-      else {
-        strTmp.Format( "PACKS: %ld   TIME: %02d:%02d:%02d.%03d   MF: %d   CF: %d   CSF: %d   MC_VERSION: %x.%x.%x",
-                m_lPacks,
-                nHou, nMin, nSec, nMsec,
-                m_nMarkerFails, m_nCounterFails, m_nCheckSummFails,
-                m_nVersionMajor, m_nVersionMiddle, m_nVersionMinor);
-      }
-      GetDlgItem( IDC_LBL_SLIDER1)->SetWindowText( strTmp);
+      GetDlgItem( IDC_LBL_SLIDER0)->SetWindowText( strTmp);
 
-      if( gl_bLoadFile1ThreadWork == FALSE) {
-        //закончил работу поток первого прохода
 
-        KillTimer( TIMER_REFRESH_VALUES1);
+      if( gl_bLoadFile0ThreadWork == FALSE) {
+        //закончил работу поток определения версии МК
+        KillTimer( TIMER_REFRESH_VALUES0);
 
-        if( gl_bStopLoadThread1 == TRUE) {
+        if( gl_bStopLoadThread0 == TRUE) {
           //его прервали - выходим по CANCEL
           OnCancel();
         }
@@ -717,8 +964,9 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
             //если мы не смогли автоматичсеки определить версию ПО микроконтроллера - попросим указать её вручную
             CDlgSelectMcVer dlg;
             if( dlg.DoModal() != IDOK) {
-              SetTimer( TIMER_REFRESH_VALUES2, 1000, NULL);
-              break;
+              OnCancel();
+              //SetTimer( TIMER_REFRESH_VALUES2, 1000, NULL);
+              //break;
             }
 
             switch( dlg.m_nRadSelect) {
@@ -731,18 +979,75 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
               case 2: //3.2.2
                 m_nVersionMajor = 3; m_nVersionMiddle = 2; m_nVersionMinor = 2;
               break;
-
-              default: //3.2.3
+              case 3: //3.2.3
                 m_nVersionMajor = 3; m_nVersionMiddle = 2; m_nVersionMinor = 3;
+              break;
+              case 4: //3.2.4
+                m_nVersionMajor = 3; m_nVersionMiddle = 2; m_nVersionMinor = 4;
+              break;
+              case 5: //3.2.5
+                m_nVersionMajor = 3; m_nVersionMiddle = 2; m_nVersionMinor = 5;
+              break;
+
+              case 6: //4.1.17
+                m_nVersionMajor = 4; m_nVersionMiddle = 1; m_nVersionMinor = 17;
+              break;
+              case 7: //4.2.0
+                m_nVersionMajor = 4; m_nVersionMiddle = 2; m_nVersionMinor = 0;
               break;
             }
           }
           //версия ПО микроконтроллера известна
 
+          //начинаем пробежку для определения временной длительности файла
+          DWORD id2;
+          HANDLE hthread2 = ::CreateThread( 0, 0, &LoadFile1Thread, this, 0, &id2);
+          
+          SetTimer( TIMER_REFRESH_VALUES1, 1000, NULL);
+        }
+      }
+
+    }
+    break;
+
+    case TIMER_REFRESH_VALUES1: {
+      double rest = gl_dblTime;
+      
+      int nHou = ( int) ( floor( rest / 60. / 60.));
+      rest = rest - nHou * 3600;
+      
+      int nMin = ( int) ( floor( rest / 60));
+      rest = rest - nMin * 60;
+
+      int nSec = ( int) ( floor( rest));
+      rest = rest - nSec;
+
+      int nMsec = ( int) ( floor( rest * 1000.));
+
+      strTmp.Format( "PACKS: %ld   TIME: %02d:%02d:%02d.%03d   MF: %d   CF: %d   CSF: %d",
+                m_lPacks,
+                nHou, nMin, nSec, nMsec,
+                m_nMarkerFails, m_nCounterFails, m_nCheckSummFails);
+      
+      GetDlgItem( IDC_LBL_SLIDER1)->SetWindowText( strTmp);
+
+      if( gl_bLoadFile1ThreadWork == FALSE) {
+        //закончил работу поток определение временной длительности файла измерения
+
+        KillTimer( TIMER_REFRESH_VALUES1);
+
+        if( gl_bStopLoadThread1 == TRUE) {
+          //его прервали - выходим по CANCEL
+          OnCancel();
+        }
+        else {
+          
+          //он закончил работу сам!
+          
           //заказываем массивы под точки
           CMainFrame *pFrm = ( CMainFrame *) AfxGetApp()->GetMainWnd();
           CMainView *pView = ( CMainView *) pFrm->GetActiveView();
-          CSlg2Doc *pDoc = (CSlg2Doc *) pView->GetDocument();
+          CSlg2Doc *pDoc =   ( CSlg2Doc *) pView->GetDocument();
           
           //высвобождаем если что либо заказано (что-то было открыто)
 		      if( pDoc->m_dx100m != NULL) { delete pDoc->m_dx100m;  pDoc->m_dx100m = NULL;}
@@ -770,8 +1075,8 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
 		      if( pDoc->m_dx_tsa != NULL) { delete pDoc->m_dx_tsa;  pDoc->m_dx_tsa = NULL;}
 		      if( pDoc->m_dy_tsa != NULL) { delete pDoc->m_dy_tsa;  pDoc->m_dy_tsa = NULL;}
 	 
-          m_dn100m = m_lTimeMillis / 10;
-          long dn100m = m_lTimeMillis / 10;
+          m_dn100m = ( long) ( ceil( gl_dblTime * 10));
+          long dn100m = ( long) ( ceil( gl_dblTime * 10));
 
 		      //заказываем память под измерения
 		      pDoc->m_dx100m =  new double[ dn100m];
@@ -810,24 +1115,25 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
     break;
 
     case TIMER_REFRESH_VALUES2:
-      int nHou = ( int) ( m_lTimeMillis / 1000. / 60. / 60.);
-      int nMin = (( int) ( m_lTimeMillis / 1000. / 60) % 60);
-      int nSec = (( int) (( m_lTimeMillis / 1000) % 60) % 60);
-      int nMsec = ( int) ( m_lTimeMillis % 1000);
+      double rest = gl_dblTime;
 
-      if( m_nVersionMajor == -1 || m_nVersionMiddle == -1 || m_nVersionMinor == -1) {
-        strTmp.Format( "PACKS: %ld   TIME: %02d:%02d:%02d.%03d   MF: %d   CF: %d   CSF: %d   MC_VERSION: unknown",
+      int nHou = ( int) ( floor( rest / 60. / 60.));
+      rest = rest - nHou * 3600;
+      
+      int nMin = ( int) ( floor( rest / 60));
+      rest = rest - nMin * 60;
+
+      int nSec = ( int) ( floor( rest));
+      rest = rest - nSec;
+
+      int nMsec = ( int) ( floor( rest * 1000.));
+
+
+      strTmp.Format( "PACKS: %ld   TIME: %02d:%02d:%02d.%03d   MF: %d   CF: %d   CSF: %d",
                 m_lPacks,
                 nHou, nMin, nSec, nMsec,
                 m_nMarkerFails, m_nCounterFails, m_nCheckSummFails);
-      }
-      else {
-        strTmp.Format( "PACKS: %ld   TIME: %02d:%02d:%02d.%03d   MF: %d   CF: %d   CSF: %d   MC_VERSION: %x.%x.%x",
-                m_lPacks,
-                nHou, nMin, nSec, nMsec,
-                m_nMarkerFails, m_nCounterFails, m_nCheckSummFails,
-                m_nVersionMajor, m_nVersionMiddle, m_nVersionMinor);
-      }
+      
       GetDlgItem( IDC_LBL_SLIDER2)->SetWindowText( strTmp);
 
       if( gl_bLoadFile2ThreadWork == FALSE) {

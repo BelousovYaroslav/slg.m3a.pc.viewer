@@ -24,8 +24,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(COpenMeasDlg)
 	enum { IDD = IDD_OPEN_MEAS_DLG };
+	CProgressCtrl	m_ctlProgress0;
+	CProgressCtrl	m_ctlProgress1;
 	CProgressCtrl	m_ctlProgress2;
-	CProgressCtrl	m_ctlProgress;
 	//}}AFX_DATA
 
 
@@ -54,7 +55,6 @@ private:
   int m_nMarkerFails;
   int m_nCounterFails;
   int m_nCheckSummFails;
-  long m_lTimeMillis;
 };
 
 //{{AFX_INSERT_LOCATION}}

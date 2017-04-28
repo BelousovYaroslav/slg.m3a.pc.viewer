@@ -49,6 +49,8 @@ extern CSlgNewAverager gl_avTsa100000;
 extern double gl_pTsa;
 extern double gl_pTSamean;
 
+extern CSlg2App theApp;
+
 /////////////////////////////////////////////////////////////////////////////
 // CMainView
 
@@ -113,8 +115,6 @@ CMainView::CMainView()
 	m_strCur1Y_val = _T("");
 	m_strCur2X_val = _T("");
 	m_strCur2Y_val = _T("");
-	m_nRadT2 = 0;
-	m_nRadT1 = 1;
 	//}}AFX_DATA_INIT
 	m_nCounterSkippedPoints = 0;
 	b1stPointSkipped = false;	
@@ -189,7 +189,7 @@ void CMainView::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_PARAM7_VAL, m_strParam7Val);
 	DDX_Text(pDX, IDC_PARAM8_VAL, m_strParam8Val);
 	DDX_Text(pDX, IDC_PARAM9_VAL, m_strParam9Val);
-	DDX_Radio(pDX, IDC_RAD_MEANING1, m_nTMeaningInd);
+	DDX_Radio(pDX, IDC_RAD_MEANING5, m_nTMeaningInd);
 	DDX_Text(pDX, IDC_EDT_K_IMP_SEC, m_dKimpSec);
 	DDX_Text(pDX, IDC_SOFTWARE_VERSION, m_strSoftwareVersion);
 	DDX_Text(pDX, IDC_THIS_SOFTWARE_VERSION, m_strThisSoftwareVersion);
@@ -199,8 +199,6 @@ void CMainView::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_LBL_CURSOR1_Y_VAL, m_strCur1Y_val);
 	DDX_Text(pDX, IDC_LBL_CURSOR2_X_VAL, m_strCur2X_val);
 	DDX_Text(pDX, IDC_LBL_CURSOR2_Y_VAL, m_strCur2Y_val);
-	DDX_Radio(pDX, IDC_RAD_T2_TD1, m_nRadT2);
-	DDX_Radio(pDX, IDC_RAD_T1_TD1, m_nRadT1);
 	//}}AFX_DATA_MAP
 }
 
@@ -229,6 +227,7 @@ BEGIN_MESSAGE_MAP(CMainView, CFormView)
 	ON_BN_CLICKED(IDC_RAD_T2_TD1, OnRadT2Td1)
 	ON_BN_CLICKED(IDC_RAD_T2_TD2, OnRadT2Td2)
 	ON_BN_CLICKED(IDC_RAD_T2_TD3, OnRadT2Td3)
+	ON_BN_CLICKED(IDC_RAD_MEANING5, OnRadMeaning5)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -259,50 +258,82 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 
 	if( m_ctlSmallGraph1.m_hWnd) {
 		m_ctlSmallGraph1.GetWindowRect( &rc);
-		m_ctlSmallGraph1.SetWindowPos( NULL, 0, 50, nGrWidth - 2, rc.Height(), SWP_NOZORDER);
+		m_ctlSmallGraph1.SetWindowPos( NULL, 0, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH1_T0)->SetWindowPos( NULL, nGrWidth * 1 - 21, 60, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH1_T1)->SetWindowPos( NULL, nGrWidth * 1 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH1_T2)->SetWindowPos( NULL, nGrWidth * 1 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH1_T3)->SetWindowPos( NULL, nGrWidth * 1 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH1_T4)->SetWindowPos( NULL, nGrWidth * 1 - 21, 120, 20, 12, SWP_NOZORDER);
 	}
 	
 	if( m_ctlSmallGraph2.m_hWnd) {
 		m_ctlSmallGraph2.GetWindowRect( &rc);
-		m_ctlSmallGraph2.SetWindowPos( NULL, nGrWidth, 50, nGrWidth - 2, rc.Height(), SWP_NOZORDER);
+		m_ctlSmallGraph2.SetWindowPos( NULL, nGrWidth, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH2_T0)->SetWindowPos( NULL, nGrWidth * 2 - 21, 60, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH2_T1)->SetWindowPos( NULL, nGrWidth * 2 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH2_T2)->SetWindowPos( NULL, nGrWidth * 2 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH2_T3)->SetWindowPos( NULL, nGrWidth * 2 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH2_T4)->SetWindowPos( NULL, nGrWidth * 2 - 21, 120, 20, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph3.m_hWnd) {
 		m_ctlSmallGraph3.GetWindowRect( &rc);
-		m_ctlSmallGraph3.SetWindowPos( NULL, nGrWidth * 2, 50, nGrWidth - 2, rc.Height(), SWP_NOZORDER);
+		m_ctlSmallGraph3.SetWindowPos( NULL, nGrWidth * 2, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH3_T0)->SetWindowPos( NULL, nGrWidth * 3 - 21, 60, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH3_T1)->SetWindowPos( NULL, nGrWidth * 3 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH3_T2)->SetWindowPos( NULL, nGrWidth * 3 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH3_T3)->SetWindowPos( NULL, nGrWidth * 3 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH3_T4)->SetWindowPos( NULL, nGrWidth * 3 - 21, 120, 20, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph4.m_hWnd) {
 		m_ctlSmallGraph4.GetWindowRect( &rc);
-		m_ctlSmallGraph4.SetWindowPos( NULL, nGrWidth * 3, 50, nGrWidth - 2, rc.Height(), SWP_NOZORDER);
+		m_ctlSmallGraph4.SetWindowPos( NULL, nGrWidth * 3, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH4_T0)->SetWindowPos( NULL, nGrWidth * 4 - 21, 60, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH4_T1)->SetWindowPos( NULL, nGrWidth * 4 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH4_T2)->SetWindowPos( NULL, nGrWidth * 4 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH4_T3)->SetWindowPos( NULL, nGrWidth * 4 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH4_T4)->SetWindowPos( NULL, nGrWidth * 4 - 21, 120, 20, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph5.m_hWnd) {
 		m_ctlSmallGraph5.GetWindowRect( &rc);
-		m_ctlSmallGraph5.SetWindowPos( NULL, nGrWidth * 4, 50, nGrWidth - 2, rc.Height(), SWP_NOZORDER);
+		m_ctlSmallGraph5.SetWindowPos( NULL, nGrWidth * 4, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH5_T0)->SetWindowPos( NULL, nGrWidth * 5 - 21, 60, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH5_T1)->SetWindowPos( NULL, nGrWidth * 5 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH5_T2)->SetWindowPos( NULL, nGrWidth * 5 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH5_T3)->SetWindowPos( NULL, nGrWidth * 5 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH5_T4)->SetWindowPos( NULL, nGrWidth * 5 - 21, 120, 20, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph6.m_hWnd) {
 		m_ctlSmallGraph6.GetWindowRect( &rc);
 		m_ctlSmallGraph6.SetWindowPos( NULL, nGrWidth * 5, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-
-    GetDlgItem( IDC_RAD_T1_TD1)->SetWindowPos( NULL, nGrWidth * 6 - 21, 70, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_T1_TD2)->SetWindowPos( NULL, nGrWidth * 6 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_T1_TD3)->SetWindowPos( NULL, nGrWidth * 6 - 21, 110, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH6_T0)->SetWindowPos( NULL, nGrWidth * 6 - 21, 60, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH6_T1)->SetWindowPos( NULL, nGrWidth * 6 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH6_T2)->SetWindowPos( NULL, nGrWidth * 6 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH6_T3)->SetWindowPos( NULL, nGrWidth * 6 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH6_T4)->SetWindowPos( NULL, nGrWidth * 6 - 21, 120, 20, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph7.m_hWnd) {
 		m_ctlSmallGraph7.GetWindowRect( &rc);
 		m_ctlSmallGraph7.SetWindowPos( NULL, nGrWidth * 6, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-
-    GetDlgItem( IDC_RAD_T2_TD1)->SetWindowPos( NULL, nGrWidth * 7 - 21, 70, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_T2_TD2)->SetWindowPos( NULL, nGrWidth * 7 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_T2_TD3)->SetWindowPos( NULL, nGrWidth * 7 - 21, 110, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH7_T0)->SetWindowPos( NULL, nGrWidth * 7 - 21, 60, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH7_T1)->SetWindowPos( NULL, nGrWidth * 7 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH7_T2)->SetWindowPos( NULL, nGrWidth * 7 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH7_T3)->SetWindowPos( NULL, nGrWidth * 7 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH7_T4)->SetWindowPos( NULL, nGrWidth * 7 - 21, 120, 20, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph8.m_hWnd) {
 		m_ctlSmallGraph8.GetWindowRect( &rc);
-		m_ctlSmallGraph8.SetWindowPos( NULL, nGrWidth * 7, 50, nGrWidth - 2, rc.Height(), SWP_NOZORDER);
+		m_ctlSmallGraph8.SetWindowPos( NULL, nGrWidth * 7, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH8_T0)->SetWindowPos( NULL, nGrWidth * 8 - 21, 60, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH8_T1)->SetWindowPos( NULL, nGrWidth * 8 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH8_T2)->SetWindowPos( NULL, nGrWidth * 8 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH8_T3)->SetWindowPos( NULL, nGrWidth * 8 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_GRAPH8_T4)->SetWindowPos( NULL, nGrWidth * 8 - 21, 120, 20, 12, SWP_NOZORDER);
 	}
 
 	int base = 50 + rc.Height();
@@ -738,17 +769,19 @@ void CMainView::RefreshGraphs()
 	m_ctlSmallGraph4.PlotXY( line_vpc, true);
 	m_ctlSmallGraph5.PlotXY( line_aa, true);
 	
-  switch( m_nRadT1) {
-    case 0: m_ctlSmallGraph6.PlotXY( line_t1, true); break;
-    case 1: m_ctlSmallGraph6.PlotXY( line_t2, true); break;
-    case 2: m_ctlSmallGraph6.PlotXY( line_t3, true); break;
-  }
+  m_ctlSmallGraph6.PlotXY( line_t1, true);
+  //switch( m_nRadT1) {
+  //  case 0: m_ctlSmallGraph6.PlotXY( line_t1, true); break;
+  //  case 1: m_ctlSmallGraph6.PlotXY( line_t2, true); break;
+  //  case 2: m_ctlSmallGraph6.PlotXY( line_t3, true); break;
+  //}
 	
-  switch( m_nRadT2) {
-    case 0: m_ctlSmallGraph7.PlotXY( line_t1, true); break;
-    case 1: m_ctlSmallGraph7.PlotXY( line_t2, true); break;
-    case 2: m_ctlSmallGraph7.PlotXY( line_t3, true); break;
-  }
+  m_ctlSmallGraph7.PlotXY( line_t2, true);
+  //switch( m_nRadT2) {
+  //  case 0: m_ctlSmallGraph7.PlotXY( line_t1, true); break;
+  //  case 1: m_ctlSmallGraph7.PlotXY( line_t2, true); break;
+  //  case 2: m_ctlSmallGraph7.PlotXY( line_t3, true); break;
+  //}
 
 	m_ctlSmallGraph8.PlotXY( line_tsa, true);
 
@@ -831,7 +864,13 @@ void CMainView::RefreshGraphs()
 		case 6:
 			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 0, 0, 127));
 			
-      switch( m_nRadT1) {
+      m_ctlMainGraph.PlotXY( line_t1, true);
+      m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_t1_min);
+			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_t1_mean);
+			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_t1_max);
+			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_t1_rms);
+
+      /*switch( m_nRadT1) {
         case 0:
           m_ctlMainGraph.PlotXY( line_t1, true);
           m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_t1_min);
@@ -853,12 +892,19 @@ void CMainView::RefreshGraphs()
 			    m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_t3_max);
 			    m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_t3_rms);
         break;
-      }
+      }*/
 		break;
 
 		case 7:
 			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 0, 127, 0));
 			
+      m_ctlMainGraph.PlotXY( line_t2, true);
+      m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_t2_min);
+			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_t2_mean);
+			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_t2_max);
+			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_t2_rms);
+
+      /*
       switch( m_nRadT2) {
         case 0:
           m_ctlMainGraph.PlotXY( line_t1, true);
@@ -882,6 +928,7 @@ void CMainView::RefreshGraphs()
 			    m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_t3_rms);
         break;
       }
+      */
 		break;
 
 		case 8:
@@ -949,6 +996,12 @@ void CMainView::RefreshGraphs()
 	m_strSmGr5_max.Format( _T("%.4f"), doc->m_d_aa_max);
 	m_strSmGr5_rms.Format( _T("%.4f"), doc->m_d_aa_rms);
 	
+  m_strSmGr6_min.Format( _T("%.4f"), doc->m_d_t1_min);
+	m_strSmGr6_mean.Format( _T("%.4f"), doc->m_d_t1_mean);
+	m_strSmGr6_max.Format( _T("%.4f"), doc->m_d_t1_max);
+	m_strSmGr6_rms.Format( _T("%.4f"), doc->m_d_t1_rms);
+
+  /*
   switch( m_nRadT1) {
     case 0:
       m_strSmGr6_min.Format( _T("%.4f"), doc->m_d_t1_min);
@@ -968,9 +1021,14 @@ void CMainView::RefreshGraphs()
 	    m_strSmGr6_max.Format( _T("%.4f"), doc->m_d_t3_max);
 	    m_strSmGr6_rms.Format( _T("%.4f"), doc->m_d_t3_rms);
     break;
-  }
+  }*/
 	
-	switch( m_nRadT2) {
+  m_strSmGr7_min.Format( _T("%.4f"), doc->m_d_t2_min);
+	m_strSmGr7_mean.Format( _T("%.4f"), doc->m_d_t2_mean);
+	m_strSmGr7_max.Format( _T("%.4f"), doc->m_d_t2_max);
+	m_strSmGr7_rms.Format( _T("%.4f"), doc->m_d_t2_rms);
+	/*
+  switch( m_nRadT2) {
     case 0:
       m_strSmGr7_min.Format( _T("%.4f"), doc->m_d_t1_min);
 	    m_strSmGr7_mean.Format( _T("%.4f"), doc->m_d_t1_mean);
@@ -990,6 +1048,7 @@ void CMainView::RefreshGraphs()
 	    m_strSmGr7_rms.Format( _T("%.4f"), doc->m_d_t3_rms);
     break;
   }
+  */
 	
 	m_strSmGr8_min.Format( _T("%.4f"), doc->m_d_tsa_min);
 	m_strSmGr8_mean.Format( _T("%.4f"), doc->m_d_tsa_mean);
@@ -1003,7 +1062,8 @@ void CMainView::RefreshGraphs()
 
 void CMainView::OnInitialUpdate() 
 {
-	m_dKimpSec = (( CSlg2App *) AfxGetApp())->m_dKimpSec;
+  m_dlgGraphSetup = NULL;
+	m_dKimpSec = theApp.m_dKimpSec;
 
 	m_nMainGraph = 1;
 	CFormView::OnInitialUpdate();	
@@ -1122,6 +1182,14 @@ BEGIN_EVENTSINK_MAP(CMainView, CFormView)
 	ON_EVENT(CMainView, IDC_GRAPH7, -600 /* Click */, OnClickGraph7, VTS_NONE)
 	ON_EVENT(CMainView, IDC_GRAPH8, -600 /* Click */, OnClickGraph8, VTS_NONE)
 	ON_EVENT(CMainView, IDC_MAIN_GRAPH, 1 /* CursorChange */, OnCursorChangeMainGraph, VTS_PI4 VTS_PVARIANT VTS_PVARIANT VTS_PBOOL)
+	ON_EVENT(CMainView, IDC_GRAPH1, -607 /* MouseUp */, OnMouseUpGraph1, VTS_I2 VTS_I2 VTS_I4 VTS_I4)
+	ON_EVENT(CMainView, IDC_GRAPH2, -607 /* MouseUp */, OnMouseUpGraph2, VTS_I2 VTS_I2 VTS_I4 VTS_I4)
+	ON_EVENT(CMainView, IDC_GRAPH3, -607 /* MouseUp */, OnMouseUpGraph3, VTS_I2 VTS_I2 VTS_I4 VTS_I4)
+	ON_EVENT(CMainView, IDC_GRAPH4, -607 /* MouseUp */, OnMouseUpGraph4, VTS_I2 VTS_I2 VTS_I4 VTS_I4)
+	ON_EVENT(CMainView, IDC_GRAPH5, -607 /* MouseUp */, OnMouseUpGraph5, VTS_I2 VTS_I2 VTS_I4 VTS_I4)
+	ON_EVENT(CMainView, IDC_GRAPH6, -607 /* MouseUp */, OnMouseUpGraph6, VTS_I2 VTS_I2 VTS_I4 VTS_I4)
+	ON_EVENT(CMainView, IDC_GRAPH7, -607 /* MouseUp */, OnMouseUpGraph7, VTS_I2 VTS_I2 VTS_I4 VTS_I4)
+	ON_EVENT(CMainView, IDC_GRAPH8, -607 /* MouseUp */, OnMouseUpGraph8, VTS_I2 VTS_I2 VTS_I4 VTS_I4)
 	//}}AFX_EVENTSINK_MAP
 END_EVENTSINK_MAP()
 
@@ -1273,6 +1341,11 @@ void CMainView::OnRadMeaning100sec()
 	SetRefreshTimer();
 }
 
+void CMainView::OnRadMeaning5() 
+{
+	SetRefreshTimer();
+}
+
 void CMainView::OnUpdateZoomin(CCmdUI* pCmdUI) 
 {
 	pCmdUI->Enable( !( ( CSlg2Doc *)GetDocument())->m_strCurrentFileName.IsEmpty()
@@ -1398,3 +1471,108 @@ void CMainView::OnRadT2Td3()
 	m_ctlSmallGraph7.SetCaption( _T("Термодатчик 3 [Корпус], [°C]"));
   SetRefreshTimer( 100);
 }
+void CMainView::OnMouseUpGraph1(short Button, short Shift, long x, long y) 
+{
+	if( Button == MK_RBUTTON) {
+    if( m_dlgGraphSetup == NULL) {
+      m_dlgGraphSetup = new CDlgGraphSetup( this);
+      m_dlgGraphSetup->Create( IDD_GRAPH_SETUP, this);
+    }
+
+    m_dlgGraphSetup->Init( 0);
+    m_dlgGraphSetup->ShowWindow( SW_SHOW);
+  }
+}
+
+void CMainView::OnMouseUpGraph2(short Button, short Shift, long x, long y) 
+{
+	if( Button == MK_RBUTTON) {
+    if( m_dlgGraphSetup == NULL) {
+      m_dlgGraphSetup = new CDlgGraphSetup( this);
+      m_dlgGraphSetup->Create( IDD_GRAPH_SETUP, this);
+    }
+
+    m_dlgGraphSetup->Init( 1);
+    m_dlgGraphSetup->ShowWindow( SW_SHOW);
+  }
+}
+
+void CMainView::OnMouseUpGraph3(short Button, short Shift, long x, long y) 
+{
+	if( Button == MK_RBUTTON) {
+    if( m_dlgGraphSetup == NULL) {
+      m_dlgGraphSetup = new CDlgGraphSetup( this);
+      m_dlgGraphSetup->Create( IDD_GRAPH_SETUP, this);
+    }
+
+    m_dlgGraphSetup->Init( 2);
+    m_dlgGraphSetup->ShowWindow( SW_SHOW);
+  }
+}
+
+void CMainView::OnMouseUpGraph4(short Button, short Shift, long x, long y) 
+{
+	if( Button == MK_RBUTTON) {
+    if( m_dlgGraphSetup == NULL) {
+      m_dlgGraphSetup = new CDlgGraphSetup( this);
+      m_dlgGraphSetup->Create( IDD_GRAPH_SETUP, this);
+    }
+
+    m_dlgGraphSetup->Init( 3);
+    m_dlgGraphSetup->ShowWindow( SW_SHOW);
+  }
+}
+
+void CMainView::OnMouseUpGraph5(short Button, short Shift, long x, long y) 
+{
+  if( Button == MK_RBUTTON) {
+    if( m_dlgGraphSetup == NULL) {
+      m_dlgGraphSetup = new CDlgGraphSetup( this);
+      m_dlgGraphSetup->Create( IDD_GRAPH_SETUP, this);
+    }
+
+    m_dlgGraphSetup->Init( 4);
+    m_dlgGraphSetup->ShowWindow( SW_SHOW);
+  }
+}
+
+void CMainView::OnMouseUpGraph6(short Button, short Shift, long x, long y) 
+{
+  if( Button == MK_RBUTTON) {
+    if( m_dlgGraphSetup == NULL) {
+      m_dlgGraphSetup = new CDlgGraphSetup( this);
+      m_dlgGraphSetup->Create( IDD_GRAPH_SETUP, this);
+    }
+
+    m_dlgGraphSetup->Init( 5);
+    m_dlgGraphSetup->ShowWindow( SW_SHOW);
+  }
+}
+
+void CMainView::OnMouseUpGraph7(short Button, short Shift, long x, long y) 
+{
+  if( Button == MK_RBUTTON) {
+    if( m_dlgGraphSetup == NULL) {
+      m_dlgGraphSetup = new CDlgGraphSetup( this);
+      m_dlgGraphSetup->Create( IDD_GRAPH_SETUP, this);
+    }
+
+    m_dlgGraphSetup->Init( 6);
+    m_dlgGraphSetup->ShowWindow( SW_SHOW);
+  }	
+}
+
+void CMainView::OnMouseUpGraph8(short Button, short Shift, long x, long y) 
+{
+	if( Button == MK_RBUTTON) {
+    if( m_dlgGraphSetup == NULL) {
+      m_dlgGraphSetup = new CDlgGraphSetup( this);
+      m_dlgGraphSetup->Create( IDD_GRAPH_SETUP, this);
+    }
+
+    m_dlgGraphSetup->Init( 7);
+    m_dlgGraphSetup->ShowWindow( SW_SHOW);
+  }	
+}
+
+

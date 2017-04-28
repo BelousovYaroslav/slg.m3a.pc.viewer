@@ -15,9 +15,7 @@
 #include "resource.h"       // main symbols
 //#include "Serial.h"
 
-#include "SlgCircleBuffer.h"
-
-
+#include "settings.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CSlg2App:
@@ -27,6 +25,8 @@
 class CSlg2App : public CWinApp
 {
 public:
+  //CLogger * GetLogger() { return &m_pLogger;}
+  CSettings *GetSettings() { return &m_pSettings;}
 	CString m_strSoftwareVer;
 	double m_dKimpSec;
 	CSlg2App();
@@ -54,6 +54,9 @@ public:
 		//    DO NOT EDIT what you see in these blocks of generated code !
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
+  CSettings m_pSettings;
+  //CLogger m_pLogger;
 };
 
 

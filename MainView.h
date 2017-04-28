@@ -3,6 +3,7 @@
 #include "NiButton.h"
 #include "NiNumEdit.h"
 //}}AFX_INCLUDES
+
 #if !defined(AFX_MAINVIEW_H__4133504C_1A2D_4A65_89A5_A033461F952F__INCLUDED_)
 #define AFX_MAINVIEW_H__4133504C_1A2D_4A65_89A5_A033461F952F__INCLUDED_
 
@@ -14,6 +15,8 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // CMainView form view
+
+#include "DlgGraphSetup.h"
 
 #ifndef __AFXEXT_H__
 #include <afxext.h>
@@ -93,8 +96,6 @@ public:
 	CString	m_strCur1Y_val;
 	CString	m_strCur2X_val;
 	CString	m_strCur2Y_val;
-	int		m_nRadT2;
-	int		m_nRadT1;
 	//}}AFX_DATA
 
 // Attributes
@@ -158,17 +159,26 @@ protected:
 	afx_msg void OnRadT2Td1();
 	afx_msg void OnRadT2Td2();
 	afx_msg void OnRadT2Td3();
+	afx_msg void OnMouseUpGraph1(short Button, short Shift, long x, long y);
+	afx_msg void OnMouseUpGraph2(short Button, short Shift, long x, long y);
+	afx_msg void OnMouseUpGraph3(short Button, short Shift, long x, long y);
+	afx_msg void OnMouseUpGraph4(short Button, short Shift, long x, long y);
+	afx_msg void OnMouseUpGraph5(short Button, short Shift, long x, long y);
+	afx_msg void OnMouseUpGraph6(short Button, short Shift, long x, long y);
+	afx_msg void OnMouseUpGraph7(short Button, short Shift, long x, long y);
+	afx_msg void OnMouseUpGraph8(short Button, short Shift, long x, long y);
+	afx_msg void OnRadMeaning5();
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
-	HANDLE hMutex;
 	bool m_bEmergencyCodeApperance;
 	int m_nCounterSkippedPoints;
 	bool b1stPointSkipped;
 	CFont m_pFont;
 	int m_nMainGraph;
 	void RefreshGraphs( void);
+  CDlgGraphSetup *m_dlgGraphSetup;
 };
 
 /////////////////////////////////////////////////////////////////////////////
