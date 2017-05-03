@@ -77,15 +77,6 @@ public:
 	CString	m_strSmGr8_mean;
 	CString	m_strSmGr8_min;
 	CString	m_strSmGr8_rms;
-	CString	m_strParam1Val;
-	CString	m_strParam2Val;
-	CString	m_strParam3Val;
-	CString	m_strParam4Val;
-	CString	m_strParam5Val;
-	CString	m_strParam6Val;
-	CString	m_strParam7Val;
-	CString	m_strParam8Val;
-	CString	m_strParam9Val;
 	int		m_nTMeaningInd;
 	double	m_dKimpSec;
 	CString	m_strSoftwareVersion;
@@ -96,6 +87,14 @@ public:
 	CString	m_strCur1Y_val;
 	CString	m_strCur2X_val;
 	CString	m_strCur2Y_val;
+	int		m_nRadMeaningGraph1;
+	int		m_nRadMeaningGraph2;
+	int		m_nRadMeaningGraph3;
+	int		m_nRadMeaningGraph4;
+	int		m_nRadMeaningGraph5;
+	int		m_nRadMeaningGraph6;
+	int		m_nRadMeaningGraph7;
+	int		m_nRadMeaningGraph8;
 	//}}AFX_DATA
 
 // Attributes

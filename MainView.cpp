@@ -6,7 +6,6 @@
 #include "Slg2Doc.h"
 #include "MainView.h"
 #include "MainFrm.h"
-#include "SlgNewAverager.h"
 #include "DlgHisto.h"
 #include "DlgAlanCurve.h"
 #include "DlgExport.h"
@@ -24,30 +23,6 @@ static char THIS_FILE[] = __FILE__;
 #define MY_MAXIMIZE_VIEW_TIMER 1002
 #define MY_REFRESH_VIEW_TIMER 1003
 
-extern BOOL m_bStopThreadFlag;
-extern BOOL m_bStopBigThreadFlag;
-extern int gl_nCircleBufferGet;
-extern int gl_nCircleBufferPut;
-
-extern double gl_dGlobalTime;
-extern CSlgNewAverager gl_avW100;
-extern CSlgNewAverager gl_avW1000;
-extern CSlgNewAverager gl_avW10000;
-extern CSlgNewAverager gl_avW100000;
-extern CSlgNewAverager gl_avI1;
-extern CSlgNewAverager gl_avI2;
-extern CSlgNewAverager gl_avVpc;
-extern CSlgNewAverager gl_avAmplAng;
-extern CSlgNewAverager gl_avT1;
-extern CSlgNewAverager gl_avT2;
-extern CSlgNewAverager gl_avT3;
-extern CSlgNewAverager gl_avTsa;
-extern CSlgNewAverager gl_avTsa1000;
-extern CSlgNewAverager gl_avTsa10000;
-extern CSlgNewAverager gl_avTsa100000;
-
-extern double gl_pTsa;
-extern double gl_pTSamean;
 
 extern CSlg2App theApp;
 
@@ -96,15 +71,6 @@ CMainView::CMainView()
 	m_strSmGr8_mean = _T("");
 	m_strSmGr8_min = _T("");
 	m_strSmGr8_rms = _T("");
-	m_strParam1Val = _T("");
-	m_strParam2Val = _T("");
-	m_strParam3Val = _T("");
-	m_strParam4Val = _T("");
-	m_strParam5Val = _T("");
-	m_strParam6Val = _T("");
-	m_strParam7Val = _T("");
-	m_strParam8Val = _T("");
-	m_strParam9Val = _T("");
 	m_nTMeaningInd = 0;
 	m_dKimpSec = 0.0;
 	m_strSoftwareVersion = _T("");
@@ -115,6 +81,14 @@ CMainView::CMainView()
 	m_strCur1Y_val = _T("");
 	m_strCur2X_val = _T("");
 	m_strCur2Y_val = _T("");
+	m_nRadMeaningGraph1 = 0;
+	m_nRadMeaningGraph2 = 0;
+	m_nRadMeaningGraph3 = 0;
+	m_nRadMeaningGraph4 = 0;
+	m_nRadMeaningGraph5 = 0;
+	m_nRadMeaningGraph6 = 0;
+	m_nRadMeaningGraph7 = 0;
+	m_nRadMeaningGraph8 = 0;
 	//}}AFX_DATA_INIT
 	m_nCounterSkippedPoints = 0;
 	b1stPointSkipped = false;	
@@ -180,15 +154,6 @@ void CMainView::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_GRAPH8_MEANVAL_LABEL, m_strSmGr8_mean);
 	DDX_Text(pDX, IDC_GRAPH8_MINVAL_LABEL, m_strSmGr8_min);
 	DDX_Text(pDX, IDC_GRAPH8_RMSVAL_LABEL, m_strSmGr8_rms);
-	DDX_Text(pDX, IDC_PARAM1_VAL, m_strParam1Val);
-	DDX_Text(pDX, IDC_PARAM2_VAL, m_strParam2Val);
-	DDX_Text(pDX, IDC_PARAM3_VAL, m_strParam3Val);
-	DDX_Text(pDX, IDC_PARAM4_VAL, m_strParam4Val);
-	DDX_Text(pDX, IDC_PARAM5_VAL, m_strParam5Val);
-	DDX_Text(pDX, IDC_PARAM6_VAL, m_strParam6Val);
-	DDX_Text(pDX, IDC_PARAM7_VAL, m_strParam7Val);
-	DDX_Text(pDX, IDC_PARAM8_VAL, m_strParam8Val);
-	DDX_Text(pDX, IDC_PARAM9_VAL, m_strParam9Val);
 	DDX_Radio(pDX, IDC_RAD_MEANING5, m_nTMeaningInd);
 	DDX_Text(pDX, IDC_EDT_K_IMP_SEC, m_dKimpSec);
 	DDX_Text(pDX, IDC_SOFTWARE_VERSION, m_strSoftwareVersion);
@@ -199,6 +164,14 @@ void CMainView::DoDataExchange(CDataExchange* pDX)
 	DDX_Text(pDX, IDC_LBL_CURSOR1_Y_VAL, m_strCur1Y_val);
 	DDX_Text(pDX, IDC_LBL_CURSOR2_X_VAL, m_strCur2X_val);
 	DDX_Text(pDX, IDC_LBL_CURSOR2_Y_VAL, m_strCur2Y_val);
+	DDX_Radio(pDX, IDC_RAD_G1_T0, m_nRadMeaningGraph1);
+	DDX_Radio(pDX, IDC_RAD_G2_T0, m_nRadMeaningGraph2);
+	DDX_Radio(pDX, IDC_RAD_G3_T0, m_nRadMeaningGraph3);
+	DDX_Radio(pDX, IDC_RAD_G4_T0, m_nRadMeaningGraph4);
+	DDX_Radio(pDX, IDC_RAD_G5_T0, m_nRadMeaningGraph5);
+	DDX_Radio(pDX, IDC_RAD_G6_T0, m_nRadMeaningGraph6);
+	DDX_Radio(pDX, IDC_RAD_G7_T0, m_nRadMeaningGraph7);
+	DDX_Radio(pDX, IDC_RAD_G8_T0, m_nRadMeaningGraph8);
 	//}}AFX_DATA_MAP
 }
 
@@ -257,86 +230,102 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 	CRect rc;
 
 	if( m_ctlSmallGraph1.m_hWnd) {
-		m_ctlSmallGraph1.GetWindowRect( &rc);
-		m_ctlSmallGraph1.SetWindowPos( NULL, 0, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH1_T0)->SetWindowPos( NULL, nGrWidth * 1 - 21, 60, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH1_T1)->SetWindowPos( NULL, nGrWidth * 1 - 21, 75, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH1_T2)->SetWindowPos( NULL, nGrWidth * 1 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH1_T3)->SetWindowPos( NULL, nGrWidth * 1 - 21, 105, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH1_T4)->SetWindowPos( NULL, nGrWidth * 1 - 21, 120, 20, 12, SWP_NOZORDER);
+		GetDlgItem( IDC_CMB_GRAPH1_Y)->SetWindowPos( NULL, 0, 50, nGrWidth, 12, SWP_NOZORDER);
+    m_ctlSmallGraph1.GetWindowRect( &rc);
+		m_ctlSmallGraph1.SetWindowPos( NULL, 0, 70, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G1_T0)->SetWindowPos( NULL, nGrWidth * 1 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G1_T1)->SetWindowPos( NULL, nGrWidth * 1 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G1_T2)->SetWindowPos( NULL, nGrWidth * 1 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G1_T3)->SetWindowPos( NULL, nGrWidth * 1 - 21, 120, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G1_T4)->SetWindowPos( NULL, nGrWidth * 1 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_CMB_GRAPH1_X)->SetWindowPos( NULL, 0, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 	
 	if( m_ctlSmallGraph2.m_hWnd) {
+    GetDlgItem( IDC_CMB_GRAPH2_Y)->SetWindowPos( NULL, nGrWidth, 50, nGrWidth, 12, SWP_NOZORDER);
 		m_ctlSmallGraph2.GetWindowRect( &rc);
-		m_ctlSmallGraph2.SetWindowPos( NULL, nGrWidth, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH2_T0)->SetWindowPos( NULL, nGrWidth * 2 - 21, 60, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH2_T1)->SetWindowPos( NULL, nGrWidth * 2 - 21, 75, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH2_T2)->SetWindowPos( NULL, nGrWidth * 2 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH2_T3)->SetWindowPos( NULL, nGrWidth * 2 - 21, 105, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH2_T4)->SetWindowPos( NULL, nGrWidth * 2 - 21, 120, 20, 12, SWP_NOZORDER);
+		m_ctlSmallGraph2.SetWindowPos( NULL, nGrWidth, 70, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G2_T0)->SetWindowPos( NULL, nGrWidth * 2 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G2_T1)->SetWindowPos( NULL, nGrWidth * 2 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G2_T2)->SetWindowPos( NULL, nGrWidth * 2 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G2_T3)->SetWindowPos( NULL, nGrWidth * 2 - 21, 120, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G2_T4)->SetWindowPos( NULL, nGrWidth * 2 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_CMB_GRAPH2_X)->SetWindowPos( NULL, nGrWidth, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph3.m_hWnd) {
+    GetDlgItem( IDC_CMB_GRAPH3_Y)->SetWindowPos( NULL, nGrWidth * 2, 50, nGrWidth, 12, SWP_NOZORDER);
 		m_ctlSmallGraph3.GetWindowRect( &rc);
-		m_ctlSmallGraph3.SetWindowPos( NULL, nGrWidth * 2, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH3_T0)->SetWindowPos( NULL, nGrWidth * 3 - 21, 60, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH3_T1)->SetWindowPos( NULL, nGrWidth * 3 - 21, 75, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH3_T2)->SetWindowPos( NULL, nGrWidth * 3 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH3_T3)->SetWindowPos( NULL, nGrWidth * 3 - 21, 105, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH3_T4)->SetWindowPos( NULL, nGrWidth * 3 - 21, 120, 20, 12, SWP_NOZORDER);
+		m_ctlSmallGraph3.SetWindowPos( NULL, nGrWidth * 2, 70, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G3_T0)->SetWindowPos( NULL, nGrWidth * 3 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G3_T1)->SetWindowPos( NULL, nGrWidth * 3 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G3_T2)->SetWindowPos( NULL, nGrWidth * 3 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G3_T3)->SetWindowPos( NULL, nGrWidth * 3 - 21, 120, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G3_T4)->SetWindowPos( NULL, nGrWidth * 3 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_CMB_GRAPH3_X)->SetWindowPos( NULL, nGrWidth * 2, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph4.m_hWnd) {
+    GetDlgItem( IDC_CMB_GRAPH4_Y)->SetWindowPos( NULL, nGrWidth * 3, 50, nGrWidth, 12, SWP_NOZORDER);
 		m_ctlSmallGraph4.GetWindowRect( &rc);
-		m_ctlSmallGraph4.SetWindowPos( NULL, nGrWidth * 3, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH4_T0)->SetWindowPos( NULL, nGrWidth * 4 - 21, 60, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH4_T1)->SetWindowPos( NULL, nGrWidth * 4 - 21, 75, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH4_T2)->SetWindowPos( NULL, nGrWidth * 4 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH4_T3)->SetWindowPos( NULL, nGrWidth * 4 - 21, 105, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH4_T4)->SetWindowPos( NULL, nGrWidth * 4 - 21, 120, 20, 12, SWP_NOZORDER);
+		m_ctlSmallGraph4.SetWindowPos( NULL, nGrWidth * 3, 70, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G4_T0)->SetWindowPos( NULL, nGrWidth * 4 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G4_T1)->SetWindowPos( NULL, nGrWidth * 4 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G4_T2)->SetWindowPos( NULL, nGrWidth * 4 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G4_T3)->SetWindowPos( NULL, nGrWidth * 4 - 21, 120, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G4_T4)->SetWindowPos( NULL, nGrWidth * 4 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_CMB_GRAPH4_X)->SetWindowPos( NULL, nGrWidth * 3, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph5.m_hWnd) {
+    GetDlgItem( IDC_CMB_GRAPH5_Y)->SetWindowPos( NULL, nGrWidth * 4, 50, nGrWidth, 12, SWP_NOZORDER);
 		m_ctlSmallGraph5.GetWindowRect( &rc);
-		m_ctlSmallGraph5.SetWindowPos( NULL, nGrWidth * 4, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH5_T0)->SetWindowPos( NULL, nGrWidth * 5 - 21, 60, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH5_T1)->SetWindowPos( NULL, nGrWidth * 5 - 21, 75, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH5_T2)->SetWindowPos( NULL, nGrWidth * 5 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH5_T3)->SetWindowPos( NULL, nGrWidth * 5 - 21, 105, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH5_T4)->SetWindowPos( NULL, nGrWidth * 5 - 21, 120, 20, 12, SWP_NOZORDER);
+		m_ctlSmallGraph5.SetWindowPos( NULL, nGrWidth * 4, 70, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G5_T0)->SetWindowPos( NULL, nGrWidth * 5 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G5_T1)->SetWindowPos( NULL, nGrWidth * 5 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G5_T2)->SetWindowPos( NULL, nGrWidth * 5 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G5_T3)->SetWindowPos( NULL, nGrWidth * 5 - 21, 120, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G5_T4)->SetWindowPos( NULL, nGrWidth * 5 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_CMB_GRAPH5_X)->SetWindowPos( NULL, nGrWidth * 4, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph6.m_hWnd) {
+    GetDlgItem( IDC_CMB_GRAPH6_Y)->SetWindowPos( NULL, nGrWidth * 5, 50, nGrWidth, 12, SWP_NOZORDER);
 		m_ctlSmallGraph6.GetWindowRect( &rc);
-		m_ctlSmallGraph6.SetWindowPos( NULL, nGrWidth * 5, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH6_T0)->SetWindowPos( NULL, nGrWidth * 6 - 21, 60, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH6_T1)->SetWindowPos( NULL, nGrWidth * 6 - 21, 75, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH6_T2)->SetWindowPos( NULL, nGrWidth * 6 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH6_T3)->SetWindowPos( NULL, nGrWidth * 6 - 21, 105, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH6_T4)->SetWindowPos( NULL, nGrWidth * 6 - 21, 120, 20, 12, SWP_NOZORDER);
+		m_ctlSmallGraph6.SetWindowPos( NULL, nGrWidth * 5, 70, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G6_T0)->SetWindowPos( NULL, nGrWidth * 6 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G6_T1)->SetWindowPos( NULL, nGrWidth * 6 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G6_T2)->SetWindowPos( NULL, nGrWidth * 6 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G6_T3)->SetWindowPos( NULL, nGrWidth * 6 - 21, 120, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G6_T4)->SetWindowPos( NULL, nGrWidth * 6 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_CMB_GRAPH6_X)->SetWindowPos( NULL, nGrWidth * 5, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph7.m_hWnd) {
+    GetDlgItem( IDC_CMB_GRAPH7_Y)->SetWindowPos( NULL, nGrWidth * 6, 50, nGrWidth, 12, SWP_NOZORDER);
 		m_ctlSmallGraph7.GetWindowRect( &rc);
-		m_ctlSmallGraph7.SetWindowPos( NULL, nGrWidth * 6, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH7_T0)->SetWindowPos( NULL, nGrWidth * 7 - 21, 60, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH7_T1)->SetWindowPos( NULL, nGrWidth * 7 - 21, 75, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH7_T2)->SetWindowPos( NULL, nGrWidth * 7 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH7_T3)->SetWindowPos( NULL, nGrWidth * 7 - 21, 105, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH7_T4)->SetWindowPos( NULL, nGrWidth * 7 - 21, 120, 20, 12, SWP_NOZORDER);
+		m_ctlSmallGraph7.SetWindowPos( NULL, nGrWidth * 6, 70, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G7_T0)->SetWindowPos( NULL, nGrWidth * 7 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G7_T1)->SetWindowPos( NULL, nGrWidth * 7 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G7_T2)->SetWindowPos( NULL, nGrWidth * 7 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G7_T3)->SetWindowPos( NULL, nGrWidth * 7 - 21, 120, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G7_T4)->SetWindowPos( NULL, nGrWidth * 7 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_CMB_GRAPH7_X)->SetWindowPos( NULL, nGrWidth * 6, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
 	if( m_ctlSmallGraph8.m_hWnd) {
+    GetDlgItem( IDC_CMB_GRAPH8_Y)->SetWindowPos( NULL, nGrWidth * 7, 50, nGrWidth, 12, SWP_NOZORDER);
 		m_ctlSmallGraph8.GetWindowRect( &rc);
-		m_ctlSmallGraph8.SetWindowPos( NULL, nGrWidth * 7, 50, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH8_T0)->SetWindowPos( NULL, nGrWidth * 8 - 21, 60, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH8_T1)->SetWindowPos( NULL, nGrWidth * 8 - 21, 75, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH8_T2)->SetWindowPos( NULL, nGrWidth * 8 - 21, 90, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH8_T3)->SetWindowPos( NULL, nGrWidth * 8 - 21, 105, 20, 12, SWP_NOZORDER);
-    GetDlgItem( IDC_RAD_GRAPH8_T4)->SetWindowPos( NULL, nGrWidth * 8 - 21, 120, 20, 12, SWP_NOZORDER);
+		m_ctlSmallGraph8.SetWindowPos( NULL, nGrWidth * 7, 70, nGrWidth - 22, rc.Height(), SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G8_T0)->SetWindowPos( NULL, nGrWidth * 8 - 21, 75, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G8_T1)->SetWindowPos( NULL, nGrWidth * 8 - 21, 90, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G8_T2)->SetWindowPos( NULL, nGrWidth * 8 - 21, 105, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G8_T3)->SetWindowPos( NULL, nGrWidth * 8 - 21, 120, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G8_T4)->SetWindowPos( NULL, nGrWidth * 8 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_CMB_GRAPH8_X)->SetWindowPos( NULL, nGrWidth * 7, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
-	int base = 50 + rc.Height();
+	int base = 95 + rc.Height();
 	CWnd *pWnd = GetDlgItem( IDC_GRAPH1_MIN_LABEL);
 	if( pWnd != NULL) {
 		CRect rc1;
@@ -364,7 +353,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		pWnd = GetDlgItem( IDC_GRAPH1_RMSVAL_LABEL);
 		pWnd->SetWindowPos( NULL, rc1.Width(), base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		
-		base = 50 + rc.Height();
+		base = 95 + rc.Height();
 		pWnd = GetDlgItem( IDC_GRAPH2_MIN_LABEL);	
 		pWnd->SetWindowPos( NULL, nGrWidth, base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		pWnd->GetWindowRect( &rc1);
@@ -390,7 +379,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		pWnd->SetWindowPos( NULL, nGrWidth + rc1.Width(), base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		
 
-		base = 50 + rc.Height();
+		base = 95 + rc.Height();
 		pWnd = GetDlgItem( IDC_GRAPH3_MIN_LABEL);	
 		pWnd->SetWindowPos( NULL, nGrWidth * 2, base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		pWnd->GetWindowRect( &rc1);
@@ -416,7 +405,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		pWnd->SetWindowPos( NULL, nGrWidth * 2 + rc1.Width(), base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		
 
-		base = 50 + rc.Height();
+		base = 95 + rc.Height();
 		pWnd = GetDlgItem( IDC_GRAPH4_MIN_LABEL);	
 		pWnd->SetWindowPos( NULL, nGrWidth * 3, base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		pWnd->GetWindowRect( &rc1);
@@ -442,7 +431,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		pWnd->SetWindowPos( NULL, nGrWidth * 3 + rc1.Width(), base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		
 
-		base = 50 + rc.Height();
+		base = 95 + rc.Height();
 		pWnd = GetDlgItem( IDC_GRAPH5_MIN_LABEL);	
 		pWnd->SetWindowPos( NULL, nGrWidth * 4, base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		pWnd->GetWindowRect( &rc1);
@@ -468,7 +457,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		pWnd->SetWindowPos( NULL, nGrWidth * 4 + rc1.Width(), base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		
 
-		base = 50 + rc.Height();
+		base = 95 + rc.Height();
 		pWnd = GetDlgItem( IDC_GRAPH6_MIN_LABEL);	
 		pWnd->SetWindowPos( NULL, nGrWidth * 5, base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		pWnd->GetWindowRect( &rc1);
@@ -494,7 +483,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		pWnd->SetWindowPos( NULL, nGrWidth * 5 + rc1.Width(), base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		
 
-		base = 50 + rc.Height();
+		base = 95 + rc.Height();
 		pWnd = GetDlgItem( IDC_GRAPH7_MIN_LABEL);	
 		pWnd->SetWindowPos( NULL, nGrWidth * 6, base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		pWnd->GetWindowRect( &rc1);
@@ -520,7 +509,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		pWnd->SetWindowPos( NULL, nGrWidth * 6 + rc1.Width(), base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		
 
-		base = 50 + rc.Height();
+		base = 95 + rc.Height();
 		pWnd = GetDlgItem( IDC_GRAPH8_MIN_LABEL);	
 		pWnd->SetWindowPos( NULL, nGrWidth * 7, base, 0, 0, SWP_NOZORDER | SWP_NOSIZE);
 		pWnd->GetWindowRect( &rc1);
@@ -576,87 +565,6 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
 		pWnd->SetWindowPos( NULL, cx - 210 + 5, base + 170, 200, 20, SWP_NOZORDER);
 		pWnd = GetDlgItem( IDC_RMSVAL_LABEL);
 		pWnd->SetWindowPos( NULL, cx - 210 + 5, base + 190, 200, 20, SWP_NOZORDER);
-
-		int x = cx - 210 + 5;
-		base += 220;
-		pWnd = GetDlgItem( IDC_PARAM1_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM1_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		
-		base += rc.Height(); base += 5;
-		x = cx - 210 + 5;
-		pWnd = GetDlgItem( IDC_PARAM2_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM2_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		
-		base += rc.Height(); base += 5;
-		x = cx - 210 + 5;
-		pWnd = GetDlgItem( IDC_PARAM3_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM3_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		
-		base += rc.Height(); base += 5;
-		x = cx - 210 + 5;
-		pWnd = GetDlgItem( IDC_PARAM4_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM4_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-			
-		base += rc.Height(); base += 5;
-		x = cx - 210 + 5;
-		pWnd = GetDlgItem( IDC_PARAM5_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM5_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-				
-		base += rc.Height(); base += 5;
-		x = cx - 210 + 5;
-		pWnd = GetDlgItem( IDC_PARAM6_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM6_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		
-		base += rc.Height(); base += 5;
-		x = cx - 210 + 5;
-		pWnd = GetDlgItem( IDC_PARAM7_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM7_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-				
-		base += rc.Height(); base += 5;
-		x = cx - 210 + 5;
-		pWnd = GetDlgItem( IDC_PARAM8_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM8_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		
-		base += rc.Height(); base += 5;
-		x = cx - 210 + 5;
-		pWnd = GetDlgItem( IDC_PARAM9_TITLE);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
-		pWnd->GetWindowRect( rc);
-		base += rc.Height();
-		pWnd = GetDlgItem( IDC_PARAM9_VAL);
-		pWnd->SetWindowPos( NULL, x, base, 0, 0, SWP_NOZORDER + SWP_NOSIZE);
 	}
 
 	
@@ -1063,10 +971,38 @@ void CMainView::RefreshGraphs()
 void CMainView::OnInitialUpdate() 
 {
   m_dlgGraphSetup = NULL;
-	m_dKimpSec = theApp.m_dKimpSec;
+	m_dKimpSec = theApp.GetSettings()->GetScaleCoeff();
 
 	m_nMainGraph = 1;
 	CFormView::OnInitialUpdate();	
+
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH1_Y))->SetCurSel( theApp.GetSettings()->GetGraphSettings(0)->GetAxisY());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH2_Y))->SetCurSel( theApp.GetSettings()->GetGraphSettings(1)->GetAxisY());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH3_Y))->SetCurSel( theApp.GetSettings()->GetGraphSettings(2)->GetAxisY());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH4_Y))->SetCurSel( theApp.GetSettings()->GetGraphSettings(3)->GetAxisY());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH5_Y))->SetCurSel( theApp.GetSettings()->GetGraphSettings(4)->GetAxisY());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH6_Y))->SetCurSel( theApp.GetSettings()->GetGraphSettings(5)->GetAxisY());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH7_Y))->SetCurSel( theApp.GetSettings()->GetGraphSettings(6)->GetAxisY());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH8_Y))->SetCurSel( theApp.GetSettings()->GetGraphSettings(7)->GetAxisY());
+
+  m_nRadMeaningGraph1 = theApp.GetSettings()->GetGraphSettings(0)->GetMeaning();
+  m_nRadMeaningGraph2 = theApp.GetSettings()->GetGraphSettings(1)->GetMeaning();
+  m_nRadMeaningGraph3 = theApp.GetSettings()->GetGraphSettings(2)->GetMeaning();
+  m_nRadMeaningGraph4 = theApp.GetSettings()->GetGraphSettings(3)->GetMeaning();
+  m_nRadMeaningGraph5 = theApp.GetSettings()->GetGraphSettings(4)->GetMeaning();
+  m_nRadMeaningGraph6 = theApp.GetSettings()->GetGraphSettings(5)->GetMeaning();
+  m_nRadMeaningGraph7 = theApp.GetSettings()->GetGraphSettings(6)->GetMeaning();
+  m_nRadMeaningGraph8 = theApp.GetSettings()->GetGraphSettings(7)->GetMeaning();
+
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH1_X))->SetCurSel( theApp.GetSettings()->GetGraphSettings(0)->GetAxisX());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH2_X))->SetCurSel( theApp.GetSettings()->GetGraphSettings(1)->GetAxisX());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH3_X))->SetCurSel( theApp.GetSettings()->GetGraphSettings(2)->GetAxisX());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH4_X))->SetCurSel( theApp.GetSettings()->GetGraphSettings(3)->GetAxisX());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH5_X))->SetCurSel( theApp.GetSettings()->GetGraphSettings(4)->GetAxisX());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH6_X))->SetCurSel( theApp.GetSettings()->GetGraphSettings(5)->GetAxisX());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH7_X))->SetCurSel( theApp.GetSettings()->GetGraphSettings(6)->GetAxisX());
+  ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH8_X))->SetCurSel( theApp.GetSettings()->GetGraphSettings(7)->GetAxisX());
+
 
 	GetDlgItem( IDC_MIN_LABEL)->SetFont( &m_pFont);
 	GetDlgItem( IDC_MINVAL_LABEL)->SetFont( &m_pFont);
@@ -1095,6 +1031,7 @@ void CMainView::OnInitialUpdate()
 	GetDlgItem( IDC_LBL_CURSOR_DX_VAL)->ShowWindow( ((CSlg2Doc *) GetDocument())->m_bShowCursors ? SW_SHOW : SW_HIDE);
 	GetDlgItem( IDC_LBL_CURSOR_DY_VAL)->ShowWindow( ((CSlg2Doc *) GetDocument())->m_bShowCursors ? SW_SHOW : SW_HIDE);
 	GetDlgItem( IDC_CURSOR_FRAME)->ShowWindow( ((CSlg2Doc *) GetDocument())->m_bShowCursors ? SW_SHOW : SW_HIDE);
+
 
 	//блокирование недостуаных для просмотра времен осреднения (для них недостаточно статистики)
 	if( ( ( CSlg2Doc *) GetDocument())->m_dn10s < 1.) {
@@ -1126,10 +1063,11 @@ void CMainView::OnTimer(UINT nIDEvent)
 	//событие 1000 мсек
 	//**** **** **** **** **** **** **** **** **** **** **** **** **** **** ****
 	if( nIDEvent == MY_TIMER_1000) {
+
 		//////////////////////////////////////////////////////////////////////
 		// Обновляем управленческие параметры
 		//////////////////////////////////////////////////////////////////////
-		m_strParam1Val.Format( _T("%.2f"), ( double) (( CSlg2App *) AfxGetApp())->m_btParam1 * m_dKimpSec);		//код амплитуды
+		/*
 		m_strParam2Val.Format( _T("%d"), (( CSlg2App *) AfxGetApp())->m_btParam2);											//код такта подставки
 		m_strParam3Val.Format( _T("%.2f"), ( double) (( CSlg2App *) AfxGetApp())->m_btParam3 / 250.);		//коэффициент M
 		m_strParam4Val.Format( _T("%.2f"), ( double) (( CSlg2App *) AfxGetApp())->m_btParam4 / 100.);		//начальная мода
@@ -1137,8 +1075,7 @@ void CMainView::OnTimer(UINT nIDEvent)
 		m_strParam6Val.Format( _T("%.2f"), ( double) (( CSlg2App *) AfxGetApp())->m_shFlashI2min / 65535. * 0.75);
 		m_strParam7Val.Format( _T("%.2f"), ( ( double) (( CSlg2App *) AfxGetApp())->m_shFlashAmplAng1min / 65535. * 6.0));
 		m_strParam8Val.Format( _T("%.5f"), ( ( double) (( CSlg2App *) AfxGetApp())->m_shFlashDecCoeff) / 65535.);
-		m_strParam9Val.Format( _T("%d"), (( CSlg2App *) AfxGetApp())->m_shFlashSa);
-		
+		*/
 
 		//////////////////////////////////////////////////////////////////////
 		// Обновляем графики
@@ -1155,7 +1092,7 @@ void CMainView::OnTimer(UINT nIDEvent)
 	if( nIDEvent == MY_REFRESH_VIEW_TIMER) {
 		KillTimer( MY_REFRESH_VIEW_TIMER);
 
-		m_strParam1Val.Format( _T("%.2f"), ( double) (( CSlg2App *) AfxGetApp())->m_btParam1 * m_dKimpSec);		//код амплитуды
+    /*
 		m_strParam2Val.Format( _T("%d"), (( CSlg2App *) AfxGetApp())->m_btParam2);											//код такта подставки
 		m_strParam3Val.Format( _T("%.2f"), ( double) (( CSlg2App *) AfxGetApp())->m_btParam3 / 250.);		//коэффициент M
 		m_strParam4Val.Format( _T("%.2f"), ( double) (( CSlg2App *) AfxGetApp())->m_btParam4 / 100.);		//начальная мода
@@ -1163,7 +1100,7 @@ void CMainView::OnTimer(UINT nIDEvent)
 		m_strParam6Val.Format( _T("%.2f"), ( double) (( CSlg2App *) AfxGetApp())->m_shFlashI2min / 65535. * 0.75);
 		m_strParam7Val.Format( _T("%.2f"), ( ( double) (( CSlg2App *) AfxGetApp())->m_shFlashAmplAng1min / 65535. * 6.0));
 		m_strParam8Val.Format( _T("%.5f"), ( ( double) (( CSlg2App *) AfxGetApp())->m_shFlashDecCoeff) / 65535.);
-		m_strParam9Val.Format( _T("%d"), (( CSlg2App *) AfxGetApp())->m_shFlashSa);
+    */
 
 		RefreshGraphs();
 	}
@@ -1277,7 +1214,35 @@ void CMainView::OnClickGraph8()
 void CMainView::OnDestroy() 
 {
 	UpdateData( true);
-	((CSlg2App *) AfxGetApp())->m_dKimpSec = m_dKimpSec;
+	//((CSlg2App *) AfxGetApp())->m_dKimpSec = m_dKimpSec;
+  theApp.GetSettings()->SetScaleCoeff( m_dKimpSec);
+
+  theApp.GetSettings()->GetGraphSettings(0)->SetAxisY( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH1_Y))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(1)->SetAxisY( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH2_Y))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(2)->SetAxisY( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH3_Y))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(3)->SetAxisY( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH4_Y))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(4)->SetAxisY( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH5_Y))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(5)->SetAxisY( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH6_Y))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(6)->SetAxisY( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH7_Y))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(7)->SetAxisY( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH8_Y))->GetCurSel());
+
+  theApp.GetSettings()->GetGraphSettings(0)->SetMeaning( m_nRadMeaningGraph1);
+  theApp.GetSettings()->GetGraphSettings(1)->SetMeaning( m_nRadMeaningGraph2);
+  theApp.GetSettings()->GetGraphSettings(2)->SetMeaning( m_nRadMeaningGraph3);
+  theApp.GetSettings()->GetGraphSettings(3)->SetMeaning( m_nRadMeaningGraph4);
+  theApp.GetSettings()->GetGraphSettings(4)->SetMeaning( m_nRadMeaningGraph5);
+  theApp.GetSettings()->GetGraphSettings(5)->SetMeaning( m_nRadMeaningGraph6);
+  theApp.GetSettings()->GetGraphSettings(6)->SetMeaning( m_nRadMeaningGraph7);
+  theApp.GetSettings()->GetGraphSettings(7)->SetMeaning( m_nRadMeaningGraph8);
+
+  theApp.GetSettings()->GetGraphSettings(0)->SetAxisX( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH1_X))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(1)->SetAxisX( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH2_X))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(2)->SetAxisX( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH3_X))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(3)->SetAxisX( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH4_X))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(4)->SetAxisX( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH5_X))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(5)->SetAxisX( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH6_X))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(6)->SetAxisX( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH7_X))->GetCurSel());
+  theApp.GetSettings()->GetGraphSettings(7)->SetAxisX( ( ( CComboBox *) GetDlgItem( IDC_CMB_GRAPH8_X))->GetCurSel());
 
 	CFormView::OnDestroy();
 	VERIFY( m_pFont.DeleteObject());
@@ -1287,7 +1252,7 @@ void CMainView::OnKillfocusEdtKImpSec()
 {
 	UpdateData( true);
 	if( (( CSlg2Doc *) GetDocument())->m_strCurrentFileName.IsEmpty()) return;
-	((CSlg2App *) AfxGetApp())->m_dKimpSec = m_dKimpSec;
+  theApp.GetSettings()->SetScaleCoeff( m_dKimpSec);
 	(( CSlg2Doc *) GetDocument())->ReadDataFile( (( CSlg2Doc *) GetDocument())->m_strCurrentFileName, NULL);
 	(( CSlg2Doc *) GetDocument())->RecalculateStatistics();
 }
@@ -1323,27 +1288,110 @@ void CMainView::SetRefreshTimer( int nPeriod)
 
 void CMainView::OnRadMeaning100msec() 
 {
+  GetDlgItem( IDC_RAD_G1_T1)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G1_T1)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G2_T1)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G2_T1)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G3_T1)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G3_T1)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G4_T1)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G4_T1)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G5_T1)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G5_T1)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G6_T1)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G6_T1)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G7_T1)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G7_T1)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G8_T1)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G8_T1)->SendMessage( WM_LBUTTONUP);
 	SetRefreshTimer();
 }
 
 void CMainView::OnRadMeaning1sec() 
 {
+  GetDlgItem( IDC_RAD_G1_T2)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G1_T2)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G2_T2)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G2_T2)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G3_T2)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G3_T2)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G4_T2)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G4_T2)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G5_T2)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G5_T2)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G6_T2)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G6_T2)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G7_T2)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G7_T2)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G8_T2)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G8_T2)->SendMessage( WM_LBUTTONUP);
 	SetRefreshTimer();
 }
 
 void CMainView::OnRadMeaning10sec() 
 {
+  GetDlgItem( IDC_RAD_G1_T3)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G1_T3)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G2_T3)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G2_T3)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G3_T3)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G3_T3)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G4_T3)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G4_T3)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G5_T3)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G5_T3)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G6_T3)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G6_T3)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G7_T3)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G7_T3)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G8_T3)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G8_T3)->SendMessage( WM_LBUTTONUP);
 	SetRefreshTimer();
 }
 
 void CMainView::OnRadMeaning100sec() 
 {
+  GetDlgItem( IDC_RAD_G1_T4)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G1_T4)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G2_T4)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G2_T4)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G3_T4)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G3_T4)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G4_T4)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G4_T4)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G5_T4)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G5_T4)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G6_T4)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G6_T4)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G7_T4)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G7_T4)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G8_T4)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G8_T4)->SendMessage( WM_LBUTTONUP);
+
 	SetRefreshTimer();
 }
 
 void CMainView::OnRadMeaning5() 
 {
-	SetRefreshTimer();
+  //NO MEANING
+  GetDlgItem( IDC_RAD_G1_T0)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G1_T0)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G2_T0)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G2_T0)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G3_T0)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G3_T0)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G4_T0)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G4_T0)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G5_T0)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G5_T0)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G6_T0)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G6_T0)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G7_T0)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G7_T0)->SendMessage( WM_LBUTTONUP);
+  GetDlgItem( IDC_RAD_G8_T0)->SendMessage( WM_LBUTTONDOWN);
+  GetDlgItem( IDC_RAD_G8_T0)->SendMessage( WM_LBUTTONUP);
+
+	//SetRefreshTimer();
 }
 
 void CMainView::OnUpdateZoomin(CCmdUI* pCmdUI) 

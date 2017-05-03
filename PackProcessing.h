@@ -47,6 +47,12 @@ public:
   int ProcessPack_3_2_3( void);
   int ProcessPack_3_2_5( void);
 
+  int ProcessPackTime_3_2_3( void);
+  int ProcessPackTime_3_2_4( void);
+  int ProcessPackTime_3_2_5( void);
+  int ProcessPackTime_4_1_7( void);
+  int ProcessPackTime_4_2_0( void);
+
   BOOL m_bVeracity;
   BOOL m_bLockBit;
   BOOL m_bSyncAsync;

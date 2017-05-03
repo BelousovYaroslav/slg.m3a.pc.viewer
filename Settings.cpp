@@ -30,9 +30,6 @@ void CSettings::LoadSettings()
 {
   m_nLogLevel =       theApp.GetProfileInt( _T("SETTINGS"), _T("LOG_LEVEL"), 6);
   m_nControlButtons = theApp.GetProfileInt( _T("SETTINGS"), _T("CONTROL_BUTTONS"), 0);
-
-  m_nComPort =        theApp.GetProfileInt( _T("SETTINGS"), _T("COM_PORT"), 1);
-  m_nComBaudrate =    theApp.GetProfileInt( _T("SETTINGS"), _T("COM_BAUDRATE"), 1);
   
   int nScaleCoeff =   theApp.GetProfileInt( _T("SETTINGS"), _T("SCALE_COEFF"), 2900);
   m_dKimpSec = nScaleCoeff / 1000.;
@@ -124,8 +121,6 @@ void CSettings::LoadSettings()
 
 void CSettings::SaveSettings()
 {
-  theApp.WriteProfileInt( _T("SETTINGS"), _T("COM_PORT"), m_nComPort);
-  theApp.WriteProfileInt( _T("SETTINGS"), _T("COM_BAUDRATE"), m_nComBaudrate);
   //theApp.WriteProfileInt( _T("SETTINGS"), _T("LOG_LEVEL"), m_nLogLevel);
   theApp.WriteProfileInt( _T("SETTINGS"), _T("SCALE_COEFF"), ( int) ( m_dKimpSec * 1000.));
 

@@ -9,7 +9,6 @@
 #include "slg2View.h"
 #include "MainView.h"
 
-#include "SlgNewAverager.h"
 #include "Serial.h"
 
 #ifdef _DEBUG
@@ -72,8 +71,9 @@ BOOL CSlg2App::InitInstance()
 	SetRegistryKey(_T("Alcor Laboratories"));
 	LoadStdProfileSettings();  // Load standard INI file options (including MRU)
 
-	int kimpsec = GetProfileInt( _T("SETTINGS_VIEWER"), _T("K_IMP_SEC"), 1000);
-	m_dKimpSec = kimpsec / 1000.;
+  m_pSettings.LoadSettings();
+	//int kimpsec = GetProfileInt( _T("SETTINGS_VIEWER"), _T("K_IMP_SEC"), 1000);
+	//m_dKimpSec = kimpsec / 1000.;
 
 
 	CSingleDocTemplate* pDocTemplate;
@@ -163,8 +163,10 @@ void CSlg2App::OnAppAbout()
 int CSlg2App::ExitInstance() 
 {
 	// TODO: Add your specialized code here and/or call the base class
-	int kimpsec = m_dKimpSec * 1000;
+  m_pSettings.SaveSettings();
+	
+  /*int kimpsec = m_dKimpSec * 1000;
 	WriteProfileInt( _T("SETTINGS_VIEWER"), _T("K_IMP_SEC"), kimpsec);
-
+  */
 	return CWinApp::ExitInstance();
 }

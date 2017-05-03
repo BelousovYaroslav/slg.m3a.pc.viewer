@@ -57,6 +57,9 @@ public:
 	int m_nStatFileVersion;
 	void ReadDataFile( CString filename, COpenMeasDlg *dlg);
 	CString m_strCurrentFileName;
+  int m_nMcVersionMajor;
+  int m_nMcVersionMiddle;
+  int m_nMcVersionMinor;
 	void RecalculateStatistics( void);
 	//данные
 	double *m_dx100m,			*m_dy100m,			m_dn100m;

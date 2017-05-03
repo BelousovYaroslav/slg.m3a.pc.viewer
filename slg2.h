@@ -28,17 +28,8 @@ public:
   //CLogger * GetLogger() { return &m_pLogger;}
   CSettings *GetSettings() { return &m_pSettings;}
 	CString m_strSoftwareVer;
-	double m_dKimpSec;
 	CSlg2App();
-	BYTE m_btParam1;
-	BYTE m_btParam2;
-	BYTE m_btParam3;
-	BYTE m_btParam4;
-	unsigned short m_shFlashI1min;
-	unsigned short m_shFlashI2min;
-	unsigned short m_shFlashAmplAng1min;
-	short m_shFlashDecCoeff;
-	short m_shFlashSa;
+
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CSlg2App)

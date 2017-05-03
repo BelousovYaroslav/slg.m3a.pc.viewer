@@ -11,6 +11,7 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+extern CSlg2App theApp;
 /////////////////////////////////////////////////////////////////////////////
 // CDlgExport dialog
 
@@ -143,7 +144,7 @@ void CDlgExport::OnOK()
 			case 1:
 				fscanf( fh, "%f\t%f\t%d\t%d\t%d\n", &of_f1, &of_f2, &of_i1, &of_i2, &of_i3);
 
-				p_phi = of_f1 * ( ( CSlg2App *) AfxGetApp())->m_dKimpSec / 4.;
+				p_phi = of_f1 * theApp.GetSettings()->GetScaleCoeff() / 4.;
 				w_Summ += p_phi;
 
 				p_tsa = of_i3 / 32768.;
@@ -165,7 +166,7 @@ void CDlgExport::OnOK()
 				fread( &nf_s2, sizeof( short), 1, fh);
 				fread( &nf_s3, sizeof( short), 1, fh);
 
-				p_phi = ( nf_d1 / 2147483647. * 99310.) * ( ( CSlg2App *) AfxGetApp())->m_dKimpSec / 4.;
+				p_phi = ( nf_d1 / 2147483647. * 99310.) * theApp.GetSettings()->GetScaleCoeff() / 4.;
 				w_Summ += p_phi;
 
 				p_tsa = nf_s3 / 32768.;
@@ -243,7 +244,7 @@ void CDlgExport::OnOK()
         fprintf( fhOut, _T("%-12.4f"), (( vpc_Summ / vpc_Counter / 4096. * 3.) - 2.048) * 100.);
 			
 			if( m_bChkAA)
-				fprintf( fhOut, _T("%-12.4f"), aa_Summ / aa_Counter / 4. * ((CSlg2App *) AfxGetApp())->m_dKimpSec);//( aa_Summ / aa_Counter / 4096. * 3.) / 0.5);
+				fprintf( fhOut, _T("%-12.4f"), aa_Summ / aa_Counter / 4. * theApp.GetSettings()->GetScaleCoeff());//( aa_Summ / aa_Counter / 4096. * 3.) / 0.5);
 				
 			if( m_bChkT1)
 				//fprintf( fhOut, _T("%-12.4f"), 70.24586 * ( t1_Summ / t1_Counter / 4096. * 3.) - 128.209);

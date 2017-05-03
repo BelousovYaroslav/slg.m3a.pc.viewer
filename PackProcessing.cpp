@@ -87,14 +87,21 @@ int CPackProcessing::ProcessPack_4_2_0( void) {
 
 		case AMPLANG_ALTERA:
       m_dblAnParamValue = shCur1 / 2.                              //imp
-                    * theApp.m_dKimpSec;	                         //''
+                    * theApp.GetSettings()->GetScaleCoeff();       //''
     break;
     
     case AMPLANG_DUS:
       m_dblAnParamValue = shCur1 / 4096. * 3.;            //V
     break;
 
-    
+    case SIGNCOEFF:
+      if( shCur1 == 0) m_shSignCoeff = -1;
+      if( shCur1 == 2) m_shSignCoeff = 1;
+    break;
+
+    case DECCOEFF:
+      m_dblDecCoeff = ( ( double) shCur1) / 65535.;
+    break;
   }
 
 
@@ -116,8 +123,9 @@ int CPackProcessing::ProcessPack_4_2_0( void) {
 
     //и нам нужен знаковый коэффициент
     if( m_shSignCoeff == 0) {
-      if( m_nAnParam == SIGNCOEFF)
-         m_shSignCoeff = m_dblAnParamValue;
+      if( m_nAnParam == SIGNCOEFF) {
+        m_shSignCoeff = m_dblAnParamValue;
+      }
       else
         return 2;
     }
@@ -196,7 +204,7 @@ int CPackProcessing::ProcessPack_3_2_3( void) {
 
 		case AMPLANG_ALTERA:
       m_dblAnParamValue = shCur1 / 4.                              //imp
-                    * ( ( CSlg2App *) AfxGetApp())->m_dKimpSec;	  //''
+                    * theApp.GetSettings()->GetScaleCoeff();       //''
     break;
     
     case AMPLANG_DUS:
@@ -204,18 +212,6 @@ int CPackProcessing::ProcessPack_3_2_3( void) {
     break;
 
     /*
-		case AMPLITUDE: theApp.m_btParam1 = nCur1;        break;        //Амплитуда колебаний виброподвеса
-		case TACT_CODE: theApp.m_btParam2 = nCur1;        break;        //Код такта подставки
-		case M_COEFF:   theApp.m_btParam3 = nCur1;        break;        //коэффициент ошумления
-		case STARTMODE: theApp.m_btParam4 = nCur1;        break;        //Начальная мода
-    case DECCOEFF:    theApp.m_shFlashDecCoeff = nCur1; break;      //коэффициент вычета
-
-    case CONTROL_I1:  theApp.m_shFlashI1min = nCur1;  break;        //Контрольный ток I1
-		case CONTROL_I2:  theApp.m_shFlashI2min = nCur1;  break;        //Контрольный ток I2
-		case CONTROL_AA:  theApp.m_shFlashAmplAng1min = nCur1; break;   //Контрольный сигнал раскачки AmplAng1
-					
-    case HV_APPLY_COUNT_TR: theApp.m_nHvAppliesThisRun = nCur1; break;  //число 3kV-импульсов поджига
-
 		case SIGNCOEFF:
 		  ( ( CSlg2App *) AfxGetApp())->m_shSignCoeff = (( signed short) nCur1) - 1;
     break;
@@ -342,30 +338,38 @@ int CPackProcessing::ProcessPack_3_2_5( void) {
   unsigned short shCur1 = ( bt9 << 8) + bt8;
   double dblCur1 = ( double) shCur1;
   switch( m_nAnParam) {
-    case UTD1: 
-		case UTD2: 
+    case UTD1:
+    case UTD2:
     case UTD3:
       m_dblAnParamValue = shCur1 / 65535. * 200. - 100.;
     break;
 
-		case I1:
-		case I2:
+    case I1:
+    case I2:
       m_dblAnParamValue = ( 2.5 - shCur1 / 4096. * 3.) / 2.5;
     break;
 
-		case CNTRPC:
+    case CNTRPC:
       m_dblAnParamValue = ( ( shCur1 / 4096. * 3.) - 2.048) * 100.;
     break;
 
-		case AMPLANG_ALTERA:
+    case AMPLANG_ALTERA:
       m_dblAnParamValue = shCur1 / 4.                              //imp
-                    * ( ( CSlg2App *) AfxGetApp())->m_dKimpSec;	  //''
+                    * theApp.GetSettings()->GetScaleCoeff();       //''
     break;
     
     case AMPLANG_DUS:
       m_dblAnParamValue = shCur1 / 4096. * 3.;            //V
     break;
 
+    case DECCOEFF:
+      m_dblDecCoeff = ( ( double) shCur1) / 65535.;
+    break;
+
+    case SIGNCOEFF:
+      if( shCur1 == 0) m_shSignCoeff = -1;
+      if( shCur1 == 2) m_shSignCoeff = 1;
+    break;
   }
 
   short dN, dU;
@@ -375,20 +379,10 @@ int CPackProcessing::ProcessPack_3_2_5( void) {
         
         
     //И нам нужен коэффициент вычета, а то без него мы не сможем вычислить Phi
-    if( m_dblDecCoeff == -1.) {
-      if( m_nAnParam == DECCOEFF)
-        m_dblDecCoeff = m_dblAnParamValue;
-      else
-        return 1;
-    }
+    if( m_dblDecCoeff == -1.) return 1;
 
     //и нам нужен знаковый коэффициент
-    if( m_shSignCoeff == 0) {
-      if( m_nAnParam == SIGNCOEFF)
-         m_shSignCoeff = m_dblAnParamValue;
-      else
-        return 2;
-    }
+    if( m_shSignCoeff == 0) return 2;
         
 
     char *ptr;
@@ -425,5 +419,42 @@ int CPackProcessing::ProcessPack_3_2_5( void) {
 		m_dblPhi = ( ( double) n_dN / 2147483647. * 99310.);
   }
 
+  return 0;
+}
+
+int CPackProcessing::ProcessPackTime_3_2_3( void) {
+  //время такта
+  short nSaTime = ( bt11 << 8) + bt10;
+	m_dblTime = nSaTime / 32768.;
+  return 0;
+}
+
+int CPackProcessing::ProcessPackTime_3_2_4( void) {
+  //время такта
+  short nSaTime = ( bt11 << 8) + bt10;
+	m_dblTime = nSaTime / 32768.;
+  return 0;
+}
+
+int CPackProcessing::ProcessPackTime_3_2_5( void) {
+  //1273 (ФАПЧ - похоже всё таки ошибка тут) * 32768Hz / 16 (делитель) = 2607104 Hz
+  double dbl1secInTacts = 2607104.;
+  short nSaTime = ( bt11 << 8) + bt10;
+	m_dblTime = nSaTime / dbl1secInTacts;
+  return 0;
+}
+
+int CPackProcessing::ProcessPackTime_4_1_7( void) {
+  //время такта
+  short nSaTime = ( bt11 << 8) + bt10;
+	m_dblTime = nSaTime / 32768.;
+  return 0;
+}
+
+int CPackProcessing::ProcessPackTime_4_2_0( void) {
+  //1273 (ФАПЧ - похоже всё таки ошибка тут) * 32768Hz / 16 (делитель) = 2607104 Hz
+  double dbl1secInTacts = 2607104.;
+  short nSaTime = ( bt11 << 8) + bt10;
+	m_dblTime = nSaTime / dbl1secInTacts;
   return 0;
 }

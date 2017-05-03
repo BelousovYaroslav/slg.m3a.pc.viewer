@@ -20,12 +20,6 @@ public:
 	CSettings();
 	virtual ~CSettings();
 
-  int GetComPort() { return m_nComPort;}
-  void SetComPort( int nNewPort) { m_nComPort = nNewPort;}
-
-  int GetComBaudrate() { return m_nComBaudrate;}
-  void SetComBaudrate( int nNewBaudrate) { m_nComBaudrate = nNewBaudrate;}
-
   int GetLogLevel() { return m_nLogLevel;}
   void SetLogLevel( int nNewVal) { m_nLogLevel = nNewVal;}
 
@@ -39,8 +33,6 @@ public:
 private:
   int m_nLogLevel;
   
-  int m_nComPort;           //сохран€емый-вычитываемый из реестра COM-порт
-  int m_nComBaudrate;       //сохран€ема€-вычитываема€ из реестра скорость COM-порта
   int m_nControlButtons;    //сохран€емый-вычитываемый из реестра флаг показывать ли управл€ющие контролы
   double m_dKimpSec;        //сохран€емый-вычитываемый из реестра масштабный коэффициент ("/imp)
   CSettingsGraph m_aSettGraph[8]; //массив настроек графиков

@@ -14,6 +14,8 @@
 static char THIS_FILE[] = __FILE__;
 #endif
 
+extern CSlg2App theApp;
+
 /////////////////////////////////////////////////////////////////////////////
 // CSlg2Doc
 
@@ -31,6 +33,10 @@ END_MESSAGE_MAP()
 
 CSlg2Doc::CSlg2Doc()
 {
+  m_nMcVersionMajor = 0;
+  m_nMcVersionMiddle = 0;
+  m_nMcVersionMinor = 0;
+
 	// TODO: add one-time construction code here
 	m_dx100m	= m_dy100m =
 	m_dx1s		= m_dy1s =
@@ -615,7 +621,7 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 
       CString strTmp;
 
-			double p_phi = ( d1 / 2147483647. * 99310.) * ((CSlg2App *) AfxGetApp())->m_dKimpSec / 4.;
+			double p_phi = ( d1 / 2147483647. * 99310.) * theApp.GetSettings()->GetScaleCoeff() / 4.;
 			double p_tsa = s3 / 32768.;
 			switch( s1 & 0x7F) {
 				case 0: temp1 += ( unsigned short) s2; n_temp1_s++; break;	//Temp1
@@ -628,17 +634,6 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 				case 6:
 					aa += s2;	n_aa_s++;
 				break;			//aa
-
-				case 7: ( ( CSlg2App *) AfxGetApp())->m_btParam1 = s2;  break;
-				case 8: ( ( CSlg2App *) AfxGetApp())->m_btParam2 = s2; break;
-				case 9: ( ( CSlg2App *) AfxGetApp())->m_btParam3 = s2; break;
-				case 10: ( ( CSlg2App *) AfxGetApp())->m_btParam4 = s2; break;
-				case 11: ( ( CSlg2App *) AfxGetApp())->m_shFlashI1min = s2; break; //flashParamI1min
-				case 12: ( ( CSlg2App *) AfxGetApp())->m_shFlashI2min = s2; break; //flashParamI2min
-	      case 13: ( ( CSlg2App *) AfxGetApp())->m_shFlashAmplAng1min = s2; break; //flashParamAmplAngMin1
-		    case 14: ( ( CSlg2App *) AfxGetApp())->m_shFlashDecCoeff = s2; /*fprintf( fh_test_needs, _T("%.4f\n"), ( double) s2 / 65535.);*/ break; //коэффициент вычета
-			  
-        //case 15: ( ( CSlg2App *) AfxGetApp())->m_shFlashSa = s2; break; //flashParamSAtime
           
 				case 16: //software version
 					( ( CSlg2App *) AfxGetApp())->m_strSoftwareVer.Format( _T("%d.%d.%d.%d"),
@@ -709,7 +704,7 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 
 				//aa points
 				m_dx_aa[ n_aa_n] = d_global_time;
-				m_dy_aa[ n_aa_n] = aa / n_aa_s / 4. * ((CSlg2App *) AfxGetApp())->m_dKimpSec;
+				m_dy_aa[ n_aa_n] = aa / n_aa_s / 4. * theApp.GetSettings()->GetScaleCoeff();
 				n_aa_n++;
 				aa = 0.; n_aa_s = 0;
 
@@ -906,7 +901,7 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 			int int1, int2, int3;
 			fscanf(fh, "%f\t%f\t%d\t%d\t%d\n", &f1, &f2, &int1, &int2, &int3);
 		
-			double p_phi = f1 * ((CSlg2App *) AfxGetApp())->m_dKimpSec / 4.;
+			double p_phi = f1 * theApp.GetSettings()->GetScaleCoeff() / 4.;
 			double p_tsa = int3 / 32768.;
 			switch( int1 & 0x0F) {
 				case 0: temp1 += int2; n_temp1_s++; break;	//Temp1
@@ -918,15 +913,6 @@ void CSlg2Doc::ReadDataFile(CString filename, COpenMeasDlg *dlg)
 				case 5: vpc += int2;	n_vpc_s++; break;		//vpc
 				case 6: aa += int2;	n_aa_s++; break;			//aa
 
-				case 7: ( ( CSlg2App *) AfxGetApp())->m_btParam1 = int2;  break;
-				case 8: ( ( CSlg2App *) AfxGetApp())->m_btParam2 = int2; break;
-				case 9: ( ( CSlg2App *) AfxGetApp())->m_btParam3 = int2; break;
-				case 10: ( ( CSlg2App *) AfxGetApp())->m_btParam4 = int2; break;
-				case 11: ( ( CSlg2App *) AfxGetApp())->m_shFlashI1min = int2; break; //flashParamI1min
-				case 12: ( ( CSlg2App *) AfxGetApp())->m_shFlashI2min = int2; break; //flashParamI2min
-	      case 13: ( ( CSlg2App *) AfxGetApp())->m_shFlashAmplAng1min = int2; break; //flashParamAmplAngMin1
-		    case 14: ( ( CSlg2App *) AfxGetApp())->m_shFlashDecCoeff = int2; break; //коэффициент вычета
-			  case 15: ( ( CSlg2App *) AfxGetApp())->m_shFlashSa = int2; break; //flashParamSAtime          
 				case 16: //software version
 					/*( ( CSlg2App *) AfxGetApp())->m_btMajVer = ( int2 & 0xFF);
 					( ( CSlg2App *) AfxGetApp())->m_btMinVer = (( int2 & 0xFF00) >> 8);*/

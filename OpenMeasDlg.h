@@ -1,3 +1,6 @@
+//{{AFX_INCLUDES()
+#include "NiNumEdit.h"
+//}}AFX_INCLUDES
 #if !defined(AFX_OPENMEASDLG_H__084F0A36_491F_4EBF_8D6E_BA988A36552F__INCLUDED_)
 #define AFX_OPENMEASDLG_H__084F0A36_491F_4EBF_8D6E_BA988A36552F__INCLUDED_
 
@@ -9,6 +12,22 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // COpenMeasDlg dialog
+
+struct Step1Info {
+  long lPacks;
+  int nMarkerFails;
+  int nCheckSummFails;
+  int nCounterFails;  
+  double dblTime;
+  long lDeviceId;
+  char cSyncAsyncUnknown;
+  char cHaveRegimedNdU;
+  char bSignCoeff;
+  double dblDecCoeffMin;
+  double dblDecCoeffMax;
+  double dblDecCoeffMean;
+  int nDecCoeffData;
+};
 
 class COpenMeasDlg : public CDialog
 {
@@ -27,6 +46,7 @@ public:
 	CProgressCtrl	m_ctlProgress0;
 	CProgressCtrl	m_ctlProgress1;
 	CProgressCtrl	m_ctlProgress2;
+	CNiNumEdit	m_ctlSignCoeff;
 	//}}AFX_DATA
 
 
@@ -46,6 +66,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnBtnStopLoad();
+	afx_msg void OnBtnGoon();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
@@ -55,6 +76,7 @@ private:
   int m_nMarkerFails;
   int m_nCounterFails;
   int m_nCheckSummFails;
+  Step1Info m_pStep1;
 };
 
 //{{AFX_INSERT_LOCATION}}
