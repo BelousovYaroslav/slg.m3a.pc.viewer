@@ -168,6 +168,55 @@ int CPackProcessing::ProcessPack_4_2_0( void) {
   return 0;
 }
 
+int CPackProcessing::ProcessPack_3_2_2( void) {
+  //время такта
+  short nSaTime = ( bt11 << 8) + bt10;
+	m_dblTime = nSaTime / 32768.;
+
+  //индикатор аналогового параметра
+  m_nAnParam = bt7;
+
+  //аналоговый параметр
+  unsigned short shCur1 = ( bt9 << 8) + bt8;
+  double dblCur1 = ( double) shCur1;
+  switch( m_nAnParam) {
+    case UTD1: 
+		case UTD2: 
+    case UTD3:
+      m_dblAnParamValue = shCur1 / 65535. * 200. - 100.;
+    break;
+
+		case I1:
+		case I2:
+      m_dblAnParamValue = ( 2.5 - shCur1 / 4096. * 3.) / 2.5;
+    break;
+
+		case CNTRPC:
+      m_dblAnParamValue = ( ( shCur1 / 4096. * 3.) - 2.048) * 100.;
+    break;
+
+		case AMPLANG_ALTERA:
+      m_dblAnParamValue = shCur1 / 4.                              //imp
+                    * theApp.GetSettings()->GetScaleCoeff();       //''
+    break;
+  }
+
+  //float f_dN;
+  int n_dN;
+  char *ptr;      
+    
+  ptr = ( char *) &n_dN;
+		
+  ptr[0] = bt3;
+	ptr[1] = bt4;
+	ptr[2] = bt5;
+	ptr[3] = bt6;
+
+	m_dblPhi = ( ( double) n_dN / 2147483647. * 99310.);
+  
+
+  return 0;
+}
 
 int CPackProcessing::ProcessPack_3_2_3( void) {
   //время такта
@@ -419,6 +468,13 @@ int CPackProcessing::ProcessPack_3_2_5( void) {
 		m_dblPhi = ( ( double) n_dN / 2147483647. * 99310.);
   }
 
+  return 0;
+}
+
+int CPackProcessing::ProcessPackTime_3_2_2( void) {
+  //время такта
+  short nSaTime = ( bt11 << 8) + bt10;
+	m_dblTime = nSaTime / 32768.;
   return 0;
 }
 

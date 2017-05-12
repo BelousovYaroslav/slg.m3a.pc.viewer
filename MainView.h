@@ -152,12 +152,6 @@ protected:
 	afx_msg void OnRestoreZoom();
 	afx_msg void OnShowCursors();
 	afx_msg void OnCursorChangeMainGraph(long FAR* CursorIndex, VARIANT FAR* XPos, VARIANT FAR* YPos, BOOL FAR* bTracking);
-	afx_msg void OnRadT1Td1();
-	afx_msg void OnRadT1Td2();
-	afx_msg void OnRadT1Td3();
-	afx_msg void OnRadT2Td1();
-	afx_msg void OnRadT2Td2();
-	afx_msg void OnRadT2Td3();
 	afx_msg void OnMouseUpGraph1(short Button, short Shift, long x, long y);
 	afx_msg void OnMouseUpGraph2(short Button, short Shift, long x, long y);
 	afx_msg void OnMouseUpGraph3(short Button, short Shift, long x, long y);
@@ -167,13 +161,13 @@ protected:
 	afx_msg void OnMouseUpGraph7(short Button, short Shift, long x, long y);
 	afx_msg void OnMouseUpGraph8(short Button, short Shift, long x, long y);
 	afx_msg void OnRadMeaning5();
+	afx_msg void OnRadMeaningGraph();
+	afx_msg void OnCloseupCmbGraph();
 	DECLARE_EVENTSINK_MAP()
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
 	bool m_bEmergencyCodeApperance;
-	int m_nCounterSkippedPoints;
-	bool b1stPointSkipped;
 	CFont m_pFont;
 	int m_nMainGraph;
 	void RefreshGraphs( void);

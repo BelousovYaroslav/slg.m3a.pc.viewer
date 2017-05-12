@@ -47,6 +47,9 @@ public:
 	CProgressCtrl	m_ctlProgress1;
 	CProgressCtrl	m_ctlProgress2;
 	CNiNumEdit	m_ctlSignCoeff;
+	CNiNumEdit	m_ctlSkipPacks;
+	int		m_nRadSkip;
+	CNiNumEdit	m_ctlSkipMsecs;
 	//}}AFX_DATA
 
 
@@ -67,6 +70,8 @@ protected:
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnBtnStopLoad();
 	afx_msg void OnBtnGoon();
+	afx_msg void OnRadSkipPacks();
+	afx_msg void OnRadSkipTime();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

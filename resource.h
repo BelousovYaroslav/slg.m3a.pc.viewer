@@ -269,8 +269,11 @@
 #define IDC_BTN_GOON                    1209
 #define IDC_RAD_G5_T0                   1209
 #define IDC_RAD_G5_T1                   1210
+#define IDC_LBL_STEP1_SKIP_PACKS        1210
 #define IDC_RAD_G5_T2                   1211
+#define IDC_CWN_SKIP_PACKS              1211
 #define IDC_RAD_G6_T0                   1212
+#define IDC_CWN_SKIP_MSECS              1212
 #define IDC_RAD_G6_T1                   1213
 #define IDC_RAD_G6_T2                   1214
 #define IDC_RAD_G5_T3                   1215
@@ -289,7 +292,9 @@
 #define IDC_RAD_G8_T4                   1228
 #define IDC_CMB_GRAPH1_X                1229
 #define IDC_CMB_GRAPH2_X                1230
+#define IDC_RAD_SKIP_PACKS              1230
 #define IDC_CMB_GRAPH3_X                1231
+#define IDC_RAD_SKIP_TIME               1231
 #define IDC_CMB_GRAPH4_X                1232
 #define IDC_CMB_GRAPH5_X                1233
 #define IDC_CMB_GRAPH6_X                1234
@@ -321,7 +326,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        146
 #define _APS_NEXT_COMMAND_VALUE         32778
-#define _APS_NEXT_CONTROL_VALUE         1230
+#define _APS_NEXT_CONTROL_VALUE         1231
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

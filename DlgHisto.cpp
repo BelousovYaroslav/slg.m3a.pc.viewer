@@ -55,78 +55,79 @@ void CDlgHisto::OnKillfocusEdtNBins()
 
 void CDlgHisto::DrawHisto()
 {
-	UpdateData( TRUE);
 
-	if( m_doc == NULL) return;
+//DEL	UpdateData( TRUE);
+//DEL
+//DEL	if( m_doc == NULL) return;
+//DEL	
+//DEL	//************* 100 msec
+//DEL	CNiReal64Vector data_100m(m_doc->m_dn100m), axis_100m( m_nBins);
+//DEL	CNiIntVector histogram_100m( m_nBins);
+//DEL
+//DEL	for( int i = 0; i < m_doc->m_dn100m; i++) {
+//DEL		data_100m[i] = m_doc->m_dy100m[i];
+//DEL	}
+//DEL
+//DEL	// create histogram
+//DEL	double min, max;
+//DEL	unsigned int minIndex, maxIndex;
+//DEL	data_100m.MinMax( min, minIndex, max, maxIndex);
+//DEL	CNiMath::Histogram( data_100m, min, max, m_nBins, histogram_100m, axis_100m);
+
+//DEL	//Plot Data and Histogram
+//DEL	m_ctlHisto100m.PlotXvsY(axis_100m, histogram_100m);
 	
-	//************* 100 msec
-	CNiReal64Vector data_100m(m_doc->m_dn100m), axis_100m( m_nBins);
-	CNiIntVector histogram_100m( m_nBins);
 
-	for( int i = 0; i < m_doc->m_dn100m; i++) {
-		data_100m[i] = m_doc->m_dy100m[i];
-	}
+//DEL	//************* 1 sec
+//DEL	CNiReal64Vector data_1s(m_doc->m_dn1s), axis_1s( m_nBins);
+//DEL	CNiIntVector histogram_1s( m_nBins);
 
-	// create histogram
-	double min, max;
-	unsigned int minIndex, maxIndex;
-	data_100m.MinMax( min, minIndex, max, maxIndex);
-	CNiMath::Histogram( data_100m, min, max, m_nBins, histogram_100m, axis_100m);
+//DEL	for( i = 0; i < m_doc->m_dn1s; i++) {
+//DEL		data_1s[i] = m_doc->m_dy1s[i];
+//DEL	}
 
-	//Plot Data and Histogram
-	m_ctlHisto100m.PlotXvsY(axis_100m, histogram_100m);
-	
+//DEL	// create histogram
+//DEL	/*double min, max;
+//DEL	unsigned int minIndex, maxIndex;*/
+//DEL	data_1s.MinMax( min, minIndex, max, maxIndex);
+//DEL	CNiMath::Histogram( data_1s, min, max, m_nBins, histogram_1s, axis_1s);
 
-	//************* 1 sec
-	CNiReal64Vector data_1s(m_doc->m_dn1s), axis_1s( m_nBins);
-	CNiIntVector histogram_1s( m_nBins);
+//DEL	//Plot Data and Histogram
+//DEL	m_ctlHisto1s.PlotXvsY(axis_1s, histogram_1s);
 
-	for( i = 0; i < m_doc->m_dn1s; i++) {
-		data_1s[i] = m_doc->m_dy1s[i];
-	}
+//DEL	//************* 10 sec
+//DEL	if( m_doc->m_dn10s > 2.) {
+//DEL		CNiReal64Vector data_10s(m_doc->m_dn10s), axis_10s( m_nBins);
+//DEL		CNiIntVector histogram_10s( m_nBins);
 
-	// create histogram
-	/*double min, max;
-	unsigned int minIndex, maxIndex;*/
-	data_1s.MinMax( min, minIndex, max, maxIndex);
-	CNiMath::Histogram( data_1s, min, max, m_nBins, histogram_1s, axis_1s);
+//DEL		for( i = 0; i < m_doc->m_dn10s; i++) {
+//DEL			data_10s[i] = m_doc->m_dy10s[i];
+//DEL		}
 
-	//Plot Data and Histogram
-	m_ctlHisto1s.PlotXvsY(axis_1s, histogram_1s);
+//DEL		// create histogram
+//DEL		data_10s.MinMax( min, minIndex, max, maxIndex);
+//DEL		CNiMath::Histogram( data_10s, min, max, m_nBins, histogram_10s, axis_10s);
 
-	//************* 10 sec
-	if( m_doc->m_dn10s > 2.) {
-		CNiReal64Vector data_10s(m_doc->m_dn10s), axis_10s( m_nBins);
-		CNiIntVector histogram_10s( m_nBins);
+//DEL		//Plot Data and Histogram
+//DEL		m_ctlHisto10s.PlotXvsY(axis_10s, histogram_10s);
+//DEL	}
 
-		for( i = 0; i < m_doc->m_dn10s; i++) {
-			data_10s[i] = m_doc->m_dy10s[i];
-		}
+//DEL	//************* 100 sec
+//DEL	if( m_doc->m_dn100s > 2.) {
+//DEL		CNiReal64Vector data_100s(m_doc->m_dn100s), axis_100s( m_nBins);
+//DEL		CNiIntVector histogram_100s( m_nBins);
 
-		// create histogram
-		data_10s.MinMax( min, minIndex, max, maxIndex);
-		CNiMath::Histogram( data_10s, min, max, m_nBins, histogram_10s, axis_10s);
+//DEL		for( i = 0; i < m_doc->m_dn100s; i++) {
+//DEL			data_100s[i] = m_doc->m_dy100s[i];
+//DEL		}
 
-		//Plot Data and Histogram
-		m_ctlHisto10s.PlotXvsY(axis_10s, histogram_10s);
-	}
+//DEL		// create histogram
+//DEL		data_100s.MinMax( min, minIndex, max, maxIndex);
+//DEL		CNiMath::Histogram( data_100s, min, max, m_nBins, histogram_100s, axis_100s);
 
-	//************* 100 sec
-	if( m_doc->m_dn100s > 2.) {
-		CNiReal64Vector data_100s(m_doc->m_dn100s), axis_100s( m_nBins);
-		CNiIntVector histogram_100s( m_nBins);
-
-		for( i = 0; i < m_doc->m_dn100s; i++) {
-			data_100s[i] = m_doc->m_dy100s[i];
-		}
-
-		// create histogram
-		data_100s.MinMax( min, minIndex, max, maxIndex);
-		CNiMath::Histogram( data_100s, min, max, m_nBins, histogram_100s, axis_100s);
-
-		//Plot Data and Histogram
-		m_ctlHisto100s.PlotXvsY(axis_100s, histogram_100s);
-	}
+//DEL		//Plot Data and Histogram
+//DEL		m_ctlHisto100s.PlotXvsY(axis_100s, histogram_100s);
+//DEL	}
 }
 
 void CDlgHisto::OnOK() 

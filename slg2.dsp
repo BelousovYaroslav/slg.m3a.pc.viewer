@@ -404,6 +404,14 @@ SOURCE=.\slg2View.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\SlgGroupNewAverager.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SlgNewAverager.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -411,6 +419,10 @@ SOURCE=.\StdAfx.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\AnalogueParamsConstList.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\BgColoredLabel.h
@@ -489,6 +501,14 @@ SOURCE=.\slg2View.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\SlgGroupNewAverager.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SlgNewAverager.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.h
 # End Source File
 # End Group
@@ -541,25 +561,20 @@ SOURCE=.\ReadMe.txt
 # 	2:10:HeaderFile:NiPlot.h
 # 	2:8:ImplFile:NiAll.cpp
 # End Section
-# Section slg2 : {65FD2500-C067-11CE-A88D-0020AF6845F6}
-# 	2:5:Class:CNiTicks
-# 	2:10:HeaderFile:NiTicks.h
-# 	2:8:ImplFile:NiAll.cpp
-# End Section
 # Section slg2 : {CA90E9C0-6D11-11CF-A543-0020AF1E73B9}
 # 	2:5:Class:CNiPlots
 # 	2:10:HeaderFile:NiPlots.h
-# 	2:8:ImplFile:NiAll.cpp
-# End Section
-# Section slg2 : {E93425C7-2038-11CF-A543-0020AF1E73B9}
-# 	2:5:Class:CNiPointers
-# 	2:10:HeaderFile:NiPointers.h
 # 	2:8:ImplFile:NiAll.cpp
 # End Section
 # Section slg2 : {083039C2-13F4-11D1-8B7E-0000F8754DA1}
 # 	2:5:Class:CCommonDialog1
 # 	2:10:HeaderFile:commondialog.h
 # 	2:8:ImplFile:commondialog.cpp
+# End Section
+# Section slg2 : {E93425C7-2038-11CF-A543-0020AF1E73B9}
+# 	2:5:Class:CNiPointers
+# 	2:10:HeaderFile:NiPointers.h
+# 	2:8:ImplFile:NiAll.cpp
 # End Section
 # Section slg2 : {E4012F00-1073-11CF-9617-0020AF6845F6}
 # 	2:5:Class:CNiLabels
@@ -591,10 +606,6 @@ SOURCE=.\ReadMe.txt
 # 	2:10:HeaderFile:NiLabels3D.h
 # 	2:8:ImplFile:NiAll.cpp
 # End Section
-# Section slg2 : {D940E4C8-6079-11CE-88CB-0020AF6845F6}
-# 	2:21:DefaultSinkHeaderFile:NiSlide.h
-# 	2:16:DefaultSinkClass:CNiSlide
-# End Section
 # Section slg2 : {0414ADF0-A0DE-11CE-A870-0020AF6845F6}
 # 	2:5:Class:CNiAxis
 # 	2:10:HeaderFile:NiAxis.h
@@ -604,6 +615,10 @@ SOURCE=.\ReadMe.txt
 # 	2:5:Class:CNiPlots3D
 # 	2:10:HeaderFile:NiPlots3D.h
 # 	2:8:ImplFile:NiAll.cpp
+# End Section
+# Section slg2 : {D940E4C8-6079-11CE-88CB-0020AF6845F6}
+# 	2:21:DefaultSinkHeaderFile:NiSlide.h
+# 	2:16:DefaultSinkClass:CNiSlide
 # End Section
 # Section slg2 : {6F7EA122-D1A1-11D2-A4EE-00A024D63828}
 # 	2:5:Class:CNiBindings
@@ -681,6 +696,15 @@ SOURCE=.\ReadMe.txt
 # 	2:10:HeaderFile:NiValuepair.h
 # 	2:8:ImplFile:NiAll.cpp
 # End Section
+# Section slg2 : {B68DBFAB-16A0-11CE-80BF-0020AF31CEF9}
+# 	2:21:DefaultSinkHeaderFile:NiGraph.h
+# 	2:16:DefaultSinkClass:CNiGraph
+# End Section
+# Section slg2 : {14AE3BE4-1A81-11CF-AE6F-0020AF31CEF9}
+# 	2:5:Class:CNiAxes
+# 	2:10:HeaderFile:NiAxes.h
+# 	2:8:ImplFile:NiAll.cpp
+# End Section
 # Section slg2 : {F32E05B0-15B6-11D2-A253-00A024D8324D}
 # 	2:5:Class:CNiLights
 # 	2:10:HeaderFile:NiLights.h
@@ -691,18 +715,14 @@ SOURCE=.\ReadMe.txt
 # 	2:10:HeaderFile:NiLight.h
 # 	2:8:ImplFile:NiAll.cpp
 # End Section
-# Section slg2 : {B68DBFAB-16A0-11CE-80BF-0020AF31CEF9}
-# 	2:21:DefaultSinkHeaderFile:NiGraph.h
-# 	2:16:DefaultSinkClass:CNiGraph
-# End Section
-# Section slg2 : {14AE3BE4-1A81-11CF-AE6F-0020AF31CEF9}
-# 	2:5:Class:CNiAxes
-# 	2:10:HeaderFile:NiAxes.h
-# 	2:8:ImplFile:NiAll.cpp
-# End Section
 # Section slg2 : {B29D1C40-5270-11D0-A547-0020AF1E73B9}
 # 	2:5:Class:CNiPicturedisp
 # 	2:10:HeaderFile:NiPicturedisp.h
+# 	2:8:ImplFile:NiAll.cpp
+# End Section
+# Section slg2 : {2C36E3E8-478D-11D0-A547-0020AF1E73B9}
+# 	2:5:Class:CNiImage
+# 	2:10:HeaderFile:NiImage.h
 # 	2:8:ImplFile:NiAll.cpp
 # End Section
 # Section slg2 : {6810EEF1-232D-11D2-BEC7-00A024585300}
@@ -713,11 +733,6 @@ SOURCE=.\ReadMe.txt
 # Section slg2 : {9B41D330-36CF-11D2-A3A3-00A024D8325C}
 # 	2:5:Class:CNiContours
 # 	2:10:HeaderFile:NiContours.h
-# 	2:8:ImplFile:NiAll.cpp
-# End Section
-# Section slg2 : {2C36E3E8-478D-11D0-A547-0020AF1E73B9}
-# 	2:5:Class:CNiImage
-# 	2:10:HeaderFile:NiImage.h
 # 	2:8:ImplFile:NiAll.cpp
 # End Section
 # Section slg2 : {85041CC0-E78C-11CE-AE6E-0020AF31CEF9}
@@ -733,4 +748,9 @@ SOURCE=.\ReadMe.txt
 # Section slg2 : {2AFA9F10-0B6A-11D2-A250-00A024D8324D}
 # 	2:21:DefaultSinkHeaderFile:NiGraph3D.h
 # 	2:16:DefaultSinkClass:CNiGraph3D
+# End Section
+# Section slg2 : {65FD2500-C067-11CE-A88D-0020AF6845F6}
+# 	2:5:Class:CNiTicks
+# 	2:10:HeaderFile:NiTicks.h
+# 	2:8:ImplFile:NiAll.cpp
 # End Section

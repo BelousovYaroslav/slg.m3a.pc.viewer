@@ -4,6 +4,8 @@
 #include "stdafx.h"
 #include "slg2.h"
 #include "DlgGraphSetup.h"
+#include "MainView.h"
+#include "MainFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -97,5 +99,9 @@ void CDlgGraphSetup::OnOK()
   //theApp.m_ctlColorLabel.SetBgColor( theApp.GetSettings()->GetGraphSettings( nGraph)->GetLineColor());
   theApp.GetSettings()->GetGraphSettings( m_nGraph)->SetLineColor( m_ctlColorLabel.GetBgColor());
 
-	CDialog::OnOK();
+  
+  CDialog::OnOK();
+  CMainFrame *frm = ( CMainFrame *) theApp.GetMainWnd();
+  CMainView *view = ( CMainView *) frm->GetActiveView();
+  view->SetRefreshTimer( 100);
 }
