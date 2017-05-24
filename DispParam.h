@@ -25,6 +25,10 @@ public:
   double * GetY( int nMeaning);
   double * GetX( int nMeaning);
   long GetDataLen( int nMeaning);
+  double GetMin( int nMeaning);
+  double GetMax( int nMeaning);
+  double GetAvg( int nMeaning);
+  double GetRms( int nMeaning);
 private:
   double *m_adbl_tact_y,  *m_adbl_tact_x;
   double m_dbl_tact_min,  m_dbl_tact_mean,  m_dbl_tact_max, m_dbl_tact_rms;

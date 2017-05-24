@@ -77,6 +77,7 @@ public:
   CDispParam m_dpDecCoeff;  
 
 	long m_nDataFileLines;
+  double m_dblMeasDuration;
 };
 
 /////////////////////////////////////////////////////////////////////////////

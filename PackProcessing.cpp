@@ -165,6 +165,7 @@ int CPackProcessing::ProcessPack_4_2_0( void) {
 		m_dblPhi = ( ( double) n_dN / 2147483647. * 99310.);
   }
 
+  m_dblPhi *= theApp.GetSettings()->GetScaleCoeff() / 4.;
   return 0;
 }
 
@@ -180,24 +181,28 @@ int CPackProcessing::ProcessPack_3_2_2( void) {
   unsigned short shCur1 = ( bt9 << 8) + bt8;
   double dblCur1 = ( double) shCur1;
   switch( m_nAnParam) {
-    case UTD1: 
-		case UTD2: 
-    case UTD3:
+    case 0: //UTD1
+		case 1: //UTD2
+    case 2: //UTD3
       m_dblAnParamValue = shCur1 / 65535. * 200. - 100.;
     break;
 
-		case I1:
-		case I2:
+		case 3: //I1
+		case 4: //I2
       m_dblAnParamValue = ( 2.5 - shCur1 / 4096. * 3.) / 2.5;
     break;
 
-		case CNTRPC:
+		case 5: //CNTR_PC
       m_dblAnParamValue = ( ( shCur1 / 4096. * 3.) - 2.048) * 100.;
     break;
 
-		case AMPLANG_ALTERA:
+		case 6: //AA
       m_dblAnParamValue = shCur1 / 4.                              //imp
                     * theApp.GetSettings()->GetScaleCoeff();       //''
+    break;
+
+    case 14:  //DEC.COEFF
+      m_dblDecCoeff = shCur1 / 65535.;
     break;
   }
 
@@ -213,7 +218,7 @@ int CPackProcessing::ProcessPack_3_2_2( void) {
 	ptr[3] = bt6;
 
 	m_dblPhi = ( ( double) n_dN / 2147483647. * 99310.);
-  
+  m_dblPhi *= theApp.GetSettings()->GetScaleCoeff() / 4.;
 
   return 0;
 }
@@ -350,6 +355,7 @@ int CPackProcessing::ProcessPack_3_2_3( void) {
 		m_dblPhi = ( ( double) n_dN / 2147483647. * 99310.);
   }
 
+  m_dblPhi *= theApp.GetSettings()->GetScaleCoeff() / 4.;
   return 0;
 }
 
@@ -468,6 +474,7 @@ int CPackProcessing::ProcessPack_3_2_5( void) {
 		m_dblPhi = ( ( double) n_dN / 2147483647. * 99310.);
   }
 
+  m_dblPhi *= theApp.GetSettings()->GetScaleCoeff() / 4.;
   return 0;
 }
 

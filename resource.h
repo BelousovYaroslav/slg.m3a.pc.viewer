@@ -275,7 +275,9 @@
 #define IDC_RAD_G6_T0                   1212
 #define IDC_CWN_SKIP_MSECS              1212
 #define IDC_RAD_G6_T1                   1213
+#define IDC_LBL_STEP1_DECCOEFF_FIRST    1213
 #define IDC_RAD_G6_T2                   1214
+#define IDC_LBL_STEP1_DECCOEFF_LAST     1214
 #define IDC_RAD_G5_T3                   1215
 #define IDC_RAD_G5_T4                   1216
 #define IDC_RAD_G6_T3                   1217
@@ -296,6 +298,7 @@
 #define IDC_CMB_GRAPH3_X                1231
 #define IDC_RAD_SKIP_TIME               1231
 #define IDC_CMB_GRAPH4_X                1232
+#define IDC_CHK_TACT_LINE               1232
 #define IDC_CMB_GRAPH5_X                1233
 #define IDC_CMB_GRAPH6_X                1234
 #define IDC_CMB_GRAPH7_X                1235
@@ -326,7 +329,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        146
 #define _APS_NEXT_COMMAND_VALUE         32778
-#define _APS_NEXT_CONTROL_VALUE         1231
+#define _APS_NEXT_CONTROL_VALUE         1233
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

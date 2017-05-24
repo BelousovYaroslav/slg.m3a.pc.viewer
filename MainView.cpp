@@ -35,42 +35,6 @@ CMainView::CMainView()
 	: CFormView(CMainView::IDD)
 {
 	//{{AFX_DATA_INIT(CMainView)
-	m_strGraphMaxVal = _T("");
-	m_strGraphMeanVal = _T("");
-	m_strGraphMinVal = _T("");
-	m_strGraphRmsVal = _T("");
-	m_strSmGr1_max = _T("");
-	m_strSmGr1_mean = _T("");
-	m_strSmGr1_min = _T("");
-	m_strSmGr1_rms = _T("");
-	m_strSmGr2_max = _T("");
-	m_strSmGr2_mean = _T("");
-	m_strSmGr2_min = _T("");
-	m_strSmGr2_rms = _T("");
-	m_strSmGr3_max = _T("");
-	m_strSmGr3_mean = _T("");
-	m_strSmGr3_min = _T("");
-	m_strSmGr3_rms = _T("");
-	m_strSmGr4_max = _T("");
-	m_strSmGr4_mean = _T("");
-	m_strSmGr4_min = _T("");
-	m_strSmGr4_rms = _T("");
-	m_strSmGr5_max = _T("");
-	m_strSmGr5_mean = _T("");
-	m_strSmGr5_min = _T("");
-	m_strSmGr5_rms = _T("");
-	m_strSmGr6_max = _T("");
-	m_strSmGr6_mean = _T("");
-	m_strSmGr6_min = _T("");
-	m_strSmGr6_rms = _T("");
-	m_strSmGr7_max = _T("");
-	m_strSmGr7_mean = _T("");
-	m_strSmGr7_min = _T("");
-	m_strSmGr7_rms = _T("");
-	m_strSmGr8_max = _T("");
-	m_strSmGr8_mean = _T("");
-	m_strSmGr8_min = _T("");
-	m_strSmGr8_rms = _T("");
 	m_nTMeaningInd = 0;
 	m_dKimpSec = 0.0;
 	m_strSoftwareVersion = _T("");
@@ -119,42 +83,6 @@ void CMainView::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_GRAPH7, m_ctlSmallGraph7);
 	DDX_Control(pDX, IDC_GRAPH8, m_ctlSmallGraph8);
 	DDX_Control(pDX, IDC_MAIN_GRAPH, m_ctlMainGraph);
-	DDX_Text(pDX, IDC_MAXVAL_LABEL, m_strGraphMaxVal);
-	DDX_Text(pDX, IDC_MEANVAL_LABEL, m_strGraphMeanVal);
-	DDX_Text(pDX, IDC_MINVAL_LABEL, m_strGraphMinVal);
-	DDX_Text(pDX, IDC_RMSVAL_LABEL, m_strGraphRmsVal);
-	DDX_Text(pDX, IDC_GRAPH1_MAXVAL_LABEL, m_strSmGr1_max);
-	DDX_Text(pDX, IDC_GRAPH1_MEANVAL_LABEL, m_strSmGr1_mean);
-	DDX_Text(pDX, IDC_GRAPH1_MINVAL_LABEL, m_strSmGr1_min);
-	DDX_Text(pDX, IDC_GRAPH1_RMSVAL_LABEL, m_strSmGr1_rms);
-	DDX_Text(pDX, IDC_GRAPH2_MAXVAL_LABEL, m_strSmGr2_max);
-	DDX_Text(pDX, IDC_GRAPH2_MEANVAL_LABEL, m_strSmGr2_mean);
-	DDX_Text(pDX, IDC_GRAPH2_MINVAL_LABEL, m_strSmGr2_min);
-	DDX_Text(pDX, IDC_GRAPH2_RMSVAL_LABEL, m_strSmGr2_rms);
-	DDX_Text(pDX, IDC_GRAPH3_MAXVAL_LABEL, m_strSmGr3_max);
-	DDX_Text(pDX, IDC_GRAPH3_MEANVAL_LABEL, m_strSmGr3_mean);
-	DDX_Text(pDX, IDC_GRAPH3_MINVAL_LABEL, m_strSmGr3_min);
-	DDX_Text(pDX, IDC_GRAPH3_RMSVAL_LABEL, m_strSmGr3_rms);
-	DDX_Text(pDX, IDC_GRAPH4_MAXVAL_LABEL, m_strSmGr4_max);
-	DDX_Text(pDX, IDC_GRAPH4_MEANVAL_LABEL, m_strSmGr4_mean);
-	DDX_Text(pDX, IDC_GRAPH4_MINVAL_LABEL, m_strSmGr4_min);
-	DDX_Text(pDX, IDC_GRAPH4_RMSVAL_LABEL, m_strSmGr4_rms);
-	DDX_Text(pDX, IDC_GRAPH5_MAXVAL_LABEL, m_strSmGr5_max);
-	DDX_Text(pDX, IDC_GRAPH5_MEANVAL_LABEL, m_strSmGr5_mean);
-	DDX_Text(pDX, IDC_GRAPH5_MINVAL_LABEL, m_strSmGr5_min);
-	DDX_Text(pDX, IDC_GRAPH5_RMSVAL_LABEL, m_strSmGr5_rms);
-	DDX_Text(pDX, IDC_GRAPH6_MAXVAL_LABEL, m_strSmGr6_max);
-	DDX_Text(pDX, IDC_GRAPH6_MEANVAL_LABEL, m_strSmGr6_mean);
-	DDX_Text(pDX, IDC_GRAPH6_MINVAL_LABEL, m_strSmGr6_min);
-	DDX_Text(pDX, IDC_GRAPH6_RMSVAL_LABEL, m_strSmGr6_rms);
-	DDX_Text(pDX, IDC_GRAPH7_MAXVAL_LABEL, m_strSmGr7_max);
-	DDX_Text(pDX, IDC_GRAPH7_MEANVAL_LABEL, m_strSmGr7_mean);
-	DDX_Text(pDX, IDC_GRAPH7_MINVAL_LABEL, m_strSmGr7_min);
-	DDX_Text(pDX, IDC_GRAPH7_RMSVAL_LABEL, m_strSmGr7_rms);
-	DDX_Text(pDX, IDC_GRAPH8_MAXVAL_LABEL, m_strSmGr8_max);
-	DDX_Text(pDX, IDC_GRAPH8_MEANVAL_LABEL, m_strSmGr8_mean);
-	DDX_Text(pDX, IDC_GRAPH8_MINVAL_LABEL, m_strSmGr8_min);
-	DDX_Text(pDX, IDC_GRAPH8_RMSVAL_LABEL, m_strSmGr8_rms);
 	DDX_Radio(pDX, IDC_RAD_MEANING5, m_nTMeaningInd);
 	DDX_Text(pDX, IDC_EDT_K_IMP_SEC, m_dKimpSec);
 	DDX_Text(pDX, IDC_SOFTWARE_VERSION, m_strSoftwareVersion);
@@ -627,6 +555,8 @@ void CMainView::RefreshGraphs()
   CSlg2Doc *doc = ( CSlg2Doc *) GetDocument();
   if( !doc->m_dpW.IsInitialized()) return;
 
+  doc->RecalculateStatistics();
+
   //цикл по объектам графикам
   for( int i=0; i<8; i++) {
     CNiGraph *graphSmall = NULL;
@@ -791,8 +721,194 @@ void CMainView::RefreshGraphs()
         graphBig->PlotXY( line, true);
       }
 
-      switch( nRadMeaning) {
-        case 1: IDC_GRAPH1_MINVAL_LABEL
+      CWnd *st_min = NULL;
+      CWnd *st_avg = NULL;
+      CWnd *st_max = NULL;
+      CWnd *st_rms = NULL;
+      switch( i) {
+        case 1:
+          st_min = GetDlgItem( IDC_GRAPH2_MINVAL_LABEL);  st_max = GetDlgItem( IDC_GRAPH2_MAXVAL_LABEL);
+          st_avg = GetDlgItem( IDC_GRAPH2_MEANVAL_LABEL); st_rms = GetDlgItem( IDC_GRAPH2_RMSVAL_LABEL);
+        break;
+
+        case 2:
+          st_min = GetDlgItem( IDC_GRAPH3_MINVAL_LABEL);  st_max = GetDlgItem( IDC_GRAPH3_MAXVAL_LABEL);
+          st_avg = GetDlgItem( IDC_GRAPH3_MEANVAL_LABEL); st_rms = GetDlgItem( IDC_GRAPH3_RMSVAL_LABEL);
+        break;
+
+        case 3:
+          st_min = GetDlgItem( IDC_GRAPH4_MINVAL_LABEL);  st_max = GetDlgItem( IDC_GRAPH4_MAXVAL_LABEL);
+          st_avg = GetDlgItem( IDC_GRAPH4_MEANVAL_LABEL); st_rms = GetDlgItem( IDC_GRAPH4_RMSVAL_LABEL);
+        break;
+
+        case 4:
+          st_min = GetDlgItem( IDC_GRAPH5_MINVAL_LABEL);  st_max = GetDlgItem( IDC_GRAPH5_MAXVAL_LABEL);
+          st_avg = GetDlgItem( IDC_GRAPH5_MEANVAL_LABEL); st_rms = GetDlgItem( IDC_GRAPH5_RMSVAL_LABEL);
+        break;
+
+        case 5:
+          st_min = GetDlgItem( IDC_GRAPH6_MINVAL_LABEL);  st_max = GetDlgItem( IDC_GRAPH6_MAXVAL_LABEL);
+          st_avg = GetDlgItem( IDC_GRAPH6_MEANVAL_LABEL); st_rms = GetDlgItem( IDC_GRAPH6_RMSVAL_LABEL);
+        break;
+
+        case 6:
+          st_min = GetDlgItem( IDC_GRAPH7_MINVAL_LABEL);  st_max = GetDlgItem( IDC_GRAPH7_MAXVAL_LABEL);
+          st_avg = GetDlgItem( IDC_GRAPH7_MEANVAL_LABEL); st_rms = GetDlgItem( IDC_GRAPH7_RMSVAL_LABEL);
+        break;
+
+        case 7:
+          st_min = GetDlgItem( IDC_GRAPH8_MINVAL_LABEL);  st_max = GetDlgItem( IDC_GRAPH8_MAXVAL_LABEL);
+          st_avg = GetDlgItem( IDC_GRAPH8_MEANVAL_LABEL); st_rms = GetDlgItem( IDC_GRAPH8_RMSVAL_LABEL);
+        break;
+
+        default:
+          st_min = GetDlgItem( IDC_GRAPH1_MINVAL_LABEL);  st_max = GetDlgItem( IDC_GRAPH1_MAXVAL_LABEL);
+          st_avg = GetDlgItem( IDC_GRAPH1_MEANVAL_LABEL); st_rms = GetDlgItem( IDC_GRAPH1_RMSVAL_LABEL);
+      }
+
+      CString tmp;
+      tmp.Format( _T("%.05f"), dp->GetMin( nRadMeaning)); st_min->SetWindowText( tmp);
+      tmp.Format( _T("%.05f"), dp->GetMax( nRadMeaning)); st_max->SetWindowText( tmp);
+      tmp.Format( _T("%.05f"), dp->GetAvg( nRadMeaning)); st_avg->SetWindowText( tmp);
+      tmp.Format( _T("%.05f"), dp->GetRms( nRadMeaning)); st_rms->SetWindowText( tmp);
+
+      if( m_nMainGraph == i+1) {
+        
+        double dblMin = 1.e99, dblMax = -1.e99, dblAvg = 0., dblRms = 0.;
+
+        if( ( nComboY >= 10 && nComboY <= 15)) {
+          if( doc->m_bShowCursors) {
+            //это вычисляемый параметр, и есть курсоры
+            
+	          double dblCurStartX = m_ctlMainGraph.GetAxes().Item( "XAxis").GetMinimum();
+	          double dblCurEndX   = m_ctlMainGraph.GetAxes().Item( "XAxis").GetMaximum();
+
+            //double dblCurStartX = m_ctlMainGraph.GetCursors().Item( "CursorStart").GetXPosition();
+	          //double dblCurEndX   = m_ctlMainGraph.GetCursors().Item( "CursorEnd").GetXPosition();
+            
+            if( dblCurStartX > dblCurEndX) {
+              double tmp = dblCurStartX;
+              dblCurStartX = dblCurEndX;
+              dblCurEndX = tmp;
+            }
+
+            long lEnd = dp->GetDataLen( nRadMeaning);
+            double dblSumm = 0.; double dblCalc = 0.;
+            for( long l=0; l<lEnd; l++) {
+              if( dp->GetX( nRadMeaning)[l] > dblCurStartX) {
+                if( dp->GetX( nRadMeaning)[l] > dblCurEndX) break;
+                double dt = dp->GetY( nRadMeaning)[l];
+                switch( nComboY) {
+                  case 10: dt = dt - doc->m_dpT2.GetY( nRadMeaning)[l]; break; //dT12
+                  case 11: dt = dt - doc->m_dpT3.GetY( nRadMeaning)[l]; break; //dT13
+                  case 12: dt = dt - doc->m_dpT3.GetY( nRadMeaning)[l]; break; //dT23
+                  case 13: dt = dt * 1000.; break;  //msec
+                  case 14: dt = dt * 1e6; break;   //mcsec
+                  case 15: dt = 1. / dt; break;     //Hz
+                }
+                if( dblMin > dt) dblMin = dt;
+                if( dblMax < dt) dblMax = dt;
+                dblSumm += dt; dblCalc += 1.;
+              }
+            }
+            dblAvg = dblSumm / dblCalc;
+            
+            dblSumm = 0.;
+            for( l=0; l<lEnd; l++) {
+              if( dp->GetX( nRadMeaning)[l] > dblCurStartX) {
+                if( dp->GetX( nRadMeaning)[l] > dblCurEndX) break;
+                dblSumm += ( dp->GetY( nRadMeaning)[ l] - dblAvg) * ( dp->GetY( nRadMeaning)[ l] - dblAvg);
+              }
+            }
+            dblRms = sqrt( dblSumm / lEnd);
+            
+            tmp.Format( _T("%.05f"), dblMin); GetDlgItem( IDC_MINVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblMax); GetDlgItem( IDC_MAXVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblAvg); GetDlgItem( IDC_MEANVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblRms); GetDlgItem( IDC_RMSVAL_LABEL)->SetWindowText( tmp);
+          }
+          else {
+            //это вычисляемый параметр, и курсоров нет
+            long lEnd = dp->GetDataLen( nRadMeaning);
+            double dblSumm = 0.;
+            for( long l=0; l<lEnd; l++) {
+              double dt = dp->GetY( nRadMeaning)[l];
+              switch( nComboY) {
+                case 10: dt = dt - doc->m_dpT2.GetY( nRadMeaning)[l]; break; //dT12
+                case 11: dt = dt - doc->m_dpT3.GetY( nRadMeaning)[l]; break; //dT13
+                case 12: dt = dt - doc->m_dpT3.GetY( nRadMeaning)[l]; break; //dT23
+                case 13: dt = dt * 1000.; break;  //msec
+                case 14: dt = dt * 1e6; break;   //mcsec
+                case 15: dt = 1. / dt; break;     //Hz
+              }
+              if( dblMin > dt) dblMin = dt;
+              if( dblMax < dt) dblMax = dt;
+              dblSumm += dt;
+            }
+            dblAvg = dblSumm / lEnd;
+            
+            dblSumm = 0.;
+            for( l=0; l<lEnd; l++) {
+              dblSumm += ( dp->GetY( nRadMeaning)[ l] - dblAvg) * ( dp->GetY( nRadMeaning)[ l] - dblAvg);
+            }
+            dblRms = sqrt( dblSumm / lEnd);
+
+            tmp.Format( _T("%.05f"), dblMin); GetDlgItem( IDC_MINVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblMax); GetDlgItem( IDC_MAXVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblAvg); GetDlgItem( IDC_MEANVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblRms); GetDlgItem( IDC_RMSVAL_LABEL)->SetWindowText( tmp);
+          }
+        }
+        else {
+          if( doc->m_bShowCursors) {
+            //это прямой параметр и есть курсоры
+            double dblCurStartX = m_ctlMainGraph.GetAxes().Item( "XAxis").GetMinimum();
+	          double dblCurEndX   = m_ctlMainGraph.GetAxes().Item( "XAxis").GetMaximum();
+            //double dblCurStartX = m_ctlMainGraph.GetCursors().Item( "CursorStart").GetXPosition();
+	          //double dblCurEndX = m_ctlMainGraph.GetCursors().Item( "CursorEnd").GetXPosition();
+
+            if( dblCurStartX > dblCurEndX) {
+              double tmp = dblCurStartX;
+              dblCurStartX = dblCurEndX;
+              dblCurEndX = tmp;
+            }
+
+            long lEnd = dp->GetDataLen( nRadMeaning);
+            double dblSumm = 0.;
+            double dblCalc = 0;
+            for( long l=0; l<lEnd; l++) {
+              if( dp->GetX( nRadMeaning)[l] > dblCurStartX) {
+                if( dp->GetX( nRadMeaning)[l] > dblCurEndX) break;
+                double dt = dp->GetY( nRadMeaning)[l];
+                if( dblMin > dt) dblMin = dt;
+                if( dblMax < dt) dblMax = dt;
+                dblSumm += dt; dblCalc += 1.;
+              }
+            }
+            dblAvg = dblSumm / dblCalc;
+            
+            dblSumm = 0.;
+            for( l=0; l<lEnd; l++) {
+              if( dp->GetX( nRadMeaning)[l] > dblCurStartX) {
+                if( dp->GetX( nRadMeaning)[l] > dblCurEndX) break;
+                dblSumm += ( dp->GetY( nRadMeaning)[ l] - dblAvg) * ( dp->GetY( nRadMeaning)[ l] - dblAvg);
+              }
+            }
+            dblRms = sqrt( dblSumm / lEnd);
+
+            tmp.Format( _T("%.05f"), dblMin); GetDlgItem( IDC_MINVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblMax); GetDlgItem( IDC_MAXVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblAvg); GetDlgItem( IDC_MEANVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dblRms); GetDlgItem( IDC_RMSVAL_LABEL)->SetWindowText( tmp);
+          }
+          else {
+            //это прямой параметр и курсоров нет - что на маленькой статистике, то и вправо
+            tmp.Format( _T("%.05f"), dp->GetMin( nRadMeaning)); GetDlgItem( IDC_MINVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dp->GetMax( nRadMeaning)); GetDlgItem( IDC_MAXVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dp->GetAvg( nRadMeaning)); GetDlgItem( IDC_MEANVAL_LABEL)->SetWindowText( tmp);
+            tmp.Format( _T("%.05f"), dp->GetRms( nRadMeaning)); GetDlgItem( IDC_RMSVAL_LABEL)->SetWindowText( tmp);
+          }
+        }
       }
     }
     else {
@@ -801,186 +917,7 @@ void CMainView::RefreshGraphs()
     }
   }
 
-
-	//doc->RecalculateStatistics();
 	m_strSoftwareVersion = ( ( CSlg2App *) AfxGetApp())->m_strSoftwareVer;
-
-//DEL switch( m_nMainGraph) {
-//DEL		case 1:
-//DEL			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 0, 127, 0));
-//DEL
-//DEL			if( m_nTMeaningInd == 0) {
-//DEL				m_ctlMainGraph.PlotXY( line_w100m, true);
-//DEL				m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_100m_min);
-//DEL				m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_100m_mean);
-//DEL				m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_100m_max);
-//DEL				m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_100m_rms);
-//DEL			}
-//DEL
-//DEL			if( m_nTMeaningInd == 1) {
-//DEL				m_ctlMainGraph.PlotXY( line_w1s, true);
-//DEL				m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_1s_min);
-//DEL				m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_1s_mean);
-//DEL				m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_1s_max);
-//DEL				m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_1s_rms);
-//DEL			}
-//DEL			
-//DEL			if( m_nTMeaningInd == 2) {
-//DEL				m_ctlMainGraph.PlotXY( line_w10s, true);
-//DEL				m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_10s_min);
-//DEL				m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_10s_mean);
-//DEL				m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_10s_max);
-//DEL				m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_10s_rms);
-//DEL			}
-//DEL
-//DEL			if( m_nTMeaningInd == 3) {
-//DEL				m_ctlMainGraph.PlotXY( line_w100s, true);
-//DEL				m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_100s_min);
-//DEL				m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_100s_mean);
-//DEL				m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_100s_max);
-//DEL				m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_100s_rms);
-//DEL			}
-//DEL			
-//DEL		break;
-//DEL
-//DEL		case 2:
-//DEL			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 127, 0, 0));
-//DEL			m_ctlMainGraph.PlotXY( line_i1, true);
-//DEL			m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_i1_min);
-//DEL			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_i1_mean);
-//DEL			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_i1_max);
-//DEL			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_i1_rms);
-//DEL		break;
-//DEL
-//DEL		case 3:
-//DEL			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 0, 0, 127));
-//DEL			m_ctlMainGraph.PlotXY( line_i2, true);
-//DEL			m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_i2_min);
-//DEL			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_i2_mean);
-//DEL			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_i2_max);
-//DEL			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_i2_rms);
-//DEL		break;
-//DEL
-//DEL		case 4:
-//DEL			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 0, 127, 0));
-//DEL			m_ctlMainGraph.PlotXY( line_vpc, true);
-//DEL			m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_vpc_min);
-//DEL			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_vpc_mean);
-//DEL			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_vpc_max);
-//DEL			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_vpc_rms);
-//DEL		break;
-//DEL
-//DEL		case 5:
-//DEL			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 127, 0, 0));
-//DEL			m_ctlMainGraph.PlotXY( line_aa, true);
-//DEL			m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_aa_min);
-//DEL			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_aa_mean);
-//DEL			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_aa_max);
-//DEL			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_aa_rms);
-//DEL		break;
-//DEL
-//DEL		case 6:
-//DEL			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 0, 0, 127));
-//DEL			
-//DEL      m_ctlMainGraph.PlotXY( line_t1, true);
-//DEL      m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_t1_min);
-//DEL			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_t1_mean);
-//DEL			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_t1_max);
-//DEL			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_t1_rms);
-//DEL
-//DEL		break;
-//DEL
-//DEL		case 7:
-//DEL			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 0, 127, 0));
-//DEL			
-//DEL      m_ctlMainGraph.PlotXY( line_t2, true);
-//DEL      m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_t2_min);
-//DEL			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_t2_mean);
-//DEL			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_t2_max);
-//DEL			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_t2_rms);
-//DEL
-//DEL		break;
-//DEL
-//DEL		case 8:
-//DEL			m_ctlMainGraph.GetPlots().Item( 1).SetLineColor( RGB( 127, 0, 0));
-//DEL			m_ctlMainGraph.PlotXY( line_tsa, true);
-//DEL			m_strGraphMinVal.Format( _T("%.4f"), doc->m_d_tsa_min);
-//DEL			m_strGraphMeanVal.Format( _T("%.4f"), doc->m_d_tsa_mean);
-//DEL			m_strGraphMaxVal.Format( _T("%.4f"), doc->m_d_tsa_max);
-//DEL			m_strGraphRmsVal.Format( _T("%.4f"), doc->m_d_tsa_rms);
-//DEL		break;
-//DEL
-//DEL		default:
-//DEL			m_nMainGraph = 1;
-//DEL		break;
-//DEL	}
-//DEL	
-//DEL	//статистика по каждому параметру
-//DEL	switch( m_nTMeaningInd) {
-//DEL		case 0:
-//DEL			m_strSmGr1_min.Format( _T("%.4f"), doc->m_d_100m_min);
-//DEL			m_strSmGr1_mean.Format( _T("%.4f"), doc->m_d_100m_mean);
-//DEL			m_strSmGr1_max.Format( _T("%.4f"), doc->m_d_100m_max);
-//DEL			m_strSmGr1_rms.Format( _T("%.4f"), doc->m_d_100m_rms);
-//DEL		break;
-//DEL
-//DEL		case 1:
-//DEL			m_strSmGr1_min.Format( _T("%.4f"), doc->m_d_1s_min);
-//DEL			m_strSmGr1_mean.Format( _T("%.4f"), doc->m_d_1s_mean);
-//DEL			m_strSmGr1_max.Format( _T("%.4f"), doc->m_d_1s_max);
-//DEL			m_strSmGr1_rms.Format( _T("%.4f"), doc->m_d_1s_rms);
-//DEL		break;
-//DEL
-//DEL		case 2:
-//DEL			m_strSmGr1_min.Format( _T("%.4f"), doc->m_d_10s_min);
-//DEL			m_strSmGr1_mean.Format( _T("%.4f"), doc->m_d_10s_mean);
-//DEL			m_strSmGr1_max.Format( _T("%.4f"), doc->m_d_10s_max);
-//DEL			m_strSmGr1_rms.Format( _T("%.4f"), doc->m_d_10s_rms);
-//DEL		break;
-//DEL
-//DEL		case 3:
-//DEL			m_strSmGr1_min.Format( _T("%.4f"), doc->m_d_100s_min);
-//DEL			m_strSmGr1_mean.Format( _T("%.4f"), doc->m_d_100s_mean);
-//DEL			m_strSmGr1_max.Format( _T("%.4f"), doc->m_d_100s_max);
-//DEL			m_strSmGr1_rms.Format( _T("%.4f"), doc->m_d_100s_rms);
-//DEL		break;
-//DEL	}
-//DEL
-//DEL	m_strSmGr2_min.Format( _T("%.4f"), doc->m_d_i1_min);
-//DEL	m_strSmGr2_mean.Format( _T("%.4f"), doc->m_d_i1_mean);
-//DEL	m_strSmGr2_max.Format( _T("%.4f"), doc->m_d_i1_max);
-//DEL	m_strSmGr2_rms.Format( _T("%.4f"), doc->m_d_i1_rms);
-//DEL
-//DEL	m_strSmGr3_min.Format( _T("%.4f"), doc->m_d_i2_min);
-//DEL	m_strSmGr3_mean.Format( _T("%.4f"), doc->m_d_i2_mean);
-//DEL	m_strSmGr3_max.Format( _T("%.4f"), doc->m_d_i2_max);
-//DEL	m_strSmGr3_rms.Format( _T("%.4f"), doc->m_d_i2_rms);
-//DEL	
-//DEL	m_strSmGr4_min.Format( _T("%.4f"), doc->m_d_vpc_min);
-//DEL	m_strSmGr4_mean.Format( _T("%.4f"), doc->m_d_vpc_mean);
-//DEL	m_strSmGr4_max.Format( _T("%.4f"), doc->m_d_vpc_max);
-//DEL	m_strSmGr4_rms.Format( _T("%.4f"), doc->m_d_vpc_rms);
-//DEL	
-//DEL	m_strSmGr5_min.Format( _T("%.4f"), doc->m_d_aa_min);
-//DEL	m_strSmGr5_mean.Format( _T("%.4f"), doc->m_d_aa_mean);
-//DEL	m_strSmGr5_max.Format( _T("%.4f"), doc->m_d_aa_max);
-//DEL	m_strSmGr5_rms.Format( _T("%.4f"), doc->m_d_aa_rms);
-//DEL	
-//DEL  m_strSmGr6_min.Format( _T("%.4f"), doc->m_d_t1_min);
-//DEL	m_strSmGr6_mean.Format( _T("%.4f"), doc->m_d_t1_mean);
-//DEL	m_strSmGr6_max.Format( _T("%.4f"), doc->m_d_t1_max);
-//DEL	m_strSmGr6_rms.Format( _T("%.4f"), doc->m_d_t1_rms);
-//DEL
-//DEL  m_strSmGr7_min.Format( _T("%.4f"), doc->m_d_t2_min);
-//DEL	m_strSmGr7_mean.Format( _T("%.4f"), doc->m_d_t2_mean);
-//DEL	m_strSmGr7_max.Format( _T("%.4f"), doc->m_d_t2_max);
-//DEL	m_strSmGr7_rms.Format( _T("%.4f"), doc->m_d_t2_rms);
-//DEL	
-//DEL	m_strSmGr8_min.Format( _T("%.4f"), doc->m_d_tsa_min);
-//DEL	m_strSmGr8_mean.Format( _T("%.4f"), doc->m_d_tsa_mean);
-//DEL	m_strSmGr8_max.Format( _T("%.4f"), doc->m_d_tsa_max);
-//DEL	m_strSmGr8_rms.Format( _T("%.4f"), doc->m_d_tsa_rms);
-//DEL
 	EndWaitCursor();
 
 	UpdateData( FALSE);

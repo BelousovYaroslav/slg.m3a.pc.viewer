@@ -75,11 +75,10 @@ int CDispParam::AllocMem( long lTactPoints, long l100msPoints)
   m_adbl_100s_x =  ( double *) malloc( l100msPoints / 1000 * sizeof( double));
   m_adbl_100s_y =  ( double *) malloc( l100msPoints / 1000 * sizeof( double));
 
-  m_dbl_tact_min = m_dbl_tact_mean = m_dbl_tact_max = m_dbl_tact_rms = 0;
-  m_dbl_100m_min = m_dbl_100m_mean = m_dbl_100m_max = m_dbl_100m_rms = 0;
-  m_dbl_1s_min   = m_dbl_1s_mean   = m_dbl_1s_max   = m_dbl_1s_rms   = 0;
-  m_dbl_10s_min  = m_dbl_10s_mean  = m_dbl_10s_max  = m_dbl_10s_rms  = 0;
-  m_dbl_100s_min = m_dbl_100s_mean = m_dbl_100s_max = m_dbl_100s_rms = 0;
+  m_dbl_tact_min  = m_dbl_100m_min  = m_dbl_1s_min  = m_dbl_10s_min  = m_dbl_100s_min  = 1.e+99;
+  m_dbl_tact_mean = m_dbl_100m_mean = m_dbl_1s_mean = m_dbl_10s_mean = m_dbl_100s_mean = 0.;
+  m_dbl_tact_max  = m_dbl_100m_max  = m_dbl_1s_max  = m_dbl_10s_max  = m_dbl_100s_max  = -1.e+99;
+  m_dbl_tact_rms  = m_dbl_100m_rms  = m_dbl_1s_rms  = m_dbl_10s_rms  = m_dbl_100s_rms  = 0;
 
   m_lAllocTact = lTactPoints;
   m_lAlloc100m = l100msPoints;
@@ -146,6 +145,7 @@ void CDispParam::AddPoint_100s( double dblT, double dblValue)
 
 void CDispParam::CalcMeanAndRMS()
 {
+  //ТАКТОВЫЕ
   //средние
   double dblSumm = 0.;
   for( long l=0; l<m_lCntTact; dblSumm += m_adbl_tact_y[ l++]);
@@ -156,7 +156,49 @@ void CDispParam::CalcMeanAndRMS()
   for( l=0; l<m_lCntTact; l++) {
     dblSumm += ( m_adbl_tact_y[ l] - m_dbl_tact_mean) * ( m_adbl_tact_y[ l] - m_dbl_tact_mean);
   }
-  m_dbl_tact_rms = sqrt( dblSumm / m_lCntTact); 
+  m_dbl_tact_rms = sqrt( dblSumm / m_lCntTact);
+
+
+  //100ms
+  //средние
+  dblSumm = 0.;
+  for( l=0; l<m_lCnt100m; dblSumm += m_adbl_100ms_y[ l++]);
+  m_dbl_100m_mean = dblSumm / ( double) m_lCnt100m;
+
+  //Rms
+  dblSumm = 0.;
+  for( l=0; l<m_lCnt100m; l++) {
+    dblSumm += ( m_adbl_100ms_y[ l] - m_dbl_100m_mean) * ( m_adbl_100ms_y[ l] - m_dbl_100m_mean);
+  }
+  m_dbl_100m_rms = sqrt( dblSumm / m_lCnt100m);
+
+
+  //1s
+  //средние
+  dblSumm = 0.;
+  for( l=0; l<m_lCnt1s; dblSumm += m_adbl_1s_y[ l++]);
+  m_dbl_1s_mean = dblSumm / ( double) m_lCnt1s;
+
+  //Rms
+  dblSumm = 0.;
+  for( l=0; l<m_lCnt1s; l++) {
+    dblSumm += ( m_adbl_1s_y[ l] - m_dbl_1s_mean) * ( m_adbl_1s_y[ l] - m_dbl_1s_mean);
+  }
+  m_dbl_1s_rms = sqrt( dblSumm / m_lCnt1s);
+
+
+  //10s
+  //средние
+  dblSumm = 0.;
+  for( l=0; l<m_lCnt10s; dblSumm += m_adbl_10s_y[ l++]);
+  m_dbl_10s_mean = dblSumm / ( double) m_lCnt10s;
+
+  //Rms
+  dblSumm = 0.;
+  for( l=0; l<m_lCnt10s; l++) {
+    dblSumm += ( m_adbl_10s_y[ l] - m_dbl_10s_mean) * ( m_adbl_10s_y[ l] - m_dbl_10s_mean);
+  }
+  m_dbl_10s_rms = sqrt( dblSumm / m_lCnt10s);
 }
 
 double * CDispParam::GetY( int nMeaning) {
@@ -187,4 +229,52 @@ long CDispParam::GetDataLen( int nMeaning) {
     case 4: return m_lCnt100s;
     default: return m_lCntTact;
   }
+}
+
+double CDispParam::GetMin( int nMeaning) {
+  double dblResult = .0;
+  switch( nMeaning) {
+    case 0: dblResult = m_dbl_tact_min; break;
+    case 1: dblResult = m_dbl_100m_min; break;
+    case 2: dblResult = m_dbl_1s_min;   break;
+    case 3: dblResult = m_dbl_10s_min;  break;
+    case 4: dblResult = m_dbl_100s_min; break;
+  }
+  return dblResult;
+}
+
+double CDispParam::GetMax( int nMeaning) {
+  double dblResult = .0;
+  switch( nMeaning) {
+    case 0: dblResult = m_dbl_tact_max; break;
+    case 1: dblResult = m_dbl_100m_max; break;
+    case 2: dblResult = m_dbl_1s_max;   break;
+    case 3: dblResult = m_dbl_10s_max;  break;
+    case 4: dblResult = m_dbl_100s_max; break;
+  }
+  return dblResult;
+}
+
+double CDispParam::GetAvg( int nMeaning) {
+  double dblResult = .0;
+  switch( nMeaning) {
+    case 0: dblResult = m_dbl_tact_mean; break;
+    case 1: dblResult = m_dbl_100m_mean; break;
+    case 2: dblResult = m_dbl_1s_mean;   break;
+    case 3: dblResult = m_dbl_10s_mean;  break;
+    case 4: dblResult = m_dbl_100s_mean; break;
+  }
+  return dblResult;
+}
+
+double CDispParam::GetRms( int nMeaning) {
+  double dblResult = .0;
+  switch( nMeaning) {
+    case 0: dblResult = m_dbl_tact_rms; break;
+    case 1: dblResult = m_dbl_100m_rms; break;
+    case 2: dblResult = m_dbl_1s_rms;   break;
+    case 3: dblResult = m_dbl_10s_rms;  break;
+    case 4: dblResult = m_dbl_100s_rms; break;
+  }
+  return dblResult;
 }

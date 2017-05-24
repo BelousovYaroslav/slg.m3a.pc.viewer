@@ -26,6 +26,8 @@ struct Step1Info {
   double dblDecCoeffMin;
   double dblDecCoeffMax;
   double dblDecCoeffMean;
+  double dblDecCoeffFirst;
+  double dblDecCoeffLast;
   int nDecCoeffData;
 };
 

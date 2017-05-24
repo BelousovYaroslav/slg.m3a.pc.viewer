@@ -4,6 +4,10 @@
 #include "stdafx.h"
 #include "slg2.h"
 #include "DlgExport.h"
+#include "AnalogueParamsConstList.h"
+#include "MainFrm.h"
+#include "MainView.h"
+#include "slg2Doc.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -100,98 +104,125 @@ void CDlgExport::OnOK()
 	fprintf( fhOut, _T("\n"));
 
 	FILE *fh;
-	switch( m_nStatFileVersion) {
+	/*switch( m_nStatFileVersion) {
 		case 1: fh = fopen( m_strFileName, "r"); break;
 		case 2: fh = fopen( m_strFileName, "rb"); break;
 		default: CDialog::OnOK(); return;
-	}
+	}*/
+  fh = fopen( m_strFileName, "rb");
 	
-
-	m_ctlProgressBar.SetRange32( 0, m_nDataFileLines);
+  CMainFrame *pFrm = ( CMainFrame *) AfxGetApp()->GetMainWnd();
+  CMainView *pView = ( CMainView *) pFrm->GetActiveView();
+  CSlg2Doc *pDoc =   ( CSlg2Doc *) pView->GetDocument();
+	m_ctlProgressBar.SetRange32( 0, ( long) pDoc->m_dblMeasDuration);
 
 	
-	//VARIABLES FOR INPUT DATA (OldFormat and NewFormat)
-	float of_f1, of_f2;
-	int of_i1, of_i2, of_i3;
-	//float nf_f1;
-	short nf_s1, nf_s2, nf_s3;
-  int nf_d1;
-			
-	int nLine = 0;
+  char nf_package[14];
 
-	double w_Summ = 0., w_Counter = 0.;
-	double i1_Summ = 0., i1_Counter = 0.;
-	double i2_Summ = 0., i2_Counter = 0.;
-	double vpc_Summ = 0., vpc_Counter = 0.;
-	double aa_Summ = 0., aa_Counter = 0.;
-	double t1_Summ = 0., t1_Counter = 0., t1_prev = 0.;
-	double t2_Summ = 0., t2_Counter = 0., t2_prev = 0.;
-	double tsa_Summ = 0.;
-	double dGlobalTime = 0.;
+  double w_Summ = 0., w_Counter = 0.;
+  double i1_Summ = 0., i1_Counter = 0.;
+  double i2_Summ = 0., i2_Counter = 0.;
+  double vpc_Summ = 0., vpc_Counter = 0.;
+  double aa_Summ = 0., aa_Counter = 0.;
+  double t1_Summ = 0., t1_Counter = 0., t1_prev = 0.;
+  double t2_Summ = 0., t2_Counter = 0., t2_prev = 0.;
+  double tsa_Summ = 0.;
+  double dGlobalTime = 0.;
 
-	double tMean;
-	switch( m_nTmean) {
-		case 1: tMean = 0.1; break;
-		case 2: tMean = 1.; break;
-		case 3: tMean = 10.; break;
-		case 4: tMean = 100.; break;
-	}
+  double tMean;
+  switch( m_nTmean) {
+    case 1: tMean = 0.1; break;
+    case 2: tMean = 1.; break;
+    case 3: tMean = 10.; break;
+    case 4: tMean = 100.; break;
+  }
 
-	while( 1) {
-		double p_phi, p_tsa;
+  while( 1) {
 
-		switch( m_nStatFileVersion) {
-			case 1:
-				fscanf( fh, "%f\t%f\t%d\t%d\t%d\n", &of_f1, &of_f2, &of_i1, &of_i2, &of_i3);
+    fread( nf_package, 14, 1, fh);
 
-				p_phi = of_f1 * theApp.GetSettings()->GetScaleCoeff() / 4.;
-				w_Summ += p_phi;
 
-				p_tsa = of_i3 / 32768.;
-				tsa_Summ += p_tsa;
-				dGlobalTime += p_tsa;
 
-				if( of_i1 == 0) { t1_Summ += of_i2; t1_Counter += 1.; }
-				if( of_i1 == 1) { t2_Summ += of_i2; t2_Counter += 1.; }
-				if( of_i1 == 2) { i1_Summ += of_i2; i1_Counter += 1.; }
-				if( of_i1 == 3) { i2_Summ += of_i2; i2_Counter += 1.; }
-				if( of_i1 == 4) { vpc_Summ += of_i2; vpc_Counter += 1.; }
-				if( of_i1 == 5) { aa_Summ += of_i2; aa_Counter += 1.; }
-			break;
+    double dbl1secInTacts = 2607104;
 
-			case 2:
-				//fread( &nf_f1, sizeof( float), 1, fh);
-        fread( &nf_d1, sizeof( int), 1, fh);
-				fread( &nf_s1, sizeof( short), 1, fh);
-				fread( &nf_s2, sizeof( short), 1, fh);
-				fread( &nf_s3, sizeof( short), 1, fh);
+    unsigned short nSaTime = ( nf_package[10] << 8) + nf_package[9];
+    double dblTime = nSaTime / dbl1secInTacts;
 
-				p_phi = ( nf_d1 / 2147483647. * 99310.) * theApp.GetSettings()->GetScaleCoeff() / 4.;
-				w_Summ += p_phi;
 
-				p_tsa = nf_s3 / 32768.;
-				tsa_Summ += p_tsa;
-				dGlobalTime += p_tsa;
+    //*****************************************************
+    //ФЛАГИ
+    BOOL bVeracity    = ( nf_package[12] & 0x80) ? TRUE : FALSE;
+    BOOL bLockBit     = ( nf_package[12] & 0x40) ? TRUE : FALSE;
+    BOOL bSyncAsync   = ( nf_package[12] & 0x20) ? TRUE : FALSE;
+    BOOL bdWdNdU      = ( nf_package[12] & 0x10) ? TRUE : FALSE;
+    short shErrorCode =  nf_package[12] & 0x0F;
 
-				if( ( nf_s1 & 0x7F) == 0) {
-					t1_Summ += ( unsigned short) nf_s2; t1_Counter += 1.; }
-				if( ( nf_s1 & 0x7F) == 1) {
-					t2_Summ += ( unsigned short) nf_s2; t2_Counter += 1.; }
-				if( ( nf_s1 & 0x7F) == 2) {
-					i1_Summ += nf_s2; i1_Counter += 1.; }
-				if( ( nf_s1 & 0x7F) == 3) {
-					i2_Summ += nf_s2; i2_Counter += 1.; }
-				if( ( nf_s1 & 0x7F) == 4) {
-					vpc_Summ += nf_s2; vpc_Counter += 1.; }
-				if( ( nf_s1 & 0x7F) == 5) {
-					aa_Summ += nf_s2; aa_Counter += 1.; }
-			break;
-		}
+    //*****************************************************
+    //АНАЛОГОВЫЙ ПАРАМЕТР
+    //индикатор аналогового параметра
+    int nAnParam = nf_package[6];
 
-		if( feof( fh))
-			break;
+    //аналоговый параметр
+    unsigned short shCur1 = ( nf_package[8] << 8) + nf_package[7];
+    double dblCur1 = ( double) shCur1;
 
-		if( !m_nTmean) {
+    double dblAnParamValue;
+    switch( nAnParam) {
+      case UTD1:    t1_Summ += shCur1;  t1_Counter += 1.;    break;
+      case UTD2:    t2_Summ += shCur1;  t2_Counter += 1.;    break;
+      //case UTD3:    t3_Summ += shCur1;  t3_Counter += 1.;    break;
+
+      case I1:      i1_Summ += shCur1;  i1_Counter += 1.;    break;
+      case I2:      i2_Summ += shCur1;  i2_Counter += 1.;    break;
+      
+
+      case CNTRPC:  vpc_Summ += shCur1; vpc_Counter += 1.;   break;
+
+      case AMPLANG_ALTERA:
+                    aa_Summ += shCur1;   aa_Counter += 1.;   break;
+    
+    }
+
+    double dblPhi;
+    if( bdWdNdU == TRUE) {
+      fclose( fh);
+      fclose( fhOut);
+      AfxMessageBox( "В файле данных есть пачка в которой передаётся dN dU.\nТакие пачки экспорт обрабатываеть не умеет.\nСбрасываем процесс экспорта.");
+      CDialog::OnOK();
+      return;
+    }
+    else {
+      //рабочий режим (передаётся phi)
+
+      //float f_dN;
+      int n_dN;
+      char *ptr;      
+    
+      ptr = ( char *) &n_dN;
+		
+      ptr[0] = nf_package[2];
+		  ptr[1] = nf_package[3];
+		  ptr[2] = nf_package[4];
+		  ptr[3] = nf_package[5];
+
+		  dblPhi = ( ( double) n_dN / 2147483647. * 99310.);
+    }
+
+    dblPhi *= theApp.GetSettings()->GetScaleCoeff() / 4.;
+    w_Summ += dblPhi;
+
+
+    tsa_Summ += dblTime;
+    dGlobalTime += dblTime;
+
+
+
+    if( feof( fh))
+      break;
+
+    if( !m_nTmean) {
+
+      //тактные значения без осреднения
 			if( m_bChkTimeSA) fprintf( fhOut, _T("%-12.4f"), dGlobalTime);
 			if( m_bChkRotAngle) fprintf( fhOut, _T("%-12.4f"), w_Summ);
 			if( m_bChkI1) fprintf( fhOut, _T("%-12.4f"), ( 2.5 - i1_Summ / i1_Counter / 4096. * 3.) / 2.5); //i1_Summ / i1_Counter / 4096. * 3. / 3.973);
@@ -231,6 +262,7 @@ void CDlgExport::OnOK()
 			t2_Summ = t2_Counter = 0.;
 		}
 		else if( tsa_Summ > tMean) {
+      //если набрали времени больше чем время осреденения
       if( m_bChkTimeSA) fprintf( fhOut, _T("%-12.4f"), dGlobalTime);
 			if( m_bChkRotAngle) fprintf( fhOut, _T("%-12.4f"), w_Summ / tsa_Summ);
 			
@@ -266,8 +298,8 @@ void CDlgExport::OnOK()
 			t2_Summ = t2_Counter = 0.;
 		}
 
-		nLine++;
-		m_ctlProgressBar.SetPos( nLine);
+		
+		m_ctlProgressBar.SetPos( ( long) dGlobalTime);
 
 	}
 

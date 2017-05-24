@@ -262,6 +262,8 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
   gl_InfoStep1.dblDecCoeffMin = 1.e6;
   gl_InfoStep1.dblDecCoeffMax = -1.e6;
   gl_InfoStep1.dblDecCoeffMean = 0.;
+  gl_InfoStep1.dblDecCoeffFirst = 0.;
+  gl_InfoStep1.dblDecCoeffLast = 0.;
   gl_InfoStep1.nDecCoeffData = 0;
 
 
@@ -428,6 +430,9 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
         unsigned short shCur1 = ( bt9 << 8) + bt8;
         double dblDecCoeff = ( ( double) shCur1) / 65535.;
 
+        if( gl_InfoStep1.dblDecCoeffFirst == 0.) gl_InfoStep1.dblDecCoeffFirst = dblDecCoeff;
+        gl_InfoStep1.dblDecCoeffLast = dblDecCoeff;
+
         if( dblDecCoeff < gl_InfoStep1.dblDecCoeffMin) gl_InfoStep1.dblDecCoeffMin = dblDecCoeff;
         if( dblDecCoeff > gl_InfoStep1.dblDecCoeffMax) gl_InfoStep1.dblDecCoeffMax = dblDecCoeff;
         gl_InfoStep1.dblDecCoeffMean += dblDecCoeff;
@@ -446,6 +451,11 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
 
       //отслеживаем режимы работы и тип выдаваемого параметра
       switch( nVer) {
+        case 0x030202:
+          gl_InfoStep1.cSyncAsyncUnknown = 0;
+          gl_InfoStep1.cHaveRegimedNdU = 0;
+        break;
+
         case 0x030204:
         case 0x030205:
         case 0x040200:          
@@ -1081,6 +1091,8 @@ LRESULT COpenMeasDlg::WindowProc(UINT message, WPARAM wParam, LPARAM lParam)
       m_pStep1.dblDecCoeffMin     = pStep1Info->dblDecCoeffMin;
       m_pStep1.dblDecCoeffMax     = pStep1Info->dblDecCoeffMax;
       m_pStep1.dblDecCoeffMean    = pStep1Info->dblDecCoeffMean;
+      m_pStep1.dblDecCoeffFirst   = pStep1Info->dblDecCoeffFirst;
+      m_pStep1.dblDecCoeffLast    = pStep1Info->dblDecCoeffLast;
       m_pStep1.nDecCoeffData      = pStep1Info->nDecCoeffData;
 
       /*
@@ -1234,6 +1246,19 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
       }
 
       if( m_pStep1.nDecCoeffData > 0)
+        strTmp.Format( "Коэфф. вычета, первый: %.5f", m_pStep1.dblDecCoeffFirst);
+      else
+        strTmp.Format( "Коэфф. вычета, первый: -");
+      GetDlgItem( IDC_LBL_STEP1_DECCOEFF_FIRST)->SetWindowText( strTmp);
+
+      if( m_pStep1.nDecCoeffData > 0)
+        strTmp.Format( "Коэфф. вычета, последний: %.5f", m_pStep1.dblDecCoeffLast);
+      else
+        strTmp.Format( "Коэфф. вычета, последний: -");
+      GetDlgItem( IDC_LBL_STEP1_DECCOEFF_LAST)->SetWindowText( strTmp);
+
+
+      if( m_pStep1.nDecCoeffData > 0)
         strTmp.Format( "Коэфф. вычета, мин: %.5f", m_pStep1.dblDecCoeffMin);
       else
         strTmp.Format( "Коэфф. вычета, мин: -");
@@ -1276,6 +1301,8 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
           CMainView *pView = ( CMainView *) pFrm->GetActiveView();
           CSlg2Doc *pDoc =   ( CSlg2Doc *) pView->GetDocument();
           
+          pDoc->m_dblMeasDuration  = m_pStep1.dblTime;
+
           pDoc->m_nMcVersionMajor  = m_nVersionMajor;
           pDoc->m_nMcVersionMiddle = m_nVersionMiddle;
           pDoc->m_nMcVersionMinor  = m_nVersionMinor;
@@ -1364,6 +1391,7 @@ void COpenMeasDlg::OnBtnStopLoad()
 void COpenMeasDlg::OnBtnGoon() 
 {
   UpdateData( TRUE);
+  GetDlgItem( IDC_BTN_GOON)->EnableWindow( FALSE);
   gl_dblStartSignCoeff = m_ctlSignCoeff.GetValue();
   gl_nSkipPacks = m_ctlSkipPacks.GetValue();
   gl_nSkipMsecs = m_ctlSkipMsecs.GetValue();
