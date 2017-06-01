@@ -760,72 +760,44 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
 
 
       //ОБСЧЁТ ПАРАМЕТРОВ ИЗ ПОСЫЛКИ
+      sgav_phi.CommonAddPoint( pack.m_dblPhi);
+      sgav_tsa.CommonAddPoint( pack.m_dblTime);
+      switch( pack.m_nAnParam) {
+        case UTD1: sgav_t1.CommonAddPoint( pack.m_dblAnParamValue); break;       //термодатчик 1
+        case UTD2: sgav_t2.CommonAddPoint( pack.m_dblAnParamValue); break;       //термодатчик 2
+        case UTD3: sgav_t3.CommonAddPoint( pack.m_dblAnParamValue); break;       //термодатчик 3
+        case I1:   sgav_i1.CommonAddPoint( pack.m_dblAnParamValue); break;       //разрядный ток i1
+        case I2:   sgav_i2.CommonAddPoint( pack.m_dblAnParamValue); break;       //разрядный ток i2
+        case CNTRPC: sgav_vpc.CommonAddPoint( pack.m_dblAnParamValue); break;    //напряжение на пьезокорректорах
+        case AMPLANG_ALTERA: sgav_aaa.CommonAddPoint( pack.m_dblAnParamValue); break; //амплитуда получаемая от alter'ы
+        case AMPLANG_DUS: sgav_aad.CommonAddPoint( pack.m_dblAnParamValue); break;    //амплитуда получаемая с ДУСа
+        case RULA: sgav_aar.CommonAddPoint( pack.m_dblAnParamValue); break;       //напряжение RULA
+        case DECCOEFF: sgav_deccoeff.CommonAddPoint( pack.m_dblAnParamValue); break;       //коэффициент вычета
+      }
 
-      
       // *** *** *** *** *** *** ***
       // TACTS POINTS
       // *** *** *** *** *** *** ***
       if( gl_bLineTact) {
         //угловая скорость (угол поворота)
         pDoc->m_dpW.AddPoint_Tact( d_global_time, pack.m_dblPhi / pack.m_dblTime);
-        sgav_phi.CommonAddPoint( pack.m_dblPhi);
-
+        
         //время такта
         pDoc->m_dpTsa.AddPoint_Tact( d_global_time, pack.m_dblTime);
-        sgav_tsa.CommonAddPoint( pack.m_dblTime);
-
+        
         //в зависимости от того, что пришло - аналоговый параметр
         switch( pack.m_nAnParam) {
 
-          case UTD1:
-            pDoc->m_dpT1.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_t1.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //термодатчик 1
-
-          case UTD2:
-            pDoc->m_dpT2.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_t2.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //термодатчик 2
-
-          case UTD3:
-            pDoc->m_dpT3.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_t3.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //термодатчик 3
-
-          case I1:
-            pDoc->m_dpI1.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_i1.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //разрядный ток i1
-
-          case I2:
-            pDoc->m_dpI2.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_i2.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //разрядный ток i2
-
-          case CNTRPC:
-            pDoc->m_dpVpc.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_vpc.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //напряжение на пьезокорректорах
-
-          case AMPLANG_ALTERA:
-            pDoc->m_dpAAa.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_aaa.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //амплитуда получаемая от alter'ы
-
-          case AMPLANG_DUS:
-            pDoc->m_dpAAd.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_aad.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //амплитуда получаемая с ДУСа
-
-          case RULA:
-            pDoc->m_dpAAr.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_aar.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //напряжение RULA
-
-          case DECCOEFF:
-            pDoc->m_dpDecCoeff.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-            sgav_deccoeff.CommonAddPoint( pack.m_dblAnParamValue);
-          break;       //коэффициент вычета
+          case UTD1: pDoc->m_dpT1.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue); break;       //термодатчик 1
+          case UTD2: pDoc->m_dpT2.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue); break;       //термодатчик 2
+          case UTD3: pDoc->m_dpT3.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue); break;       //термодатчик 3
+          case I1:   pDoc->m_dpI1.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue); break;       //разрядный ток i1
+          case I2:   pDoc->m_dpI2.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue); break;       //разрядный ток i2
+          case CNTRPC: pDoc->m_dpVpc.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue); break;           //напряжение на пьезокорректорах
+          case AMPLANG_ALTERA: pDoc->m_dpAAa.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);   break; //амплитуда получаемая от alter'ы
+          case AMPLANG_DUS: pDoc->m_dpAAd.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);      break; //амплитуда получаемая с ДУСа
+          case RULA:        pDoc->m_dpAAr.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);      break; //напряжение RULA
+          case DECCOEFF:    pDoc->m_dpDecCoeff.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue); break; //коэффициент вычета
         }
       }
   
