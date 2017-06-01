@@ -765,18 +765,18 @@ void CSlg2Doc::RecalculateStatistics()
 //DEL 	RecalculateStatistics();
 //DEL }
 
-void CSlg2Doc::AllocMem(long lPacks, long l100ms)
+void CSlg2Doc::AllocMem(long lPacks, long l100ms, BOOL bTact, BOOL b100ms, BOOL b1s, BOOL b10s, BOOL b100s, BOOL b10m)
 {
   
-  m_dpW.AllocMem( lPacks, l100ms);
-  m_dpI1.AllocMem( lPacks, l100ms);
-  m_dpI2.AllocMem( lPacks, l100ms);
-  m_dpVpc.AllocMem( lPacks, l100ms);
-  m_dpAAa.AllocMem( lPacks, l100ms);
-  m_dpAAd.AllocMem( lPacks, l100ms);
-  m_dpAAr.AllocMem( lPacks, l100ms);
-  m_dpT1.AllocMem( lPacks, l100ms);
-  m_dpT2.AllocMem( lPacks, l100ms);
-  m_dpT3.AllocMem( lPacks, l100ms);
-  m_dpTsa.AllocMem( lPacks, l100ms);
+  m_dpW.AllocMem(   lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpI1.AllocMem(  lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpI2.AllocMem(  lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpVpc.AllocMem( lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpAAa.AllocMem( lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpAAd.AllocMem( lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpAAr.AllocMem( lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpT1.AllocMem(  lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpT2.AllocMem(  lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpT3.AllocMem(  lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpTsa.AllocMem( lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
 }

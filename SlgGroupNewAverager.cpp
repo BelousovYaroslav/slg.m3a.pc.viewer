@@ -30,12 +30,14 @@ void CSlgGroupNewAverager::CommonReset()
   m_1s.Reset();
   m_10s.Reset();
   m_100s.Reset();
+  m_10m.Reset();
 }
 
-void CSlgGroupNewAverager::CommonAddPoint(double val)
+void CSlgGroupNewAverager::CommonAddPoint( double val)
 {
   m_100ms.AddPoint( val);
   m_1s.AddPoint( val);
   m_10s.AddPoint( val);
   m_100s.AddPoint( val);
+  m_10m.AddPoint( val);
 }

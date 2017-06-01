@@ -19,7 +19,8 @@ public:
   void AddPoint_1s(   double dblT, double dblValue);
   void AddPoint_10s(  double dblT, double dblValue);
   void AddPoint_100s( double dblT, double dblValue);
-	int AllocMem( long lTacts, long l100ms);
+  void AddPoint_10m(  double dblT, double dblValue);
+	int AllocMem( long lTacts, long l100ms, BOOL bTact, BOOL b100ms, BOOL b1s, BOOL b10s, BOOL b100s, BOOL b10m);
 	CDispParam();
 	virtual ~CDispParam();
   double * GetY( int nMeaning);
@@ -40,12 +41,15 @@ private:
   double m_dbl_1s_min,	  m_dbl_1s_mean,    m_dbl_1s_max,		m_dbl_1s_rms;
 
   double *m_adbl_10s_y,   *m_adbl_10s_x;
-  double m_dbl_10s_min,   m_dbl_10s_mean,	m_dbl_10s_max,	m_dbl_10s_rms;
+  double m_dbl_10s_min,   m_dbl_10s_mean,	  m_dbl_10s_max,	m_dbl_10s_rms;
 
   double *m_adbl_100s_y,  *m_adbl_100s_x;
-  double m_dbl_100s_min, m_dbl_100s_mean, m_dbl_100s_max, m_dbl_100s_rms;
+  double m_dbl_100s_min,  m_dbl_100s_mean,  m_dbl_100s_max, m_dbl_100s_rms;
 
-  long m_lCntTact, m_lCnt100m, m_lCnt1s, m_lCnt10s, m_lCnt100s;
+  double *m_adbl_10m_y,   *m_adbl_10m_x;
+  double m_dbl_10m_min,   m_dbl_10m_mean,   m_dbl_10m_max,  m_dbl_10m_rms;
+
+  long m_lCntTact, m_lCnt100m, m_lCnt1s, m_lCnt10s, m_lCnt100s, m_lCnt10m;
   long m_lAllocTact, m_lAlloc100m;
   BOOL m_bInitialized;
 };

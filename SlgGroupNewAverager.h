@@ -22,11 +22,13 @@ public:
   CSlgNewAverager *Get_1s()    { return &m_1s;    }
   CSlgNewAverager *Get_10s()   { return &m_10s;   }
   CSlgNewAverager *Get_100s()  { return &m_100s;  }
+  CSlgNewAverager *Get_10m()   { return &m_10m;   }
 private:
   CSlgNewAverager m_100ms;
   CSlgNewAverager m_1s;
   CSlgNewAverager m_10s;
   CSlgNewAverager m_100s;
+  CSlgNewAverager m_10m;
 };
 
 #endif // !defined(AFX_SLGGROUPNEWAVERAGER_H__D465F879_E8B6_4350_A325_7499FD1E5BB9__INCLUDED_)

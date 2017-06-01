@@ -507,6 +507,8 @@ double gl_dblTime;
 double gl_dblStartSignCoeff;
 int gl_nSkipPacks, gl_nSkipMsecs;
 
+BOOL gl_bLineTact, gl_bLine100ms, gl_bLine1s, gl_bLine10s, gl_bLine100s, gl_bLine10m;
+
 DWORD WINAPI LoadFile2Thread(LPVOID lparam)
 {
   double dblRunningI1 = 0.;
@@ -759,78 +761,80 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
 
       //ОБСЧЁТ ПАРАМЕТРОВ ИЗ ПОСЫЛКИ
 
+      
       // *** *** *** *** *** *** ***
       // TACTS POINTS
       // *** *** *** *** *** *** ***
-      //угловая скорость (угол поворота)
-      pDoc->m_dpW.AddPoint_Tact( d_global_time, pack.m_dblPhi / pack.m_dblTime);
-      sgav_phi.CommonAddPoint( pack.m_dblPhi);
+      if( gl_bLineTact) {
+        //угловая скорость (угол поворота)
+        pDoc->m_dpW.AddPoint_Tact( d_global_time, pack.m_dblPhi / pack.m_dblTime);
+        sgav_phi.CommonAddPoint( pack.m_dblPhi);
 
-      //время такта
-      pDoc->m_dpTsa.AddPoint_Tact( d_global_time, pack.m_dblTime);
-      sgav_tsa.CommonAddPoint( pack.m_dblTime);
+        //время такта
+        pDoc->m_dpTsa.AddPoint_Tact( d_global_time, pack.m_dblTime);
+        sgav_tsa.CommonAddPoint( pack.m_dblTime);
 
-      //в зависимости от того, что пришло - аналоговый параметр
-      switch( pack.m_nAnParam) {
+        //в зависимости от того, что пришло - аналоговый параметр
+        switch( pack.m_nAnParam) {
 
-        case UTD1:
-          pDoc->m_dpT1.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_t1.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //термодатчик 1
+          case UTD1:
+            pDoc->m_dpT1.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_t1.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //термодатчик 1
 
-        case UTD2:
-          pDoc->m_dpT2.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_t2.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //термодатчик 2
+          case UTD2:
+            pDoc->m_dpT2.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_t2.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //термодатчик 2
 
-        case UTD3:
-          pDoc->m_dpT3.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_t3.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //термодатчик 3
+          case UTD3:
+            pDoc->m_dpT3.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_t3.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //термодатчик 3
 
-        case I1:
-          pDoc->m_dpI1.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_i1.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //разрядный ток i1
+          case I1:
+            pDoc->m_dpI1.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_i1.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //разрядный ток i1
 
-        case I2:
-          pDoc->m_dpI2.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_i2.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //разрядный ток i2
+          case I2:
+            pDoc->m_dpI2.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_i2.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //разрядный ток i2
 
-        case CNTRPC:
-          pDoc->m_dpVpc.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_vpc.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //напряжение на пьезокорректорах
+          case CNTRPC:
+            pDoc->m_dpVpc.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_vpc.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //напряжение на пьезокорректорах
 
-        case AMPLANG_ALTERA:
-          pDoc->m_dpAAa.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_aaa.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //амплитуда получаемая от alter'ы
+          case AMPLANG_ALTERA:
+            pDoc->m_dpAAa.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_aaa.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //амплитуда получаемая от alter'ы
 
-        case AMPLANG_DUS:
-          pDoc->m_dpAAd.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_aad.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //амплитуда получаемая с ДУСа
+          case AMPLANG_DUS:
+            pDoc->m_dpAAd.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_aad.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //амплитуда получаемая с ДУСа
 
-        case RULA:
-          pDoc->m_dpAAr.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_aar.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //напряжение RULA
+          case RULA:
+            pDoc->m_dpAAr.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_aar.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //напряжение RULA
 
-        case DECCOEFF:
-          pDoc->m_dpDecCoeff.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
-          sgav_deccoeff.CommonAddPoint( pack.m_dblAnParamValue);
-        break;       //коэффициент вычета
+          case DECCOEFF:
+            pDoc->m_dpDecCoeff.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);
+            sgav_deccoeff.CommonAddPoint( pack.m_dblAnParamValue);
+          break;       //коэффициент вычета
+        }
       }
-
   
 
 
       // *** *** *** *** *** *** ***
       // 100MSEC POINTS
       // *** *** *** *** *** *** ***
-      if( sgav_tsa.Get_100ms()->GetSumm() >= 0.1) {
+      if( gl_bLine100ms && sgav_tsa.Get_100ms()->GetSumm() >= 0.1) {
         //100ms happens
 
         double dblW = sgav_phi.Get_100ms()->GetSumm() / sgav_tsa.Get_100ms()->GetSumm();
@@ -853,7 +857,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       // *** *** *** *** *** *** ***
       // 1 SEC POINTS
       // *** *** *** *** *** *** ***
-      if( sgav_tsa.Get_1s()->GetSumm() >= 1.0) {
+      if( gl_bLine1s && sgav_tsa.Get_1s()->GetSumm() >= 1.0) {
         //10s happens
 
         double dblW = sgav_phi.Get_1s()->GetSumm() / sgav_tsa.Get_1s()->GetSumm();
@@ -876,7 +880,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
 			// *** *** *** *** *** *** ***
       // 10 SEC POINTS
       // *** *** *** *** *** *** ***
-			if( sgav_tsa.Get_10s()->GetSumm() >= 10.0) {
+			if( gl_bLine10s && sgav_tsa.Get_10s()->GetSumm() >= 10.0) {
         //10s happens
 
         double dblW = sgav_phi.Get_10s()->GetSumm() / sgav_tsa.Get_10s()->GetSumm();
@@ -899,7 +903,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       // *** *** *** *** *** *** ***
       // 100 SEC POINTS
       // *** *** *** *** *** *** ***
-			if( sgav_tsa.Get_100s()->GetSumm() >= 100.0) {
+			if( gl_bLine100s && sgav_tsa.Get_100s()->GetSumm() >= 100.0) {
         //100s happens
 
         double dblW = sgav_phi.Get_100s()->GetSumm() / sgav_tsa.Get_100s()->GetSumm();
@@ -917,6 +921,29 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
         pDoc->m_dpT3.AddPoint_100s(   d_global_time, sgav_t3.Get_100s()->GetMean());
         pDoc->m_dpTsa.AddPoint_100s(  d_global_time, sgav_tsa.Get_100s()->GetMean());
         pDoc->m_dpDecCoeff.AddPoint_100s( d_global_time, sgav_dc.Get_100s()->GetMean());
+      }
+
+      // *** *** *** *** *** *** ***
+      // 10 MIN POINTS
+      // *** *** *** *** *** *** ***
+			if( gl_bLine10m && sgav_tsa.Get_10m()->GetSumm() >= 600.0) {
+        //10m happens
+
+        double dblW = sgav_phi.Get_10m()->GetSumm() / sgav_tsa.Get_10m()->GetSumm();
+        sgav_phi.Get_10m()->Reset();
+        pDoc->m_dpW.AddPoint_10m( d_global_time, dblW);
+
+        pDoc->m_dpI1.AddPoint_10m(   d_global_time, sgav_i1.Get_10m()->GetMean());
+        pDoc->m_dpI2.AddPoint_10m(   d_global_time, sgav_i2.Get_10m()->GetMean());
+        pDoc->m_dpVpc.AddPoint_10m(  d_global_time, sgav_vpc.Get_10m()->GetMean());
+        pDoc->m_dpAAa.AddPoint_10m(  d_global_time, sgav_aaa.Get_10m()->GetMean());
+        pDoc->m_dpAAd.AddPoint_10m(  d_global_time, sgav_aad.Get_10m()->GetMean());
+        pDoc->m_dpAAr.AddPoint_10m(  d_global_time, sgav_aar.Get_10m()->GetMean());
+        pDoc->m_dpT1.AddPoint_10m(   d_global_time, sgav_t1.Get_10m()->GetMean());
+        pDoc->m_dpT2.AddPoint_10m(   d_global_time, sgav_t2.Get_10m()->GetMean());
+        pDoc->m_dpT3.AddPoint_10m(   d_global_time, sgav_t3.Get_10m()->GetMean());
+        pDoc->m_dpTsa.AddPoint_10m(  d_global_time, sgav_tsa.Get_10m()->GetMean());
+        pDoc->m_dpDecCoeff.AddPoint_10m( d_global_time, sgav_dc.Get_10m()->GetMean());
       }
     }
 
@@ -1313,8 +1340,6 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
           m_dn100m = ( long) ( ceil( m_pStep1.dblTime * 10));
           long dn100m = ( long) ( ceil( m_pStep1.dblTime * 10));
 
-		      //заказываем память под измерения
-		      pDoc->AllocMem( m_pStep1.lPacks, dn100m);
 
           //0 - unknown; 1-only dndu;   2-only phi;   3-both
           //if( m_pStep1.cHaveRegimedNdU == 1 || m_pStep1.cHaveRegimedNdU == 3) {
@@ -1322,6 +1347,13 @@ void COpenMeasDlg::OnTimer(UINT nIDEvent)
             GetDlgItem( IDC_CWN_SKIP_PACKS)->EnableWindow( TRUE);
             GetDlgItem( IDC_EDT_DECCOEFF_START)->EnableWindow( TRUE);
             GetDlgItem( IDC_BTN_GOON)->EnableWindow( TRUE);
+
+            GetDlgItem( IDC_CHK_LINE_TACT)->EnableWindow( TRUE);
+            GetDlgItem( IDC_CHK_LINE_100MS)->EnableWindow( TRUE);
+            GetDlgItem( IDC_CHK_LINE_1S)->EnableWindow( TRUE);
+            GetDlgItem( IDC_CHK_LINE_10S)->EnableWindow( TRUE);
+            GetDlgItem( IDC_CHK_LINE_100S)->EnableWindow( TRUE);
+            GetDlgItem( IDC_CHK_LINE_10M)->EnableWindow( TRUE);
           //}
           //else {
           //  gl_dblStartSignCoeff = m_ctlSignCoeff.GetValue();
@@ -1395,6 +1427,22 @@ void COpenMeasDlg::OnBtnGoon()
   gl_dblStartSignCoeff = m_ctlSignCoeff.GetValue();
   gl_nSkipPacks = m_ctlSkipPacks.GetValue();
   gl_nSkipMsecs = m_ctlSkipMsecs.GetValue();
+
+  //заказываем память под измерения
+  CMainFrame *pFrm = ( CMainFrame *) AfxGetApp()->GetMainWnd();
+  CMainView *pView = ( CMainView *) pFrm->GetActiveView();
+  CSlg2Doc *pDoc =   ( CSlg2Doc *) pView->GetDocument();
+  
+  gl_bLineTact =  ( ( CButton *) GetDlgItem( IDC_CHK_LINE_TACT))->GetCheck();
+  gl_bLine100ms = ( ( CButton *) GetDlgItem( IDC_CHK_LINE_100MS))->GetCheck();
+  gl_bLine1s =    ( ( CButton *) GetDlgItem( IDC_CHK_LINE_1S))->GetCheck();
+  gl_bLine10s =   ( ( CButton *) GetDlgItem( IDC_CHK_LINE_10S))->GetCheck();
+  gl_bLine100s =  ( ( CButton *) GetDlgItem( IDC_CHK_LINE_100S))->GetCheck();
+  gl_bLine10m =   ( ( CButton *) GetDlgItem( IDC_CHK_LINE_10M))->GetCheck();
+
+  long dn100m = ( long) ( ceil( pDoc->m_dblMeasDuration * 10));
+  pDoc->AllocMem( m_pStep1.lPacks, dn100m, gl_bLineTact, gl_bLine100ms, gl_bLine1s, gl_bLine10s, gl_bLine100s, gl_bLine10m);
+
   //начинаем третью пробежку
   DWORD id2;
   HANDLE hthread2 = ::CreateThread( 0, 0, &LoadFile2Thread, this, 0, &id2);          

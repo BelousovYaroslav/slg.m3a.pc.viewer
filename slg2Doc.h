@@ -53,7 +53,7 @@ protected:
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 public:
-	void AllocMem( long lPacks, long l100ms);
+	void AllocMem( long lPacks, long l100ms, BOOL bTact, BOOL b100ms, BOOL b1s, BOOL b10s, BOOL b100s, BOOL b10m);
 	BOOL m_bZoomed;
 	BOOL m_bShowCursors;
 	int m_nStatFileVersion;

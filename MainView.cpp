@@ -217,6 +217,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
     GetDlgItem( IDC_RAD_G1_T2)->SetWindowPos( NULL, nGrWidth * 1 - 21, 105, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G1_T3)->SetWindowPos( NULL, nGrWidth * 1 - 21, 120, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G1_T4)->SetWindowPos( NULL, nGrWidth * 1 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G1_T5)->SetWindowPos( NULL, nGrWidth * 1 - 21, 150, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_CMB_GRAPH1_X)->SetWindowPos( NULL, 0, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 	
@@ -229,6 +230,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
     GetDlgItem( IDC_RAD_G2_T2)->SetWindowPos( NULL, nGrWidth * 2 - 21, 105, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G2_T3)->SetWindowPos( NULL, nGrWidth * 2 - 21, 120, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G2_T4)->SetWindowPos( NULL, nGrWidth * 2 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G2_T5)->SetWindowPos( NULL, nGrWidth * 2 - 21, 150, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_CMB_GRAPH2_X)->SetWindowPos( NULL, nGrWidth, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
@@ -241,6 +243,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
     GetDlgItem( IDC_RAD_G3_T2)->SetWindowPos( NULL, nGrWidth * 3 - 21, 105, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G3_T3)->SetWindowPos( NULL, nGrWidth * 3 - 21, 120, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G3_T4)->SetWindowPos( NULL, nGrWidth * 3 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G3_T5)->SetWindowPos( NULL, nGrWidth * 3 - 21, 150, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_CMB_GRAPH3_X)->SetWindowPos( NULL, nGrWidth * 2, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
@@ -253,6 +256,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
     GetDlgItem( IDC_RAD_G4_T2)->SetWindowPos( NULL, nGrWidth * 4 - 21, 105, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G4_T3)->SetWindowPos( NULL, nGrWidth * 4 - 21, 120, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G4_T4)->SetWindowPos( NULL, nGrWidth * 4 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G4_T5)->SetWindowPos( NULL, nGrWidth * 4 - 21, 150, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_CMB_GRAPH4_X)->SetWindowPos( NULL, nGrWidth * 3, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
@@ -265,6 +269,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
     GetDlgItem( IDC_RAD_G5_T2)->SetWindowPos( NULL, nGrWidth * 5 - 21, 105, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G5_T3)->SetWindowPos( NULL, nGrWidth * 5 - 21, 120, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G5_T4)->SetWindowPos( NULL, nGrWidth * 5 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G5_T5)->SetWindowPos( NULL, nGrWidth * 5 - 21, 150, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_CMB_GRAPH5_X)->SetWindowPos( NULL, nGrWidth * 4, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
@@ -277,6 +282,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
     GetDlgItem( IDC_RAD_G6_T2)->SetWindowPos( NULL, nGrWidth * 6 - 21, 105, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G6_T3)->SetWindowPos( NULL, nGrWidth * 6 - 21, 120, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G6_T4)->SetWindowPos( NULL, nGrWidth * 6 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G6_T5)->SetWindowPos( NULL, nGrWidth * 6 - 21, 150, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_CMB_GRAPH6_X)->SetWindowPos( NULL, nGrWidth * 5, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
@@ -289,6 +295,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
     GetDlgItem( IDC_RAD_G7_T2)->SetWindowPos( NULL, nGrWidth * 7 - 21, 105, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G7_T3)->SetWindowPos( NULL, nGrWidth * 7 - 21, 120, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G7_T4)->SetWindowPos( NULL, nGrWidth * 7 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G7_T5)->SetWindowPos( NULL, nGrWidth * 7 - 21, 150, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_CMB_GRAPH7_X)->SetWindowPos( NULL, nGrWidth * 6, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
@@ -301,6 +308,7 @@ void CMainView::OnSize(UINT nType, int cx, int cy)
     GetDlgItem( IDC_RAD_G8_T2)->SetWindowPos( NULL, nGrWidth * 8 - 21, 105, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G8_T3)->SetWindowPos( NULL, nGrWidth * 8 - 21, 120, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_RAD_G8_T4)->SetWindowPos( NULL, nGrWidth * 8 - 21, 135, 20, 12, SWP_NOZORDER);
+    GetDlgItem( IDC_RAD_G8_T5)->SetWindowPos( NULL, nGrWidth * 8 - 21, 150, 20, 12, SWP_NOZORDER);
     GetDlgItem( IDC_CMB_GRAPH8_X)->SetWindowPos( NULL, nGrWidth * 7, 70 + rc.Height(), nGrWidth, 12, SWP_NOZORDER);
 	}
 
