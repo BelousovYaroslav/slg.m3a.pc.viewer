@@ -294,9 +294,11 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
     if( feof( fh) != 0)
       break;
 
-    lPos = ftell( fh);
-    pParent->SendMessage( WM_SET_FILEPOS1, 0, lPos);
-    pParent->SendMessage( WM_SET_STEP1INFO, 0, reinterpret_cast <LPARAM> ( &gl_InfoStep1));
+    if( ( gl_InfoStep1.lPacks % 50) == 0) {
+      lPos = ftell( fh);
+      pParent->SendMessage( WM_SET_FILEPOS1, 0, lPos);
+    }
+    
 
     //ÐÀÇÁÎÐ ÏÀ×ÊÈ
     CPackProcessing pack;
@@ -384,8 +386,8 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
       break;
     }
 
-
-    pParent->SendMessage( WM_SET_STEP1INFO, 0, reinterpret_cast <LPARAM> ( &gl_InfoStep1));
+    if( ( gl_InfoStep1.lPacks % 50) == 0)
+      pParent->SendMessage( WM_SET_STEP1INFO, 0, reinterpret_cast <LPARAM> ( &gl_InfoStep1));
 
 
   } while( feof( fh) == 0 && gl_bStopLoadThread1 == FALSE);
