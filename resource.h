@@ -236,12 +236,9 @@
 #define IDC_RAD_321                     1198
 #define IDC_CWN_SIGNCOEFF               1198
 #define IDC_RAD_G2_T4                   1198
-#define IDC_LBL_STEP1_DECCOEFF_MIN      1199
 #define IDC_RAD_G3_T0                   1199
-#define IDC_LBL_STEP1_DECCOEFF_AVG      1200
 #define IDC_RAD_G3_T1                   1200
 #define IDC_RAD_324                     1201
-#define IDC_LBL_STEP1_DECCOEFF_MAX      1201
 #define IDC_RAD_G3_T2                   1201
 #define IDC_RAD_325                     1202
 #define IDC_CHK_Y_MAX                   1202
@@ -275,9 +272,7 @@
 #define IDC_RAD_G6_T0                   1212
 #define IDC_CWN_SKIP_MSECS              1212
 #define IDC_RAD_G6_T1                   1213
-#define IDC_LBL_STEP1_DECCOEFF_FIRST    1213
 #define IDC_RAD_G6_T2                   1214
-#define IDC_LBL_STEP1_DECCOEFF_LAST     1214
 #define IDC_RAD_G5_T3                   1215
 #define IDC_RAD_G5_T4                   1216
 #define IDC_RAD_G6_T3                   1217
@@ -311,13 +306,18 @@
 #define IDC_CMB_GRAPH1_Y                1237
 #define IDC_CHK_LINE_10M                1237
 #define IDC_CMB_GRAPH2_Y                1238
+#define IDC_BTN_STEP1_DECCOEFF_LAST     1238
 #define IDC_CWSPN_LINE_WIDTH            1239
 #define IDC_CMB_GRAPH3_Y                1239
+#define IDC_BTN_STEP1_DECCOEFF_MIN      1239
 #define IDC_CMB_GRAPH4_Y                1240
+#define IDC_BTN_STEP1_DECCOEFF_AVG      1240
 #define IDC_COMMONDIALOG                1241
 #define IDC_CMB_GRAPH5_Y                1241
+#define IDC_BTN_STEP1_DECCOEFF_MAX      1241
 #define IDC_LBL_LINE_COLOR              1242
 #define IDC_CMB_GRAPH6_Y                1242
+#define IDC_BTN_STEP1_DECCOEFF_FIRST    1242
 #define IDC_CMB_GRAPH7_Y                1243
 #define IDC_CMB_GRAPH8_Y                1244
 #define IDC_RAD_G1_T5                   1245
@@ -342,7 +342,7 @@
 #define _APS_3D_CONTROLS                     1
 #define _APS_NEXT_RESOURCE_VALUE        146
 #define _APS_NEXT_COMMAND_VALUE         32778
-#define _APS_NEXT_CONTROL_VALUE         1233
+#define _APS_NEXT_CONTROL_VALUE         1243
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

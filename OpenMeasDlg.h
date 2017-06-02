@@ -74,6 +74,11 @@ protected:
 	afx_msg void OnBtnGoon();
 	afx_msg void OnRadSkipPacks();
 	afx_msg void OnRadSkipTime();
+	afx_msg void OnBtnStep1DeccoeffFirst();
+	afx_msg void OnBtnStep1DeccoeffLast();
+	afx_msg void OnBtnStep1DeccoeffMin();
+	afx_msg void OnBtnStep1DeccoeffAvg();
+	afx_msg void OnBtnStep1DeccoeffMax();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
@@ -84,6 +89,7 @@ private:
   int m_nCounterFails;
   int m_nCheckSummFails;
   Step1Info m_pStep1;
+  long m_lPrevPacks;
 };
 
 //{{AFX_INSERT_LOCATION}}
