@@ -294,7 +294,7 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
     if( feof( fh) != 0)
       break;
 
-    if( ( gl_InfoStep1.lPacks % 50) == 0) {
+    if( ( gl_InfoStep1.lPacks % 400) == 0) {
       lPos = ftell( fh);
       pParent->SendMessage( WM_SET_FILEPOS1, 0, lPos);
     }
@@ -472,9 +472,12 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
   //поехали
   do {
     char bts[14];
+
     long lPos; 
     lPos = ftell( fh);
-    pParent->SendMessage( WM_SET_FILEPOS2, 0, lPos);
+    if( ( lPacks % 400) == 0) {
+      pParent->SendMessage( WM_SET_FILEPOS2, 0, lPos);
+    }
 
     if( feof( fh) != 0)
       break;
