@@ -673,6 +673,30 @@ void CMainView::RefreshGraphs()
         if( doc->m_dpT3.GetDataLen( nRadMeaning) < llen)
           llen = doc->m_dpT3.GetDataLen( nRadMeaning);
       break;
+
+      case 4:
+        x = doc->m_dpT1.GetY( nRadMeaning);
+        if( doc->m_dpT1.GetDataLen( nRadMeaning) < llen)
+          llen = doc->m_dpT1.GetDataLen( nRadMeaning);
+        if( doc->m_dpT2.GetDataLen( nRadMeaning) < llen)
+          llen = doc->m_dpT2.GetDataLen( nRadMeaning);
+      break;
+
+      case 5:
+        x = doc->m_dpT1.GetY( nRadMeaning);
+        if( doc->m_dpT1.GetDataLen( nRadMeaning) < llen)
+          llen = doc->m_dpT1.GetDataLen( nRadMeaning);
+        if( doc->m_dpT3.GetDataLen( nRadMeaning) < llen)
+          llen = doc->m_dpT3.GetDataLen( nRadMeaning);
+      break;
+
+      case 6:
+        x = doc->m_dpT2.GetY( nRadMeaning);
+        if( doc->m_dpT2.GetDataLen( nRadMeaning) < llen)
+          llen = doc->m_dpT2.GetDataLen( nRadMeaning);
+        if( doc->m_dpT3.GetDataLen( nRadMeaning) < llen)
+          llen = doc->m_dpT3.GetDataLen( nRadMeaning);
+      break;
     }
     
     if( nComboY == 10) {
@@ -693,37 +717,113 @@ void CMainView::RefreshGraphs()
       for( int l = 0; l < llen; l++) {
         switch( nComboY) {
           case 10:  //T1 - T2
-            line.operator()( 0, l) = x[l];
+            
+            if( nComboX > 3) {
+              switch( nComboX) {
+                case 4: line.operator()( 0, l) = x[l] - doc->m_dpT2.GetY( nRadMeaning)[l]; break;
+                case 5: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+                case 6: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+              }
+            }
+            else
+              line.operator()( 0, l) = x[l];
+
             line.operator()( 1, l) = y[l] - doc->m_dpT2.GetY( nRadMeaning)[ l];
           break;
 
+
           case 11:  //T1 - T3
-            line.operator()( 0, l) = x[l];
+            
+            if( nComboX > 3) {
+              switch( nComboX) {
+                case 4: line.operator()( 0, l) = x[l] - doc->m_dpT2.GetY( nRadMeaning)[l]; break;
+                case 5: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+                case 6: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+              }
+            }
+            else
+              line.operator()( 0, l) = x[l];
+
             line.operator()( 1, l) = y[l] - doc->m_dpT3.GetY( nRadMeaning)[ l];
           break;
+
 
           case 12:  //T2 - T3
-            line.operator()( 0, l) = x[l];
+            
+            if( nComboX > 3) {
+              switch( nComboX) {
+                case 4: line.operator()( 0, l) = x[l] - doc->m_dpT2.GetY( nRadMeaning)[l]; break;
+                case 5: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+                case 6: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+              }
+            }
+            else
+              line.operator()( 0, l) = x[l];
+
             line.operator()( 1, l) = y[l] - doc->m_dpT3.GetY( nRadMeaning)[ l];
           break;
 
-          case 13:
-            line.operator()( 0, l) = x[l];
+
+          case 13:  //Tsa, msec
+            
+            if( nComboX > 3) {
+              switch( nComboX) {
+                case 4: line.operator()( 0, l) = x[l] - doc->m_dpT2.GetY( nRadMeaning)[l]; break;
+                case 5: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+                case 6: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+              }
+            }
+            else
+              line.operator()( 0, l) = x[l];
+
             line.operator()( 1, l) = y[l] * 1000.;
           break;
 
-          case 14:
-            line.operator()( 0, l) = x[l];
+
+          case 14:  //Tsa, mcSec
+            
+            if( nComboX > 3) {
+              switch( nComboX) {
+                case 4: line.operator()( 0, l) = x[l] - doc->m_dpT2.GetY( nRadMeaning)[l]; break;
+                case 5: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+                case 6: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+              }
+            }
+            else
+              line.operator()( 0, l) = x[l];
+
             line.operator()( 1, l) = y[l] * 1000000.;
           break;
 
-          case 15:
-            line.operator()( 0, l) = x[l];
+
+          case 15:  //Tsa, Hz
+            
+            if( nComboX > 3) {
+              switch( nComboX) {
+                case 4: line.operator()( 0, l) = x[l] - doc->m_dpT2.GetY( nRadMeaning)[l]; break;
+                case 5: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+                case 6: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+              }
+            }
+            else
+              line.operator()( 0, l) = x[l];
+
             line.operator()( 1, l) = 1. / y[l];
           break;
 
+
           default:
-            line.operator()( 0, l) = x[l];
+            
+            if( nComboX > 3) {
+              switch( nComboX) {
+                case 4: line.operator()( 0, l) = x[l] - doc->m_dpT2.GetY( nRadMeaning)[l]; break;
+                case 5: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+                case 6: line.operator()( 0, l) = x[l] - doc->m_dpT3.GetY( nRadMeaning)[l]; break;
+              }
+            }
+            else
+              line.operator()( 0, l) = x[l];
+
             line.operator()( 1, l) = y[l];
         }
       }
