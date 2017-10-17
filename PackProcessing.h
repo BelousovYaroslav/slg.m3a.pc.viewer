@@ -44,6 +44,7 @@ public:
 
   int ProcessPack_4_1_7( void);
   int ProcessPack_4_2_0( void);
+  int ProcessPack_4_2_1( void);
   int ProcessPack_3_2_2( void);
   int ProcessPack_3_2_3( void);
   int ProcessPack_3_2_5( void);
@@ -54,6 +55,7 @@ public:
   int ProcessPackTime_3_2_5( void);
   int ProcessPackTime_4_1_7( void);
   int ProcessPackTime_4_2_0( void);
+  int ProcessPackTime_4_2_1( void);
 
   BOOL m_bVeracity;
   BOOL m_bLockBit;

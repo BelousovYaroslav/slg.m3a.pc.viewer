@@ -328,6 +328,7 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
 
       case 0x040107: pack.ProcessPackTime_4_1_7(); break;
       case 0x040200: pack.ProcessPackTime_4_2_0(); break;
+      case 0x040201: pack.ProcessPackTime_4_2_1(); break;
       default:       pack.ProcessPackTime_3_2_3();
     }
     
@@ -338,7 +339,6 @@ DWORD WINAPI LoadFile1Thread(LPVOID lparam)
       
     //суммируем время такта
     gl_InfoStep1.dblTime += pack.m_dblTime;
-
 
     //отслеживаем коэфициенты вычета
     if( bts[6] == DECCOEFF) {
@@ -518,6 +518,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       case 0x030205: pack.ProcessPack_3_2_5(); break;
       case 0x040107: pack.ProcessPack_4_1_7(); break;
       case 0x040200: pack.ProcessPack_4_2_0(); break;
+      case 0x040201: pack.ProcessPack_4_2_1(); break;
       default:    pack.ProcessPack_3_2_3();
     }
 
