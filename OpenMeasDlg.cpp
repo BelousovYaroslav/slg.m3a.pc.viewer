@@ -455,8 +455,6 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
   CSlgGroupNewAverager sgav_t2;
   CSlgGroupNewAverager sgav_t3;
   CSlgGroupNewAverager sgav_tsa;
-  CSlgGroupNewAverager sgav_dc;
-  CSlgGroupNewAverager sgav_deccoeff;
 
   double d_global_time = 0.;
 
@@ -550,16 +548,16 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
     sgav_phi.CommonAddPoint( pack.m_dblPhi);
     sgav_tsa.CommonAddPoint( pack.m_dblTime);
     switch( pack.m_nAnParam) {
-      case UTD1: sgav_t1.CommonAddPoint( pack.m_dblAnParamValue); break;       //термодатчик 1
-      case UTD2: sgav_t2.CommonAddPoint( pack.m_dblAnParamValue); break;       //термодатчик 2
-      case UTD3: sgav_t3.CommonAddPoint( pack.m_dblAnParamValue); break;       //термодатчик 3
-      case I1:   sgav_i1.CommonAddPoint( pack.m_dblAnParamValue); break;       //разрядный ток i1
-      case I2:   sgav_i2.CommonAddPoint( pack.m_dblAnParamValue); break;       //разрядный ток i2
-      case CNTRPC: sgav_vpc.CommonAddPoint( pack.m_dblAnParamValue); break;    //напряжение на пьезокорректорах
-      case AMPLANG_ALTERA: sgav_aaa.CommonAddPoint( pack.m_dblAnParamValue); break; //амплитуда получаемая от alter'ы
-      case AMPLANG_DUS: sgav_aad.CommonAddPoint( pack.m_dblAnParamValue); break;    //амплитуда получаемая с ДУСа
-      case RULA: sgav_aar.CommonAddPoint( pack.m_dblAnParamValue); break;       //напряжение RULA
-      case DECCOEFF: sgav_deccoeff.CommonAddPoint( pack.m_dblAnParamValue); break;       //коэффициент вычета
+      case UTD1:            sgav_t1.CommonAddPoint( pack.m_dblAnParamValue);  break;  //термодатчик 1
+      case UTD2:            sgav_t2.CommonAddPoint( pack.m_dblAnParamValue);  break;  //термодатчик 2
+      case UTD3:            sgav_t3.CommonAddPoint( pack.m_dblAnParamValue);  break;  //термодатчик 3
+      case I1:              sgav_i1.CommonAddPoint( pack.m_dblAnParamValue);  break;  //разрядный ток i1
+      case I2:              sgav_i2.CommonAddPoint( pack.m_dblAnParamValue);  break;  //разрядный ток i2
+      case CNTRPC:          sgav_vpc.CommonAddPoint( pack.m_dblAnParamValue); break;  //напряжение на пьезокорректорах
+      case AMPLANG_ALTERA:  sgav_aaa.CommonAddPoint( pack.m_dblAnParamValue); break;  //амплитуда получаемая от alter'ы
+      case AMPLANG_DUS:     sgav_aad.CommonAddPoint( pack.m_dblAnParamValue); break;  //амплитуда получаемая с ДУСа
+      case RULA:            sgav_aar.CommonAddPoint( pack.m_dblAnParamValue); break;  //напряжение RULA
+      case DECCOEFF:        dblRunningDecCoeff = pack.m_dblDecCoeff;          break;  //коэффициент вычета
     }
 
     // *** *** *** *** *** *** ***
@@ -584,7 +582,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
         case AMPLANG_ALTERA: pDoc->m_dpAAa.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);   break; //амплитуда получаемая от alter'ы
         case AMPLANG_DUS: pDoc->m_dpAAd.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);      break; //амплитуда получаемая с ДУСа
         case RULA:        pDoc->m_dpAAr.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue);      break; //напряжение RULA
-        case DECCOEFF:    pDoc->m_dpDecCoeff.AddPoint_Tact( d_global_time, pack.m_dblAnParamValue); break; //коэффициент вычета
+        case DECCOEFF:    pDoc->m_dpDecCoeff.AddPoint_Tact( d_global_time, dblRunningDecCoeff); break; //коэффициент вычета
       }
     }
   
@@ -609,7 +607,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       pDoc->m_dpT2.AddPoint_100m(   d_global_time, sgav_t2.Get_100ms()->GetMean());
       pDoc->m_dpT3.AddPoint_100m(   d_global_time, sgav_t3.Get_100ms()->GetMean());
       pDoc->m_dpTsa.AddPoint_100m(  d_global_time, sgav_tsa.Get_100ms()->GetMean());
-      pDoc->m_dpDecCoeff.AddPoint_100m( d_global_time, sgav_dc.Get_100ms()->GetMean());
+      pDoc->m_dpDecCoeff.AddPoint_100m( d_global_time, dblRunningDecCoeff);
     }
       
     // *** *** *** *** *** *** ***
@@ -632,7 +630,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       pDoc->m_dpT2.AddPoint_1s(   d_global_time, sgav_t2.Get_1s()->GetMean());
       pDoc->m_dpT3.AddPoint_1s(   d_global_time, sgav_t3.Get_1s()->GetMean());
       pDoc->m_dpTsa.AddPoint_1s(  d_global_time, sgav_tsa.Get_1s()->GetMean());
-      pDoc->m_dpDecCoeff.AddPoint_1s( d_global_time, sgav_dc.Get_1s()->GetMean());
+      pDoc->m_dpDecCoeff.AddPoint_1s( d_global_time, dblRunningDecCoeff);
     }
 
 		// *** *** *** *** *** *** ***
@@ -655,7 +653,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       pDoc->m_dpT2.AddPoint_10s(   d_global_time, sgav_t2.Get_10s()->GetMean());
       pDoc->m_dpT3.AddPoint_10s(   d_global_time, sgav_t3.Get_10s()->GetMean());
       pDoc->m_dpTsa.AddPoint_10s(  d_global_time, sgav_tsa.Get_10s()->GetMean());
-      pDoc->m_dpDecCoeff.AddPoint_10s( d_global_time, sgav_dc.Get_10s()->GetMean());
+      pDoc->m_dpDecCoeff.AddPoint_10s( d_global_time, dblRunningDecCoeff);
     }
 
     // *** *** *** *** *** *** ***
@@ -678,7 +676,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       pDoc->m_dpT2.AddPoint_100s(   d_global_time, sgav_t2.Get_100s()->GetMean());
       pDoc->m_dpT3.AddPoint_100s(   d_global_time, sgav_t3.Get_100s()->GetMean());
       pDoc->m_dpTsa.AddPoint_100s(  d_global_time, sgav_tsa.Get_100s()->GetMean());
-      pDoc->m_dpDecCoeff.AddPoint_100s( d_global_time, sgav_dc.Get_100s()->GetMean());
+      pDoc->m_dpDecCoeff.AddPoint_100s( d_global_time, dblRunningDecCoeff);
     }
 
     // *** *** *** *** *** *** ***
@@ -701,7 +699,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
       pDoc->m_dpT2.AddPoint_10m(   d_global_time, sgav_t2.Get_10m()->GetMean());
       pDoc->m_dpT3.AddPoint_10m(   d_global_time, sgav_t3.Get_10m()->GetMean());
       pDoc->m_dpTsa.AddPoint_10m(  d_global_time, sgav_tsa.Get_10m()->GetMean());
-      pDoc->m_dpDecCoeff.AddPoint_10m( d_global_time, sgav_dc.Get_10m()->GetMean());
+      pDoc->m_dpDecCoeff.AddPoint_10m( d_global_time, dblRunningDecCoeff);
     }
 
   } while( feof( fh) == 0 && gl_bStopLoadThread1 == FALSE);

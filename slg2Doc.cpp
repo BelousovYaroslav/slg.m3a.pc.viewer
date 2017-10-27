@@ -779,4 +779,5 @@ void CSlg2Doc::AllocMem(long lPacks, long l100ms, BOOL bTact, BOOL b100ms, BOOL 
   m_dpT2.AllocMem(  lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
   m_dpT3.AllocMem(  lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
   m_dpTsa.AllocMem( lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
+  m_dpDecCoeff.AllocMem( lPacks, l100ms, bTact, b100ms, b1s, b10s, b100s, b10m);
 }
