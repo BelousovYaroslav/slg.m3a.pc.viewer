@@ -33,31 +33,32 @@ void CDlgGraphSetup::DoDataExchange(CDataExchange* pDX)
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CDlgGraphSetup)
 	DDX_Control(pDX, IDC_LBL_LINE_COLOR, m_ctlColorLabel);
-	DDX_Control(pDX, IDC_COMMONDIALOG, m_ctlCommonDialog);
 	//}}AFX_DATA_MAP
 }
 
 
 BEGIN_MESSAGE_MAP(CDlgGraphSetup, CDialog)
 	//{{AFX_MSG_MAP(CDlgGraphSetup)
-	ON_BN_CLICKED(IDC_LBL_LINE_COLOR, OnLblLineColor)
+	ON_EN_CHANGE(IDC_EDT_R, OnChangeEdtR)
+	ON_EN_CHANGE(IDC_EDT_G, OnChangeEdtG)
+	ON_EN_CHANGE(IDC_EDT_B, OnChangeEdtB)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CDlgGraphSetup message handlers
 
-void CDlgGraphSetup::OnLblLineColor() 
-{
-  m_ctlCommonDialog.ShowColor();
-  unsigned long col = m_ctlCommonDialog.GetColor();
-  unsigned short nRed   = ( unsigned short) ( col & 0xFF);
-  unsigned short nGreen = ( unsigned short) (( col & 0xFF00) >> 8);
-  unsigned short nBlue  = ( unsigned short) (( col & 0xFF0000) >> 16);	
-  
-  m_ctlColorLabel.SetBgColor( RGB( nRed, nGreen, nBlue));
-  m_ctlColorLabel.Invalidate();
-}
+//DEL void CDlgGraphSetup::OnLblLineColor() 
+//DEL {
+//DEL   m_ctlCommonDialog.ShowColor();
+//DEL   unsigned long col = m_ctlCommonDialog.GetColor();
+//DEL   unsigned short nRed   = ( unsigned short) ( col & 0xFF);
+//DEL   unsigned short nGreen = ( unsigned short) (( col & 0xFF00) >> 8);
+//DEL   unsigned short nBlue  = ( unsigned short) (( col & 0xFF0000) >> 16);	
+//DEL   
+//DEL   m_ctlColorLabel.SetBgColor( RGB( nRed, nGreen, nBlue));
+//DEL   m_ctlColorLabel.Invalidate();
+//DEL }
 
 void CDlgGraphSetup::Init( int nGraph)
 {
@@ -104,4 +105,52 @@ void CDlgGraphSetup::OnOK()
   CMainFrame *frm = ( CMainFrame *) theApp.GetMainWnd();
   CMainView *view = ( CMainView *) frm->GetActiveView();
   view->SetRefreshTimer( 100);
+}
+
+void CDlgGraphSetup::OnChangeEdtR() 
+{
+	// TODO: If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+	
+	ColorChanged();
+}
+
+void CDlgGraphSetup::OnChangeEdtG() 
+{
+	// TODO: If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+	
+	ColorChanged();
+}
+
+void CDlgGraphSetup::OnChangeEdtB() 
+{
+	// TODO: If this is a RICHEDIT control, the control will not
+	// send this notification unless you override the CDialog::OnInitDialog()
+	// function and call CRichEditCtrl().SetEventMask()
+	// with the ENM_CHANGE flag ORed into the mask.
+	
+	ColorChanged();
+}
+
+void CDlgGraphSetup::ColorChanged()
+{
+  CString tmp;
+  UINT r, g, b;
+	
+  ( ( CWnd *) GetDlgItem( IDC_EDT_R))->GetWindowText( tmp);
+  r = atoi( tmp);
+
+  ( ( CWnd *) GetDlgItem( IDC_EDT_G))->GetWindowText( tmp);
+  g = atoi( tmp);
+
+  ( ( CWnd *) GetDlgItem( IDC_EDT_B))->GetWindowText( tmp);
+  b = atoi( tmp);
+	
+  m_ctlColorLabel.SetBgColor( RGB( r, g, b));
+  m_ctlColorLabel.Invalidate();
 }

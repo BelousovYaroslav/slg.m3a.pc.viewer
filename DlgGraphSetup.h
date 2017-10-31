@@ -25,7 +25,6 @@ public:
 	//{{AFX_DATA(CDlgGraphSetup)
 	enum { IDD = IDD_GRAPH_SETUP };
 	CBgColoredLabel	m_ctlColorLabel;
-	CCommonDialog1	m_ctlCommonDialog;
 	//}}AFX_DATA
 
 
@@ -41,11 +40,14 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CDlgGraphSetup)
-	afx_msg void OnLblLineColor();
 	virtual void OnOK();
+	afx_msg void OnChangeEdtR();
+	afx_msg void OnChangeEdtG();
+	afx_msg void OnChangeEdtB();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
+  void ColorChanged( void);
 	int m_nGraph;
 };
 

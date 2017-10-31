@@ -267,10 +267,13 @@
 #define IDC_RAD_G5_T0                   1209
 #define IDC_RAD_G5_T1                   1210
 #define IDC_LBL_STEP1_SKIP_PACKS        1210
+#define IDC_EDT_R                       1210
 #define IDC_RAD_G5_T2                   1211
 #define IDC_CWN_SKIP_PACKS              1211
+#define IDC_EDT_G                       1211
 #define IDC_RAD_G6_T0                   1212
 #define IDC_CWN_SKIP_MSECS              1212
+#define IDC_EDT_B                       1212
 #define IDC_RAD_G6_T1                   1213
 #define IDC_RAD_G6_T2                   1214
 #define IDC_RAD_G5_T3                   1215
@@ -312,7 +315,6 @@
 #define IDC_BTN_STEP1_DECCOEFF_MIN      1239
 #define IDC_CMB_GRAPH4_Y                1240
 #define IDC_BTN_STEP1_DECCOEFF_AVG      1240
-#define IDC_COMMONDIALOG                1241
 #define IDC_CMB_GRAPH5_Y                1241
 #define IDC_BTN_STEP1_DECCOEFF_MAX      1241
 #define IDC_LBL_LINE_COLOR              1242
