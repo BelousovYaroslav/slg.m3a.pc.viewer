@@ -61,6 +61,9 @@ CMainView::CMainView()
 	lf.lfHeight = 20;																	// Request a 12-pixel-height font.
 	lstrcpy(lf.lfFaceName, _T("Times New Roman"));   // Request a face name "Arial".
 	VERIFY(m_pFont.CreateFontIndirect(&lf));							// Create the font.
+
+  m_clrSelected = CNiColor( 255, 250, 205);
+  m_clrFree = CNiColor( 255, 255, 255);
 }
 
 CMainView::~CMainView()
@@ -588,8 +591,13 @@ void CMainView::RefreshGraphs()
       default: graphSmall = &m_ctlSmallGraph1; break;
     }
     
-    if( m_nMainGraph == i+1)
+    if( m_nMainGraph == i+1) {
       graphBig = &m_ctlMainGraph;
+      graphSmall->SetPlotAreaColor( m_clrSelected);
+    }
+    else {
+      graphSmall->SetPlotAreaColor( m_clrFree);
+    }
 
     int nRadMeaning, nComboX, nComboY;
     switch( i) {

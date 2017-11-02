@@ -136,6 +136,8 @@ private:
 	int m_nMainGraph;
 	void RefreshGraphs( void);
   CDlgGraphSetup *m_dlgGraphSetup;
+  CNiColor m_clrSelected;
+  CNiColor m_clrFree;
 };
 
 /////////////////////////////////////////////////////////////////////////////
