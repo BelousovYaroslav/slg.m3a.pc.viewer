@@ -47,6 +47,7 @@ public:
   int ProcessPack_4_2_1( void);
   int ProcessPack_3_2_2( void);
   int ProcessPack_3_2_3( void);
+  int ProcessPack_3_2_4( void);
   int ProcessPack_3_2_5( void);
 
   int ProcessPackTime_3_2_2( void);

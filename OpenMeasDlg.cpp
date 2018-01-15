@@ -513,6 +513,7 @@ DWORD WINAPI LoadFile2Thread(LPVOID lparam)
     int nVer = pParent->m_nVersionMajor * 65536 + pParent->m_nVersionMiddle * 256 + pParent->m_nVersionMinor;
     switch( nVer) {
       case 0x030202: pack.ProcessPack_3_2_2(); break;
+      case 0x030204: pack.ProcessPack_3_2_4(); break;
       case 0x030205: pack.ProcessPack_3_2_5(); break;
       case 0x040107: pack.ProcessPack_4_1_7(); break;
       case 0x040200: pack.ProcessPack_4_2_0(); break;
