@@ -36,23 +36,23 @@ void CSettings::LoadSettings()
   
   //параметр, отображаемый по оси Y
   m_aSettGraph[0].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH1_PARAM"), 0));
-  m_aSettGraph[1].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH2_PARAM"), 0));
-  m_aSettGraph[2].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH3_PARAM"), 0));
-  m_aSettGraph[3].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH4_PARAM"), 0));
-  m_aSettGraph[4].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH5_PARAM"), 0));
-  m_aSettGraph[5].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH6_PARAM"), 0));
-  m_aSettGraph[6].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH7_PARAM"), 0));
-  m_aSettGraph[7].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH8_PARAM"), 0));
+  m_aSettGraph[1].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH2_PARAM"), 1));
+  m_aSettGraph[2].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH3_PARAM"), 2));
+  m_aSettGraph[3].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH4_PARAM"), 3));
+  m_aSettGraph[4].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH5_PARAM"), 4));
+  m_aSettGraph[5].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH6_PARAM"), 7));
+  m_aSettGraph[6].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH7_PARAM"), 9));
+  m_aSettGraph[7].SetAxisY( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH8_PARAM"), 15));
 
   //осреднения
-  m_aSettGraph[0].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH1_MEANING"), 0));
-  m_aSettGraph[1].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH2_MEANING"), 0));
-  m_aSettGraph[2].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH3_MEANING"), 0));
-  m_aSettGraph[3].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH4_MEANING"), 0));
-  m_aSettGraph[4].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH5_MEANING"), 0));
-  m_aSettGraph[5].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH6_MEANING"), 0));
-  m_aSettGraph[6].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH7_MEANING"), 0));
-  m_aSettGraph[7].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH8_MEANING"), 0));
+  m_aSettGraph[0].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH1_MEANING"), 1));
+  m_aSettGraph[1].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH2_MEANING"), 1));
+  m_aSettGraph[2].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH3_MEANING"), 1));
+  m_aSettGraph[3].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH4_MEANING"), 1));
+  m_aSettGraph[4].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH5_MEANING"), 1));
+  m_aSettGraph[5].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH6_MEANING"), 1));
+  m_aSettGraph[6].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH7_MEANING"), 1));
+  m_aSettGraph[7].SetMeaning( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH8_MEANING"), 1));
 
   //параметр, отображаемый по оси X
   m_aSettGraph[0].SetAxisX( theApp.GetProfileInt( _T("SETTINGS"), _T("GRAPH1_X"), 0));
