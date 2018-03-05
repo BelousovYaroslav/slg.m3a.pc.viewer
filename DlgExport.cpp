@@ -33,7 +33,10 @@ CDlgExport::CDlgExport(CWnd* pParent /*=NULL*/)
 	m_nTmean = 0;
 	m_strOutputFileName = _T("");
 	m_bChkTimeSA = FALSE;
-	m_bChkRotAngle = FALSE;
+	m_bChkTglobal = FALSE;
+	m_bChkOmega = FALSE;
+	m_bChkDt = FALSE;
+	m_bChkdPhi = FALSE;
 	//}}AFX_DATA_INIT
 }
 
@@ -52,7 +55,10 @@ void CDlgExport::DoDataExchange(CDataExchange* pDX)
 	DDX_Radio(pDX, IDC_NO_MEANING, m_nTmean);
 	DDX_Text(pDX, IDC_LBL_OUTPUT_FILENAME, m_strOutputFileName);
 	DDX_Check(pDX, IDC_CHK_TSA, m_bChkTimeSA);
-	DDX_Check(pDX, IDC_CHK_ROT_SPEED, m_bChkRotAngle);
+	DDX_Check(pDX, IDC_CHK_TGLOBAL, m_bChkTglobal);
+	DDX_Check(pDX, IDC_CHK_OMEGA, m_bChkOmega);
+	DDX_Check(pDX, IDC_CHK_DT, m_bChkDt);
+	DDX_Check(pDX, IDC_CHK_DPHI, m_bChkdPhi);
 	//}}AFX_DATA_MAP
 }
 
@@ -76,8 +82,9 @@ void CDlgExport::OnOK()
 	UpdateData( TRUE);
 
   //если ничего не выбрали - то и экспортировать нечего
-	if( !m_bChkAA && !m_bChkI1 && !m_bChkI2 && !m_bChkRotAngle &&
-			!m_bChkT1 && !m_bChkT2 && !m_bChkTimeSA && !m_bChkVpp) {
+	if( !m_bChkTglobal && !m_bChkDt && !m_bChkdPhi && !m_bChkOmega &&
+      !m_bChkI1 && !m_bChkI2 && !m_bChkVpp && !m_bChkAA &&
+			!m_bChkT1 && !m_bChkT2) {
 
 		AfxMessageBox( _T("Нет отмеченных данных для экспорта!"));
 		return;
@@ -85,22 +92,17 @@ void CDlgExport::OnOK()
 
 	FILE *fhOut = fopen( m_strOutputFileName, _T("w"));
 
-	if( m_bChkTimeSA)
-		fprintf( fhOut, _T("%-12s"), _T("t,[сек]"));
-	
-	if( m_bChkRotAngle) {
-		if( m_nTmean)
-			fprintf( fhOut, _T("%-12s"), _T("w[''/сек]"));
-		else
-			fprintf( fhOut, _T("%-12s"), _T("phi['']"));
-	}
+	if( m_bChkTglobal)fprintf( fhOut, _T("%-12s"), _T("t,[сек]"));
+	if( m_bChkDt)     fprintf( fhOut, _T("%-12s"), _T("dt,[сек]"));
+  if( m_bChkdPhi)   fprintf( fhOut, _T("%-12s"), _T("dphi,['']"));
+  if( m_bChkOmega)  fprintf( fhOut, _T("%-12s"), _T("w[''/сек]"));
+	if( m_bChkI1)     fprintf( fhOut, _T("%-12s"), _T("I1,[мА]"));
+	if( m_bChkI2)     fprintf( fhOut, _T("%-12s"), _T("I2,[мА]"));
+	if( m_bChkVpp)    fprintf( fhOut, _T("%-12s"), _T("Vpc,[В]"));
+	if( m_bChkAA)     fprintf( fhOut, _T("%-12s"), _T("AA,['']"));
+	if( m_bChkT1)     fprintf( fhOut, _T("%-12s"), _T("T1(HIRO),[°C]"));
+	if( m_bChkT2)     fprintf( fhOut, _T("%-12s"), _T("T2(BODY),[°C]"));
 
-	if( m_bChkI1) fprintf( fhOut, _T("%-12s"), _T("I1,[мА]"));
-	if( m_bChkI2) fprintf( fhOut, _T("%-12s"), _T("I2,[мА]"));
-	if( m_bChkVpp) fprintf( fhOut, _T("%-12s"), _T("Vpc,[В]"));
-	if( m_bChkAA) fprintf( fhOut, _T("%-12s"), _T("AA,['']"));
-	if( m_bChkT1) fprintf( fhOut, _T("%-12s"), _T("T1(HIRO),[°C]"));
-	if( m_bChkT2) fprintf( fhOut, _T("%-12s"), _T("T2(BODY),[°C]"));
 	fprintf( fhOut, _T("\n"));
 
 	FILE *fh;
@@ -223,8 +225,10 @@ void CDlgExport::OnOK()
     if( !m_nTmean) {
 
       //тактные значения без осреднения
-			if( m_bChkTimeSA) fprintf( fhOut, _T("%-12.4f"), dGlobalTime);
-			if( m_bChkRotAngle) fprintf( fhOut, _T("%-12.4f"), w_Summ);
+			if( m_bChkTglobal) fprintf( fhOut, _T("%-12.4f"), dGlobalTime);
+    	if( m_bChkDt)      fprintf( fhOut, _T("%-12.4f"), dblTime);
+      if( m_bChkdPhi)    fprintf( fhOut, _T("%-12.4f"), dblPhi);
+      if( m_bChkOmega)   fprintf( fhOut, _T("%-12.4f"), dblPhi / dblTime);
 			if( m_bChkI1) fprintf( fhOut, _T("%-12.4f"), ( 2.5 - i1_Summ / i1_Counter / 4096. * 3.) / 2.5); //i1_Summ / i1_Counter / 4096. * 3. / 3.973);
 			if( m_bChkI2) fprintf( fhOut, _T("%-12.4f"), ( 2.5 - i2_Summ / i2_Counter / 4096. * 3.) / 2.5); //i2_Summ / i2_Counter / 4096. * 3. / 3.973);
 			if( m_bChkVpp) fprintf( fhOut, _T("%-12.4f"), (( vpc_Summ / vpc_Counter / 4096. * 3.) - 2.048) * 100.);
@@ -263,8 +267,11 @@ void CDlgExport::OnOK()
 		}
 		else if( tsa_Summ > tMean) {
       //если набрали времени больше чем время осреденения
-      if( m_bChkTimeSA) fprintf( fhOut, _T("%-12.4f"), dGlobalTime);
-			if( m_bChkRotAngle) fprintf( fhOut, _T("%-12.4f"), w_Summ / tsa_Summ);
+
+      if( m_bChkTglobal) fprintf( fhOut, _T("%-12.4f"), dGlobalTime);
+    	if( m_bChkDt)      fprintf( fhOut, _T("%-12.4f"), tsa_Summ);
+      if( m_bChkdPhi)    fprintf( fhOut, _T("%-12.4f"), w_Summ);
+      if( m_bChkOmega)   fprintf( fhOut, _T("%-12.4f"), w_Summ / tsa_Summ);
 			
       if( m_bChkI1)
         fprintf( fhOut, _T("%-12.4f"), ( 2.5 - i1_Summ / i1_Counter / 4096. * 3.) / 2.5); //i1_Summ / i1_Counter / 4096. * 3. / 3.973);
@@ -338,26 +345,25 @@ void CDlgExport::OnBtnBrowse()
 
 void CDlgExport::OnNoMeaning() 
 {
-	GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угол поворота"));
+	//GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угол поворота"));
 }
 
 void CDlgExport::OnRad100m() 
 {
-	GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угловая скорость"));
-	
+	//GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угловая скорость"));
 }
 
 void CDlgExport::OnRad100s() 
 {
-	GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угловая скорость"));
+	//GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угловая скорость"));
 }
 
 void CDlgExport::OnRad10s() 
 {
-	GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угловая скорость"));
+	//GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угловая скорость"));
 }
 
 void CDlgExport::OnRad1s() 
 {
-	GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угловая скорость"));
+	//GetDlgItem( IDC_CHK_ROT_SPEED)->SetWindowText( _T("Угловая скорость"));
 }

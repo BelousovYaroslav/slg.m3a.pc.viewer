@@ -180,7 +180,9 @@
 #define IDC_RAD_10S                     1162
 #define IDC_RAD_100S                    1163
 #define IDC_CHK_TSA                     1164
+#define IDC_CHK_TGLOBAL                 1164
 #define IDC_CHK_ROT_SPEED               1165
+#define IDC_CHK_DPHI                    1165
 #define IDC_CHK_I1                      1166
 #define IDC_CHK_I2                      1167
 #define IDC_CHK_V_PP                    1168
@@ -192,7 +194,9 @@
 #define IDC_LBL_OUTPUT_FILENAME         1174
 #define IDC_PRGR                        1175
 #define IDC_PRGR1                       1175
+#define IDC_CHK_DT                      1175
 #define IDC_PRGR2                       1176
+#define IDC_CHK_OMEGA                   1176
 #define IDC_PRGR0                       1177
 #define IDC_LBL_CURSOR_DX_VAL           1178
 #define IDC_LBL_CURSOR_DY_VAL           1179

@@ -32,7 +32,10 @@ public:
 	int		m_nTmean;
 	CString	m_strOutputFileName;
 	BOOL	m_bChkTimeSA;
-	BOOL	m_bChkRotAngle;
+	BOOL	m_bChkTglobal;
+	BOOL	m_bChkOmega;
+	BOOL	m_bChkDt;
+	BOOL	m_bChkdPhi;
 	//}}AFX_DATA
 
 

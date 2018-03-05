@@ -522,7 +522,7 @@ BEGIN
                     440,10
 END
 
-IDD_DLG_EXPORT DIALOG DISCARDABLE  0, 0, 397, 246
+IDD_DLG_EXPORT DIALOG DISCARDABLE  0, 0, 397, 271
 STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
 CAPTION "Экспорт в ASCII"
 FONT 8, "MS Sans Serif"
@@ -537,32 +537,36 @@ BEGIN
                     50,10
     CONTROL         "100 сек",IDC_RAD_100S,"Button",BS_AUTORADIOBUTTON,331,
                     55,50,10
-    DEFPUSHBUTTON   "OK",IDOK,5,225,50,14
-    PUSHBUTTON      "Отмена",IDCANCEL,345,225,50,14
+    DEFPUSHBUTTON   "OK",IDOK,10,255,50,14
+    PUSHBUTTON      "Отмена",IDCANCEL,345,255,50,14
     GROUPBOX        "Время осреднения",IDC_STATIC,5,45,390,25
-    GROUPBOX        "Данные для экспорта",IDC_STATIC,5,75,390,130
-    CONTROL         "Время с момента запуска",IDC_CHK_TSA,"Button",
+    GROUPBOX        "Данные для экспорта",IDC_STATIC,5,75,390,160
+    CONTROL         "Время с момента запуска, [сек]",IDC_CHK_TGLOBAL,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,85,370,10
-    CONTROL         "Угол поворота",IDC_CHK_ROT_SPEED,"Button",
-                    BS_AUTOCHECKBOX | WS_TABSTOP,10,100,370,10
-    CONTROL         "Разрядный ток I1",IDC_CHK_I1,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,115,370,10
-    CONTROL         "Разрядный ток I2",IDC_CHK_I2,"Button",BS_AUTOCHECKBOX | 
-                    WS_TABSTOP,10,130,370,10
-    CONTROL         "V на выходе регул. перим, [В]",IDC_CHK_V_PP,"Button",
+    CONTROL         "Угол поворота dPhi, ['']",IDC_CHK_DPHI,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,115,370,10
+    CONTROL         "Разрядный ток I1, [мА]",IDC_CHK_I1,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,145,370,10
-    CONTROL         "Ампл. част. подст., [В]",IDC_CHK_AA,"Button",
+    CONTROL         "Разрядный ток I2, [мА]",IDC_CHK_I2,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,160,370,10
-    CONTROL         "Термодатчик 1, [°C]",IDC_CHK_T1,"Button",
+    CONTROL         "V на выходе регул. перим, [В]",IDC_CHK_V_PP,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,175,370,10
-    CONTROL         "Термодатчик 2, [°C]",IDC_CHK_T2,"Button",
+    CONTROL         "Амплитуда частотной подставки, ['']",IDC_CHK_AA,"Button",
                     BS_AUTOCHECKBOX | WS_TABSTOP,10,190,370,10
+    CONTROL         "Термодатчик 1, [°C]",IDC_CHK_T1,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,205,370,10
+    CONTROL         "Термодатчик 2, [°C]",IDC_CHK_T2,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,220,370,10
     CONTROL         "Progress1",IDC_PRG_ACTION,"msctls_progress32",WS_BORDER,
-                    5,210,390,10
+                    5,240,390,10
     GROUPBOX        "Файл экспорта",IDC_STATIC,5,5,390,35
     LTEXT           "Static",IDC_LBL_OUTPUT_FILENAME,10,15,330,15,
                     SS_CENTERIMAGE | WS_BORDER
     PUSHBUTTON      "Изменить",IDC_BTN_BROWSE,345,15,40,15
+    CONTROL         "Время такта dT, [сек]",IDC_CHK_DT,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,100,370,10
+    CONTROL         "Угловая скорость w, [''/сек]",IDC_CHK_OMEGA,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,10,130,370,10
 END
 
 IDD_OPEN_MEAS_DLG DIALOG DISCARDABLE  0, 0, 362, 337
@@ -814,7 +818,7 @@ BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 390
         TOPMARGIN, 7
-        BOTTOMMARGIN, 239
+        BOTTOMMARGIN, 264
     END
 
     IDD_OPEN_MEAS_DLG, DIALOG
